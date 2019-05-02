@@ -8,8 +8,12 @@ import android.view.View;
 import com.sunmi.sunmit2demo.BaseFragment;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.adapter.GoodsSortDetailAdapter;
+import com.sunmi.sunmit2demo.decoration.GridSpacingItemDecoration;
+import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
+import com.sunmi.sunmit2demo.modle.GoodsInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * author : chrc
@@ -21,7 +25,7 @@ public class HomeGoodsSortFragment extends BaseFragment {
     public final static String DATA  = "data";
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private GoodsSortDetailAdapter mAdapter;
 
     public static HomeGoodsSortFragment createFragment(Bundle bundle) {
         HomeGoodsSortFragment fragment = new HomeGoodsSortFragment();
@@ -38,13 +42,23 @@ public class HomeGoodsSortFragment extends BaseFragment {
     protected void init(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, 10, true));
 
-        mAdapter = new GoodsSortDetailAdapter(new ArrayList<String>());
+        mAdapter = new GoodsSortDetailAdapter(new ArrayList<GoodsInfo>());
         mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-
+        Bundle bundle = getArguments();
+        Object o = bundle.getSerializable(DATA);
+        if (o instanceof ClassAndGoodsModle) {
+            ClassAndGoodsModle modle = (ClassAndGoodsModle) o;
+            List<GoodsInfo> infos = modle.getGoodsList();
+            if (infos != null && infos.size() > 0) {
+                mAdapter.setData(infos);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

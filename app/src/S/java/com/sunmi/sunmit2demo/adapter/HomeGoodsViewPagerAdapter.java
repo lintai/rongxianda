@@ -45,6 +45,7 @@ public class HomeGoodsViewPagerAdapter extends FragmentPagerAdapter {
             for (int i = 0; i < size; i++) {
                 if (classId == datas.get(i).getClassId()) {
                     pos = i;
+                    break;
                 }
             }
         }

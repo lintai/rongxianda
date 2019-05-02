@@ -35,7 +35,7 @@ public class GoodsSortAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_goods_sort, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_goods_sort_tag, parent, false);
         GoodsSortViewHolder viewHolder = new GoodsSortViewHolder(view);
         return viewHolder;
     }
@@ -46,7 +46,7 @@ public class GoodsSortAdapter extends RecyclerView.Adapter {
         final GoodsSortTagModle modle = datas.get(position);
         viewHolder.goodsSortTv.setText(modle.getClassName());
         if (itemClickListenr != null) {
-            viewHolder.goodsSortTv.setOnClickListener(new View.OnClickListener() {
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemClickListenr.onItemClick(modle.getClassId());

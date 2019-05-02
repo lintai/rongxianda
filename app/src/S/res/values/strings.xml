@@ -1,0 +1,3 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="goods_single_price">1%$s</string>
+</resources>

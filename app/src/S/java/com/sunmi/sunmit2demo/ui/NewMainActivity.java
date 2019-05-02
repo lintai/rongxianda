@@ -43,11 +43,14 @@ import com.sunmi.sunmit2demo.adapter.HomeMenuAdapter;
 import com.sunmi.sunmit2demo.bean.GoodsCode;
 import com.sunmi.sunmit2demo.bean.GvBeans;
 import com.sunmi.sunmit2demo.bean.MenusBean;
+import com.sunmi.sunmit2demo.decoration.GoodsSortGridSpacingItemDecoration;
 import com.sunmi.sunmit2demo.dialog.PayDialog;
+import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
 import com.sunmi.sunmit2demo.eventbus.UpdateUnLockUserEvent;
 import com.sunmi.sunmit2demo.fragment.GoodsManagerFragment;
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
 import com.sunmi.sunmit2demo.modle.GoodsSortTagModle;
+import com.sunmi.sunmit2demo.modle.MenuItemModule;
 import com.sunmi.sunmit2demo.present.TextDisplay;
 import com.sunmi.sunmit2demo.present.VideoDisplay;
 import com.sunmi.sunmit2demo.present.VideoMenuDisplay;
@@ -76,7 +79,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class NewMainActivity extends BaseActivity implements View.OnClickListener, HomeClassAndGoodsContact.View {
+public class NewMainActivity extends BaseActivity implements View.OnClickListener, HomeClassAndGoodsContact.View, HomeMenuAdapter.GoodsCountChangeListener {
 
     private final String TAG = "NewMainActivity";
 //    private TextView tv_user_lock;
@@ -355,14 +358,16 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     private void initViewPager(List<ClassAndGoodsModle> datas) {
         mHomeGoodsViewPagerAdapter = new HomeGoodsViewPagerAdapter(getSupportFragmentManager(), datas);
-         mViewPager.setAdapter(mHomeGoodsViewPagerAdapter);
+        mViewPager.setAdapter(mHomeGoodsViewPagerAdapter);
+        mViewPager.setCurrentItem(0);
     }
 
 
     private void initData() {
         mPresenter = new HomePresenter(this, this);
 
-        mMenuAdapter = new HomeMenuAdapter(new ArrayList<String>());
+        mMenuAdapter = new HomeMenuAdapter(new ArrayList<MenuItemModule>());
+        mMenuAdapter.setChangeListener(this);
         mMenuRecyclerVeiew.setLayoutManager(new LinearLayoutManager(this));
         mMenuRecyclerVeiew.setAdapter(mMenuAdapter);
 
@@ -378,6 +383,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         });
         mGoodsSortRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mGoodsSortRecyclerView.addItemDecoration(new GoodsSortGridSpacingItemDecoration(3, 10));
         mGoodsSortRecyclerView.setAdapter(mGoodsSortAdapter);
 
         screenManager.init(this);
@@ -437,6 +443,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         soundPool.load(NewMainActivity.this, R.raw.audio, 1);// 1
         soundPool.load(NewMainActivity.this, isZh(this) ? R.raw.alipay : R.raw.alipay_en, 1);// 2
+        mPresenter.load();
     }
 
 
@@ -715,6 +722,42 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void GoodsItemClickEvent(GoodsItemClickEvent event) {
+        //加入购物清单
+        MenuItemModule menuItemModule = new MenuItemModule();
+        menuItemModule.setGoodsName(event.goodsName);
+        menuItemModule.setPrice(event.price);
+        menuItemModule.setUnit(event.unit);
+        menuItemModule.setGoodsCount(1);
+
+        List<MenuItemModule> modules = mMenuAdapter.getDatas();
+        if (modules.size() > 0) {
+            int size = modules.size();
+            boolean hasThisGood = false;
+            for (int i = 0; i < size; i++) {
+                MenuItemModule module = modules.get(i);
+                if (menuItemModule.getPrice() == module.getPrice()
+                    && !TextUtils.isEmpty(menuItemModule.getGoodsName())
+                    && menuItemModule.getGoodsName().equals(module.getGoodsName())) {
+                    //价格相等且货物名称相同,说明原有清单列表已有该货物，将该货物的count+1
+                    module.setGoodsCount(module.getGoodsCount()+1);
+                    mMenuAdapter.notifyItemChanged(i);
+                    hasThisGood = true;
+                    break;
+                }
+            }
+            if (!hasThisGood) {
+                modules.add(0, menuItemModule);
+                mMenuAdapter.notifyDataSetChanged();
+            }
+        } else {
+            modules.add(0, menuItemModule);
+            mMenuAdapter.notifyDataSetChanged();
+        }
+        //更新所有清单总价格
+    }
+
 
     private void welcomeUserAnim() {
 //        this.tv_user_lock.setAlpha(1.0F);
@@ -833,6 +876,19 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             }
             mGoodsSortAdapter.notifyDataSetChanged();
             initViewPager(datas);
+        }
+    }
+
+    @Override
+    public void change(int type, float money) {
+        switch (type) {
+            case HomeMenuAdapter.CHANGE_TYPE_ADD:
+                break;
+            case HomeMenuAdapter.CHANGE_TYPE_DELEASE:
+                break;
+                case HomeMenuAdapter.CHANGE_TYPE_DELETE:
+                break;
+
         }
     }
 }
