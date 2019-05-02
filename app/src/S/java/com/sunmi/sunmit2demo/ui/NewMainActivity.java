@@ -1,24 +1,17 @@
 package com.sunmi.sunmit2demo.ui;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.Outline;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,18 +24,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
-import android.view.animation.LinearInterpolator;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.sunmi.extprinterservice.ExtPrinterService;
 import com.sunmi.peripheral.printer.InnerPrinterCallback;
 import com.sunmi.peripheral.printer.InnerPrinterException;
@@ -55,30 +39,30 @@ import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.adapter.GoodsAdapter;
 import com.sunmi.sunmit2demo.adapter.GoodsSortAdapter;
 import com.sunmi.sunmit2demo.adapter.HomeGoodsViewPagerAdapter;
-import com.sunmi.sunmit2demo.adapter.MenuAdapter;
-import com.sunmi.sunmit2demo.adapter.MenusAdapter;
+import com.sunmi.sunmit2demo.adapter.HomeMenuAdapter;
 import com.sunmi.sunmit2demo.bean.GoodsCode;
 import com.sunmi.sunmit2demo.bean.GvBeans;
 import com.sunmi.sunmit2demo.bean.MenusBean;
 import com.sunmi.sunmit2demo.dialog.PayDialog;
 import com.sunmi.sunmit2demo.eventbus.UpdateUnLockUserEvent;
 import com.sunmi.sunmit2demo.fragment.GoodsManagerFragment;
-import com.sunmi.sunmit2demo.fragment.PayModeSettingFragment;
+import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
+import com.sunmi.sunmit2demo.modle.GoodsSortTagModle;
 import com.sunmi.sunmit2demo.present.TextDisplay;
 import com.sunmi.sunmit2demo.present.VideoDisplay;
 import com.sunmi.sunmit2demo.present.VideoMenuDisplay;
+import com.sunmi.sunmit2demo.presenter.HomePresenter;
 import com.sunmi.sunmit2demo.presenter.KPrinterPresenter;
 import com.sunmi.sunmit2demo.presenter.PayMentPayPresenter;
 import com.sunmi.sunmit2demo.presenter.PrinterPresenter;
 import com.sunmi.sunmit2demo.presenter.ScalePresenter;
+import com.sunmi.sunmit2demo.presenter.contact.HomeClassAndGoodsContact;
 import com.sunmi.sunmit2demo.unlock.UnlockServer;
 import com.sunmi.sunmit2demo.utils.ResourcesUtils;
 import com.sunmi.sunmit2demo.utils.ScreenManager;
 import com.sunmi.sunmit2demo.utils.SharePreferenceUtil;
-import com.sunmi.sunmit2demo.utils.Utils;
 import com.sunmi.sunmit2demo.view.CustomPopWindow;
 import com.sunmi.sunmit2demo.view.Input2Dialog;
-import com.sunmi.sunmit2demo.view.VipPayDialog;
 import com.sunmi.widget.dialog.InputDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -92,9 +76,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-public class NewMainActivity extends BaseActivity implements View.OnClickListener {
+public class NewMainActivity extends BaseActivity implements View.OnClickListener, HomeClassAndGoodsContact.View {
 
     private final String TAG = "NewMainActivity";
 //    private TextView tv_user_lock;
@@ -103,7 +85,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private TextView mGoodsCountTv, mGoodsDiscountTv, mGoodsTotalPriceTv, mPayTv;
     private TextView mPrePageTv, mNextPageTv;
 
-    private RecyclerView.Adapter mMenuAdapter, mGoodsSortAdapter;
+    private HomeMenuAdapter mMenuAdapter;
+    private GoodsSortAdapter mGoodsSortAdapter;
+    private HomeGoodsViewPagerAdapter mHomeGoodsViewPagerAdapter;
 
     private GoodsAdapter drinkAdapter;
     private GoodsAdapter fruitAdapter;
@@ -142,6 +126,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private PayMentPayPresenter payMentPayPresenter;
     private ScalePresenter scalePresenter;
     Input2Dialog mInputDialog;
+
+    private HomePresenter mPresenter;
 
 
     @Override
@@ -367,17 +353,30 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    private void initViewPager(List<String> datas) {
-         mViewPager.setAdapter(new HomeGoodsViewPagerAdapter(getSupportFragmentManager(), datas));
+    private void initViewPager(List<ClassAndGoodsModle> datas) {
+        mHomeGoodsViewPagerAdapter = new HomeGoodsViewPagerAdapter(getSupportFragmentManager(), datas);
+         mViewPager.setAdapter(mHomeGoodsViewPagerAdapter);
     }
 
 
     private void initData() {
-        mMenuAdapter = new MenuAdapter(new ArrayList<String>());
+        mPresenter = new HomePresenter(this, this);
+
+        mMenuAdapter = new HomeMenuAdapter(new ArrayList<String>());
         mMenuRecyclerVeiew.setLayoutManager(new LinearLayoutManager(this));
         mMenuRecyclerVeiew.setAdapter(mMenuAdapter);
 
-        mGoodsSortAdapter = new GoodsSortAdapter(new ArrayList<String>());
+        mGoodsSortAdapter = new GoodsSortAdapter(new ArrayList<GoodsSortTagModle>());
+        mGoodsSortAdapter.setOnItemClickListener(new GoodsSortAdapter.ItemClickListenr() {
+            @Override
+            public void onItemClick(long classId) {
+                int pos = mHomeGoodsViewPagerAdapter.getPositionWithClassId(classId);
+                if (pos != -1) {
+                    mViewPager.setCurrentItem(pos);
+                }
+            }
+
+        });
         mGoodsSortRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mGoodsSortRecyclerView.setAdapter(mGoodsSortAdapter);
 
@@ -821,4 +820,19 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
     };
 
+    @Override
+    public void loadComplete(List<ClassAndGoodsModle> datas) {
+        if (datas != null && datas.size() > 0) {
+            List<GoodsSortTagModle> tags = mGoodsSortAdapter.getDatas();
+            int size = datas.size();
+            for (int i = 0; i < size; i++) {
+                ClassAndGoodsModle modle = datas.get(i);
+                if (modle != null && !TextUtils.isEmpty(modle.getClassName())) {
+                    tags.add(new GoodsSortTagModle(modle.getClassId(), modle.getClassName()));
+                }
+            }
+            mGoodsSortAdapter.notifyDataSetChanged();
+            initViewPager(datas);
+        }
+    }
 }

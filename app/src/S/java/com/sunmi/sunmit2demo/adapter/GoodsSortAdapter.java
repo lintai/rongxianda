@@ -4,11 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.sunmi.sunmit2demo.R;
+import com.sunmi.sunmit2demo.modle.GoodsSortTagModle;
 
 import java.util.List;
-import java.util.SortedMap;
 
 /**
  * author : chrc
@@ -17,14 +18,19 @@ import java.util.SortedMap;
  */
 public class GoodsSortAdapter extends RecyclerView.Adapter {
 
-    List<String> datas;
+    List<GoodsSortTagModle> datas;
+    ItemClickListenr itemClickListenr;
 
-    public GoodsSortAdapter(List<String> datas) {
+    public GoodsSortAdapter(List<GoodsSortTagModle> datas) {
         this.datas = datas;
     }
 
-    public List<String> getDatas() {
+    public List<GoodsSortTagModle> getDatas() {
         return datas;
+    }
+
+    public void setOnItemClickListener(ItemClickListenr itemClickListen) {
+        this.itemClickListenr = itemClickListen;
     }
 
     @Override
@@ -37,6 +43,16 @@ public class GoodsSortAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         GoodsSortViewHolder viewHolder = (GoodsSortViewHolder) holder;
+        final GoodsSortTagModle modle = datas.get(position);
+        viewHolder.goodsSortTv.setText(modle.getClassName());
+        if (itemClickListenr != null) {
+            viewHolder.goodsSortTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemClickListenr.onItemClick(modle.getClassId());
+                }
+            });
+        }
     }
 
     @Override
@@ -46,8 +62,15 @@ public class GoodsSortAdapter extends RecyclerView.Adapter {
 
     class GoodsSortViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView goodsSortTv;
+
         public GoodsSortViewHolder(View itemView) {
             super(itemView);
+            goodsSortTv = itemView.findViewById(R.id.tv_goods_sort_name);
         }
+    }
+
+    public interface ItemClickListenr {
+        void onItemClick(long classId);
     }
 }

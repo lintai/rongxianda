@@ -16,14 +16,14 @@ import java.util.List;
  * date   : 2019/5/2  1:00 PM
  * desc   :
  */
-public class MenuAdapter extends RecyclerView.Adapter {
+public class HomeMenuAdapter extends RecyclerView.Adapter {
 
     private final int TYPE_NORMAL = 0;
     private final int TYPE_EMPTY = 1;
 
     List<String> datas;
 
-    public MenuAdapter(List<String> datas) {
+    public HomeMenuAdapter(List<String> datas) {
         this.datas = datas;
     }
 

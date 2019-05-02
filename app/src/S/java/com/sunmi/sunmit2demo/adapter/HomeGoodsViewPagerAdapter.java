@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.sunmi.sunmit2demo.fragment.HomeGoodsSortFragment;
+import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
 
 import java.util.List;
 
@@ -16,9 +17,9 @@ import java.util.List;
  */
 public class HomeGoodsViewPagerAdapter extends FragmentPagerAdapter {
 
-    List<String> datas;
+    List<ClassAndGoodsModle> datas;
 
-    public HomeGoodsViewPagerAdapter(FragmentManager fm, List<String> datas) {
+    public HomeGoodsViewPagerAdapter(FragmentManager fm, List<ClassAndGoodsModle> datas) {
         super(fm);
         this.datas = datas;
     }
@@ -26,14 +27,27 @@ public class HomeGoodsViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (datas == null || datas.size() == 0) return null;
-        String data = datas.get(position);
+        ClassAndGoodsModle data = datas.get(position);
         Bundle bundle = new Bundle();
-        bundle.putString(HomeGoodsSortFragment.DATA, data);
+        bundle.putSerializable(HomeGoodsSortFragment.DATA, data);
         return HomeGoodsSortFragment.createFragment(bundle);
     }
 
     @Override
     public int getCount() {
         return datas == null ? 0 : datas.size();
+    }
+
+    public int getPositionWithClassId(long classId) {
+        int pos = -1;
+        if (datas != null) {
+            int size = datas.size();
+            for (int i = 0; i < size; i++) {
+                if (classId == datas.get(i).getClassId()) {
+                    pos = i;
+                }
+            }
+        }
+        return pos;
     }
 }
