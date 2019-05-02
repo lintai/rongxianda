@@ -205,6 +205,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         int width = dm.widthPixels;// 屏幕宽度
         int height = dm.heightPixels;// 屏幕宽度
         Log.e("@@@", dm.densityDpi + "  " + dm.density);
+        Toast.makeText(this, dm.densityDpi + "  " + dm.density, Toast.LENGTH_LONG).show();
         isVertical = height > width;
 
         isK1 = MyApplication.getInstance().isHaveCamera() && isVertical;
