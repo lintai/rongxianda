@@ -68,7 +68,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        mView.loadComplete(null);
+//                        mView.loadComplete(null);
                     }
 
                     @Override
