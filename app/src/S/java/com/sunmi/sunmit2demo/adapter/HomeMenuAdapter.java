@@ -57,10 +57,16 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
         return goodsTotalPrice;
     }
 
+    public void addGoodsCount(int goodsCount) {
+        this.goodsCount += goodsCount;
+    }
+
+    public void addGoodsTotalPrice(float goodsPrice) {
+        this.goodsTotalPrice += goodsPrice;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        goodsCount = 0;
-        goodsTotalPrice = 0;
         RecyclerView.ViewHolder viewHolder = null;
         if (viewType == TYPE_EMPTY) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_goods_menu_empty, parent, false);
@@ -77,6 +83,7 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
         if (holder.getItemViewType() == TYPE_NORMAL) {
             MenuViewHolder menuViewHolder = (MenuViewHolder) holder;
             final MenuItemModule module = datas.get(position);
+
             if (!TextUtils.isEmpty(module.getGoodsName())) {
                 menuViewHolder.mGoodsNameTv.setText(module.getGoodsName());
             }
@@ -100,10 +107,19 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (module.getGoodsCount() <= 0) return;
-                    goodsCount--;
+                    if (goodsCount > 0) {
+                        goodsCount--;
+                    }
                     goodsTotalPrice -= module.getPrice();
+                    goodsTotalPrice = goodsTotalPrice < 0 ? 0 : goodsTotalPrice;
+
                     module.setGoodsCount(module.getGoodsCount() - 1);
-                    notifyItemChanged(position);
+                    if (module.getGoodsCount() == 0) {
+                        datas.remove(position);
+                        notifyDataSetChanged();
+                    } else {
+                        notifyItemChanged(position);
+                    }
                     if (changeListener != null) {
                         changeListener.change(CHANGE_TYPE_DELEASE, module.getPrice());
                     }

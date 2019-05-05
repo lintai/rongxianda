@@ -274,7 +274,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         mGoodsCountTv = findViewById(R.id.tv_goods_count);
         mGoodsDiscountTv = findViewById(R.id.tv_goods_discount);
-        mGoodsTotalPriceTv = findViewById(R.id.tv_pay);
+        mGoodsTotalPriceTv = findViewById(R.id.tv_goods_total_price);
         mPrePageTv = findViewById(R.id.tv_pre_page);
         mNextPageTv = findViewById(R.id.tv_next_page);
         mPayTv = findViewById(R.id.tv_pay);
@@ -731,6 +731,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         menuItemModule.setUnit(event.unit);
         menuItemModule.setGoodsCount(1);
 
+        mMenuAdapter.addGoodsCount(1);
+        mMenuAdapter.addGoodsTotalPrice(event.price);
+
         List<MenuItemModule> modules = mMenuAdapter.getDatas();
         if (modules.size() > 0) {
             int size = modules.size();
@@ -756,6 +759,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             mMenuAdapter.notifyDataSetChanged();
         }
         //更新所有清单总价格
+        mGoodsCountTv.setText(String.valueOf(mMenuAdapter.getGoodsCount()));
+        mGoodsTotalPriceTv.setText(String.valueOf(mMenuAdapter.getGoodsTotalPrice() / 100));
     }
 
 
@@ -883,7 +888,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     public void change(int type, float money) {
         if (mMenuAdapter == null) return;
         mGoodsCountTv.setText(String.valueOf(mMenuAdapter.getGoodsCount()));
-        mGoodsTotalPriceTv.setText(String.valueOf(mMenuAdapter.getGoodsTotalPrice()));
+        mGoodsTotalPriceTv.setText(String.valueOf(mMenuAdapter.getGoodsTotalPrice() / 100));
         switch (type) {
             case HomeMenuAdapter.CHANGE_TYPE_ADD:
                 break;
