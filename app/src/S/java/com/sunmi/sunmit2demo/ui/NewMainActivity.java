@@ -881,6 +881,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void change(int type, float money) {
+        if (mMenuAdapter == null) return;
+        mGoodsCountTv.setText(String.valueOf(mMenuAdapter.getGoodsCount()));
+        mGoodsTotalPriceTv.setText(String.valueOf(mMenuAdapter.getGoodsTotalPrice()));
         switch (type) {
             case HomeMenuAdapter.CHANGE_TYPE_ADD:
                 break;

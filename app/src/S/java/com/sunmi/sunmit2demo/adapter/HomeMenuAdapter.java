@@ -28,8 +28,11 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
     public static final int CHANGE_TYPE_DELEASE = 3;
     public static final int CHANGE_TYPE_DELETE = 4;
 
-    List<MenuItemModule> datas;
-    GoodsCountChangeListener changeListener;
+    private List<MenuItemModule> datas;
+    private GoodsCountChangeListener changeListener;
+
+    private int goodsCount;
+    private float goodsTotalPrice;
 
     public HomeMenuAdapter(List<MenuItemModule> datas) {
         this.datas = datas;
@@ -46,8 +49,18 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
         this.changeListener = changeListener;
     }
 
+    public int getGoodsCount() {
+        return goodsCount;
+    }
+
+    public float getGoodsTotalPrice() {
+        return goodsTotalPrice;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        goodsCount = 0;
+        goodsTotalPrice = 0;
         RecyclerView.ViewHolder viewHolder = null;
         if (viewType == TYPE_EMPTY) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_goods_menu_empty, parent, false);
@@ -74,6 +87,8 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
             menuViewHolder.mAddGoodsIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    goodsCount++;
+                    goodsTotalPrice += module.getPrice();
                     module.setGoodsCount(module.getGoodsCount() + 1);
                     notifyItemChanged(position);
                     if (changeListener != null) {
@@ -85,6 +100,8 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (module.getGoodsCount() <= 0) return;
+                    goodsCount--;
+                    goodsTotalPrice -= module.getPrice();
                     module.setGoodsCount(module.getGoodsCount() - 1);
                     notifyItemChanged(position);
                     if (changeListener != null) {
@@ -95,6 +112,8 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
             menuViewHolder.mDeleteIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    goodsCount = goodsCount - module.getGoodsCount();
+                    goodsTotalPrice -= module.getGoodsCount() * module.getPrice();
                     datas.remove(position);
                     notifyDataSetChanged();
                     if (changeListener != null) {

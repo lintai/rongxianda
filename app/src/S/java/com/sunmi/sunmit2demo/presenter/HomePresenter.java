@@ -7,10 +7,20 @@ import com.sunmi.sunmit2demo.modle.AllClassAndGoodsResult;
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
 import com.sunmi.sunmit2demo.modle.GoodsInfo;
 import com.sunmi.sunmit2demo.presenter.contact.HomeClassAndGoodsContact;
+import com.sunmi.sunmit2demo.server.ServerManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * author : chrc
@@ -32,6 +42,41 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
     @Override
     public void load() {
         //造假数据，先用new Thread方法，后面用Rxjava
+        Observable.create(new ObservableOnSubscribe<List<ClassAndGoodsModle>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<ClassAndGoodsModle>> e) throws Exception {
+                AllClassAndGoodsResult result = ServerManager.getClassGoodsList("", "");
+                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
+                    e.onNext(result.getResult());
+                } else {
+                    e.onError(new Throwable());
+                }
+            }
+        })
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new Observer<List<ClassAndGoodsModle>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<ClassAndGoodsModle> value) {
+                        mView.loadComplete(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.loadComplete(null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
         final Handler handler = new Handler();
         new Thread(new Runnable() {
             @Override
