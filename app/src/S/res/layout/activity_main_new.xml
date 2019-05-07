@@ -9,7 +9,7 @@
         android:layout_width="456dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#f39c11">
+        android:background="#f8d451">
 
         <TextView
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:paddingBottom="20dp"
-            android:background="#afb4db"
+            android:background="#816c21"
             android:orientation="vertical">
 
             <LinearLayout
@@ -122,7 +122,7 @@
             android:text="结算"
             android:textSize="28dp"
             android:textColor="#ffffff"
-            android:background="#FFA500"/>
+            android:background="#e67140"/>
 
     </LinearLayout>
 
@@ -131,12 +131,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#ff0000">
+        android:background="#fcf6dd">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/goods_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_above="@+id/goods_sort_container"/>
 
         <LinearLayout
@@ -144,14 +147,14 @@
             android:layout_width="match_parent"
             android:layout_height="184dp"
             android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="#fae9a1">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/goods_sort_recyclerview"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:background="#ffdc35"/>
+                android:layout_weight="3"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -168,7 +171,7 @@
                     android:textSize="30dp"
                     android:gravity="center"
                     android:textColor="#856c00"
-                    android:background="#fde996"/>
+                    android:background="#f8d451"/>
 
                 <TextView
                     android:id="@+id/tv_next_page"
@@ -178,7 +181,7 @@
                     android:textSize="30dp"
                     android:gravity="center"
                     android:textColor="#856c00"
-                    android:background="#fde996"/>
+                    android:background="#f8d451"/>
 
             </LinearLayout>
 

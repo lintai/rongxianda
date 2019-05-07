@@ -7,5 +7,5 @@ package com.sunmi.sunmit2demo.server;
  */
 public interface Api {
 
-    String HOME_CLASS_GOODS_LIST = "/goodsInfo/goodsInfo/getClassGoodsList";
+    String HOME_CLASS_GOODS_LIST = "http://47.92.54.128:9801/GoodsInfo/GoodsInfo/getClassGoodsList";
 }

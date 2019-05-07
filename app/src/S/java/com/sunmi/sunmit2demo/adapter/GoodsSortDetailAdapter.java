@@ -57,7 +57,7 @@ public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
         GoodsSortViewHolder viewHolder = (GoodsSortViewHolder) holder;
 //        viewHolder.goodsCoverIv
         final GoodsInfo info = datas.get(position);
-        if (!TextUtils.isEmpty(info.getClassNme())) {
+        if (!TextUtils.isEmpty(info.getGoodsName())) {
             viewHolder.goodsNameTv.setText(info.getGoodsName());
         }
         String price = "￥"+ (info.getPrice() * 1.0f / 100) + "/" + info.getWeight() + info.getUnit();

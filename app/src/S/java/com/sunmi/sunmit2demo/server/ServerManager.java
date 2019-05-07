@@ -2,9 +2,14 @@ package com.sunmi.sunmit2demo.server;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.modle.AllClassAndGoodsResult;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -19,11 +24,16 @@ import okhttp3.Response;
  */
 public class ServerManager {
 
-    public static AllClassAndGoodsResult getClassGoodsList(String appId, String sign) {
+    public static AllClassAndGoodsResult getClassGoodsList(String appId) {
+        String currTime = Util.getCurrData();
+        Map<String, String> params = new HashMap<>();
+        params.put("appid", appId);
+        params.put("requesttime", currTime);
+
         RequestBody requestBody = new FormBody.Builder()
                     .add("appid", appId)
-                    .add("sign", sign)
-                    .add("requesttime", String.valueOf(System.currentTimeMillis()))
+                    .add("sign", Util.getSignStringBuffer(params))
+                    .add("requesttime", currTime)
                     .build();
 
         Request request = new Request.Builder()
@@ -35,7 +45,8 @@ public class ServerManager {
         try {
             Response response = client.newCall(request).execute();
             if (response != null && response.isSuccessful()) {
-                return new Gson().fromJson(response.body().string(), new TypeToken<AllClassAndGoodsResult>(){}.getType());
+                String bodyString = response.body().string();
+                return new Gson().fromJson(bodyString, new TypeToken<AllClassAndGoodsResult>(){}.getType());
             }
         } catch (IOException e) {
             e.printStackTrace();
