@@ -68,7 +68,7 @@ public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post(
-                        new GoodsItemClickEvent(info.getGoodsName(), info.getPrice(), "/"+info.getWeight()+info.getUnit()));
+                        new GoodsItemClickEvent(info.getGoodsName(), info.getPrice(), "/"+info.getWeight()+info.getUnit(), info.getGoodsCode()));
             }
         });
     }

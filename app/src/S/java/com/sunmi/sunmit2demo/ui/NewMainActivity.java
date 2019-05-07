@@ -51,6 +51,7 @@ import com.sunmi.sunmit2demo.fragment.GoodsManagerFragment;
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
 import com.sunmi.sunmit2demo.modle.GoodsSortTagModle;
 import com.sunmi.sunmit2demo.modle.MenuItemModule;
+import com.sunmi.sunmit2demo.modle.OrderInfo;
 import com.sunmi.sunmit2demo.present.TextDisplay;
 import com.sunmi.sunmit2demo.present.VideoDisplay;
 import com.sunmi.sunmit2demo.present.VideoMenuDisplay;
@@ -477,6 +478,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_pay:
+                if (mPresenter != null) {
+                    mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
+                }
                 break;
             case R.id.tv_pre_page:
                 break;
@@ -730,6 +734,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         menuItemModule.setPrice(event.price);
         menuItemModule.setUnit(event.unit);
         menuItemModule.setGoodsCount(1);
+        menuItemModule.setGoodsCode(event.goodsCode);
 
         mMenuAdapter.addGoodsCount(1);
         mMenuAdapter.addGoodsTotalPrice(event.price);
@@ -881,6 +886,21 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             }
             mGoodsSortAdapter.notifyDataSetChanged();
             initViewPager(datas);
+        }
+    }
+
+    @Override
+    public void orderCreateComplete(OrderInfo orderInfo) {
+        if (orderInfo != null) {
+            Intent intent = new Intent(this, ChoosePayWayActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ChoosePayWayActivity.ORDER_RESULT, orderInfo);
+            bundle.putString(ChoosePayWayActivity.GOODS_COUNT, String.valueOf(mMenuAdapter.getGoodsCount()));
+            bundle.putString(ChoosePayWayActivity.GOODS_ORIGINAL_PRICE, String.valueOf(mMenuAdapter.getGoodsTotalPrice()));
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "订单生成失败，请稍后再试", Toast.LENGTH_SHORT).show();
         }
     }
 

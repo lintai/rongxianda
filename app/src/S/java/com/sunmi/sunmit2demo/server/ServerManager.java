@@ -4,11 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.modle.AllClassAndGoodsResult;
+import com.sunmi.sunmit2demo.modle.CreateOrderResult;
+import com.sunmi.sunmit2demo.modle.GoodsOrderModle;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.FormBody;
@@ -47,6 +50,45 @@ public class ServerManager {
             if (response != null && response.isSuccessful()) {
                 String bodyString = response.body().string();
                 return new Gson().fromJson(bodyString, new TypeToken<AllClassAndGoodsResult>(){}.getType());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static CreateOrderResult createOrder(String appId, List<GoodsOrderModle> goodsList, int totalfee) {
+        String goodsListJson = new Gson().toJson(goodsList);
+        Map<String, String> params = new HashMap<>();
+        params.put("appid", appId);
+        params.put("totalfee", String.valueOf(totalfee));
+        params.put("goodslist", goodsListJson);
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("appid", appId)
+                .add("sign", Util.getSignStringBuffer(params))
+                .add("totalfee", String.valueOf(totalfee))
+                .add("goodslist", goodsListJson)
+                .build();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < ((FormBody) requestBody).size(); i++) {
+            sb.append(((FormBody) requestBody).encodedName(i));
+            sb.append(" - ");
+            sb.append(((FormBody) requestBody).encodedValue(i));
+            sb.append("\n");
+        }
+        String body = sb.toString();
+        Request request = new Request.Builder()
+                .url(Api.CREATE_ORDER)
+                .post(requestBody)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response != null && response.isSuccessful()) {
+                String bodyString = response.body().string();
+                return new Gson().fromJson(bodyString, new TypeToken<CreateOrderResult>(){}.getType());
             }
         } catch (IOException e) {
             e.printStackTrace();

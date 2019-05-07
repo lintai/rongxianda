@@ -112,7 +112,7 @@ dependencies {
     implementation 'org.greenrobot:greendao-generator:3.2.2'
     implementation 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
     implementation 'com.android.support:design:26.1.0'
-    implementation ('com.sunmi:SunmiWidgetLib:1.0.1'){
+    implementation('com.sunmi:SunmiWidgetLib:1.0.1') {
         exclude group: 'com.android.support'
         exclude module: 'support-annotations:'
     }

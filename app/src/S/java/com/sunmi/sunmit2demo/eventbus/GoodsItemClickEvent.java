@@ -10,10 +10,12 @@ public class GoodsItemClickEvent {
     public String goodsName;
     public int price;//单位(分)
     public String unit;//计量单位，比如38元/300g 中的/300g
+    public String goodsCode;//商品编码
 
-    public GoodsItemClickEvent(String goodsName, int price, String unit) {
+    public GoodsItemClickEvent(String goodsName, int price, String unit, String goodsCode) {
         this.goodsName = goodsName;
         this.price = price;
         this.unit = unit;
+        this.goodsCode = goodsCode;
     }
 }

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_goods_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="74dp"
+        android:text="总共n件商品"
+        android:textSize="33dp"
+        android:textColor="#333333"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="原价："
+                android:textSize="33dp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/tv_original_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
+                android:text=""
+                android:textSize="33dp"
+                android:textColor="#333333"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="折后："
+                android:textSize="56dp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/tv_discount_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text=""
+                android:textSize="56dp"
+                android:textColor="#333333"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="请选择支付方式："
+                android:textSize="33dp"
+                android:textColor="#333333"/>
+
+            <TextView
+                android:id="@+id/tv_cash_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="现金支付"
+                android:textSize="33dp"
+                android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
+                android:background="@drawable/goods_choose_pay_way_selector"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_member_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="会员卡支付"
+            android:textSize="33dp"
+            android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
+            android:background="@drawable/goods_choose_pay_way_selector"/>
+
+        <TextView
+            android:id="@+id/tv_wx_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="微信支付"
+            android:textSize="33dp"
+            android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
+            android:background="@drawable/goods_choose_pay_way_selector"/>
+
+        <TextView
+            android:id="@+id/tv_ali_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="支付宝支付"
+            android:textSize="33dp"
+            android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
+            android:background="@drawable/goods_choose_pay_way_selector"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="下一步"
+        android:textSize="33dp"
+        android:textColor="#ffffff"
+        android:background="@drawable/goods_choose_pay_way_next_rectangle_bg"/>
+
+</RelativeLayout>

@@ -1,6 +1,8 @@
 package com.sunmi.sunmit2demo.presenter.contact;
 
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
+import com.sunmi.sunmit2demo.modle.MenuItemModule;
+import com.sunmi.sunmit2demo.modle.OrderInfo;
 
 import java.util.List;
 
@@ -13,9 +15,11 @@ public interface HomeClassAndGoodsContact {
 
     public interface View {
         void loadComplete(List<ClassAndGoodsModle> datas);
+        void orderCreateComplete(OrderInfo orderInfo);
     }
 
     public interface Presenter {
         void load();
+        void pay(List<MenuItemModule> goodList, int totalPrice);
     }
 }
