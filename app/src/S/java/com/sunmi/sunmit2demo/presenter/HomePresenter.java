@@ -88,7 +88,13 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                 int size = goodList.size();
                 for (int i = 0; i < size; i++) {
                     MenuItemModule module = goodList.get(i);
-                    GoodsOrderModle orderModle = new GoodsOrderModle(module.getGoodsCode(), String.valueOf(module.getGoodsCount()), module.getPrice());
+                    float price;
+                    if (module.getPriceType() == 2) {
+                        price = module.getPrice() * module.getGoodsCount();
+                    } else {
+                        price = module.getPrice();
+                    }
+                    GoodsOrderModle orderModle = new GoodsOrderModle(module.getGoodsCode(), String.valueOf(module.getGoodsCount()), price);
                     orderModles.add(orderModle);
                 }
                 CreateOrderResult result = ServerManager.createOrder(Util.appId, orderModles, totalPrice);

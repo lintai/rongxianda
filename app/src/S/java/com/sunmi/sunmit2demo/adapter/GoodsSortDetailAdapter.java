@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
 import com.sunmi.sunmit2demo.modle.GoodsInfo;
+import com.sunmi.sunmit2demo.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -60,7 +61,7 @@ public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
         if (!TextUtils.isEmpty(info.getGoodsName())) {
             viewHolder.goodsNameTv.setText(info.getGoodsName());
         }
-        String price = "￥"+ (info.getPrice() * 1.0f / 100) + "/" + info.getWeight() + info.getUnit();
+        String price = "￥"+ (Utils.numberFormat(info.getPrice() * 1.0f / 100)) + "/" + info.getWeight() + info.getUnit();
         if (!TextUtils.isEmpty(price)) {
             viewHolder.goodsPriceTv.setText(price);
         }
@@ -68,7 +69,7 @@ public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post(
-                        new GoodsItemClickEvent(info.getGoodsName(), info.getPrice(), "/"+info.getWeight()+info.getUnit(), info.getGoodsCode()));
+                        new GoodsItemClickEvent(info.getGoodsName(), info.getPrice(), "/"+info.getWeight()+info.getUnit(), info.getGoodsCode(), info.getPriceType()));
             }
         });
     }

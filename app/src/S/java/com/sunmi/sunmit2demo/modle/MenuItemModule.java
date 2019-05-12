@@ -11,6 +11,7 @@ public class MenuItemModule extends BaseModle {
     int price;//单位(分)
     String unit;//计量单位，比如38元/300g 中的 /300g
     String goodsCode;//商品编码
+    int priceType;//价格类型；1-计件 2-称重
 
     int goodsCount;//数量
 
@@ -18,11 +19,12 @@ public class MenuItemModule extends BaseModle {
 
     }
 
-    public MenuItemModule(String goodsName, int price, String unit, String goodsCode) {
+    public MenuItemModule(String goodsName, int price, String unit, String goodsCode, int priceType) {
         this.goodsName = goodsName;
         this.price = price;
         this.unit = unit;
         this.goodsCode = goodsCode;
+        this.priceType = priceType;
     }
 
     public String getGoodsName() {
@@ -63,5 +65,13 @@ public class MenuItemModule extends BaseModle {
 
     public void setGoodsCode(String goodsCode) {
         this.goodsCode = goodsCode;
+    }
+
+    public int getPriceType() {
+        return priceType;
+    }
+
+    public void setPriceType(int priceType) {
+        this.priceType = priceType;
     }
 }

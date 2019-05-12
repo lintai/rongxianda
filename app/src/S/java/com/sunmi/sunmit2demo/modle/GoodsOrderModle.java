@@ -9,9 +9,9 @@ public class GoodsOrderModle extends BaseModle {
 
     String goodsCode;   //商品编码
     String num;         //商品数量/重量，重量用g为单位
-    int price;          //物品单价，单位：分；称重物品视为单件物品
+    float price;          //物品单价，单位：分；称重物品视为单件物品
 
-    public GoodsOrderModle(String goodsCode, String num, int price) {
+    public GoodsOrderModle(String goodsCode, String num, float price) {
         this.goodsCode = goodsCode;
         this.num = num;
         this.price = price;
@@ -33,11 +33,11 @@ public class GoodsOrderModle extends BaseModle {
         this.num = num;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 }

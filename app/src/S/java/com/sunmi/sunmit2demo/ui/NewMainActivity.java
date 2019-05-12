@@ -735,6 +735,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         menuItemModule.setUnit(event.unit);
         menuItemModule.setGoodsCount(1);
         menuItemModule.setGoodsCode(event.goodsCode);
+        menuItemModule.setPriceType(event.priceType);
 
         mMenuAdapter.addGoodsCount(1);
         mMenuAdapter.addGoodsTotalPrice(event.price);
