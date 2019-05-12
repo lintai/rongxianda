@@ -896,7 +896,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             Bundle bundle = new Bundle();
             bundle.putSerializable(ChoosePayWayActivity.ORDER_RESULT, orderInfo);
             bundle.putString(ChoosePayWayActivity.GOODS_COUNT, String.valueOf(mMenuAdapter.getGoodsCount()));
-            bundle.putString(ChoosePayWayActivity.GOODS_ORIGINAL_PRICE, String.valueOf(mMenuAdapter.getGoodsTotalPrice()));
+            bundle.putFloat(ChoosePayWayActivity.GOODS_ORIGINAL_PRICE, mMenuAdapter.getGoodsTotalPrice());
             intent.putExtras(bundle);
             startActivity(intent);
         } else {

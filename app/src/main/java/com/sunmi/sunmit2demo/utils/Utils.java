@@ -7,6 +7,8 @@ package com.sunmi.sunmit2demo.utils;
 
 import com.sunmi.sunmit2demo.R;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -72,5 +74,10 @@ public class Utils {
         } else {
             return str.substring(f, t);
         }
+    }
+
+    public static String numberFormat(float number) {
+        NumberFormat nf = new DecimalFormat("#.##");
+        return nf.format(number);
     }
 }

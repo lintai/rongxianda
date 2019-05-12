@@ -6,6 +6,8 @@ import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.modle.AllClassAndGoodsResult;
 import com.sunmi.sunmit2demo.modle.CreateOrderResult;
 import com.sunmi.sunmit2demo.modle.GoodsOrderModle;
+import com.sunmi.sunmit2demo.modle.PayInfo;
+import com.sunmi.sunmit2demo.modle.Result;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -89,6 +91,50 @@ public class ServerManager {
             if (response != null && response.isSuccessful()) {
                 String bodyString = response.body().string();
                 return new Gson().fromJson(bodyString, new TypeToken<CreateOrderResult>(){}.getType());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Result<PayInfo> pay(String appId, String orderId, int payType, String authcode, int sourcetype) {
+        Map<String, String> params = new HashMap<>();
+        params.put("appid", appId);
+        params.put("orderid", orderId);
+        params.put("paytype", String.valueOf(payType));
+        params.put("authcode", authcode);
+        params.put("sourcetype", String.valueOf(sourcetype));
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("appid", appId)
+                .add("sign", Util.getSignStringBuffer(params))
+                .add("orderid", orderId)
+                .add("paytype", String.valueOf(payType))
+                .add("authcode", authcode)
+                .add("sourcetype", String.valueOf(sourcetype))
+                .build();
+
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < ((FormBody) requestBody).size(); i++) {
+            sb.append(((FormBody) requestBody).encodedName(i));
+            sb.append(" - ");
+            sb.append(((FormBody) requestBody).encodedValue(i));
+            sb.append("\n");
+        }
+        String body = sb.toString();
+
+        Request request = new Request.Builder()
+                .url(Api.PAY)
+                .post(requestBody)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response != null && response.isSuccessful()) {
+                String bodyString = response.body().string();
+                return new Gson().fromJson(bodyString, new TypeToken<Result<PayInfo>>(){}.getType());
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -62,80 +62,84 @@
                 android:layout_marginLeft="20dp"
                 android:text=""
                 android:textSize="56dp"
-                android:textColor="#333333"/>
+                android:textColor="#ff0000"/>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tv_cash_pay"
+                android:layout_toLeftOf="@+id/tv_cash_pay"
                 android:text="请选择支付方式："
                 android:textSize="33dp"
                 android:textColor="#333333"/>
 
             <TextView
                 android:id="@+id/tv_cash_pay"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
                 android:layout_marginLeft="20dp"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
                 android:text="现金支付"
                 android:textSize="33dp"
                 android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
                 android:background="@drawable/goods_choose_pay_way_selector"/>
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_member_pay"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_cash_pay"
+                android:layout_marginTop="18dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:text="会员卡支付"
+                android:textSize="33dp"
+                android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
+                android:background="@drawable/goods_choose_pay_way_selector"/>
 
-        <TextView
-            android:id="@+id/tv_member_pay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="会员卡支付"
-            android:textSize="33dp"
-            android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
-            android:background="@drawable/goods_choose_pay_way_selector"/>
+            <TextView
+                android:id="@+id/tv_wx_pay"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_member_pay"
+                android:layout_marginTop="18dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:text="微信支付"
+                android:textSize="33dp"
+                android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
+                android:background="@drawable/goods_choose_pay_way_selector"/>
 
-        <TextView
-            android:id="@+id/tv_wx_pay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="微信支付"
-            android:textSize="33dp"
-            android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
-            android:background="@drawable/goods_choose_pay_way_selector"/>
+            <TextView
+                android:id="@+id/tv_ali_pay"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_wx_pay"
+                android:layout_marginTop="18dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:text="支付宝支付"
+                android:textSize="33dp"
+                android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
+                android:background="@drawable/goods_choose_pay_way_selector"/>
 
-        <TextView
-            android:id="@+id/tv_ali_pay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="支付宝支付"
-            android:textSize="33dp"
-            android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
-            android:background="@drawable/goods_choose_pay_way_selector"/>
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -145,6 +149,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
         android:paddingTop="10dp"
