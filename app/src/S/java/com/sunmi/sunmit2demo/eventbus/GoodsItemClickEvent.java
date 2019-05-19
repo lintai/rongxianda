@@ -10,7 +10,7 @@ public class GoodsItemClickEvent {
     public String goodsName;
     public int price;//单位(分)
     public String unit;//计量单位，比如38元/300g 中的/300g
-    public String goodsCode;//商品编码
+    public String goodsCode;//商品编码，称重物品则是plu吗
     public int priceType;//价格类型；1-计件 2-称重
 
     public GoodsItemClickEvent(String goodsName, int price, String unit, String goodsCode, int priceType) {

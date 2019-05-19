@@ -1,5 +1,6 @@
 package com.sunmi.sunmit2demo.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.sunmi.sunmit2demo.Constants;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
 import com.sunmi.sunmit2demo.modle.GoodsInfo;
@@ -26,10 +29,12 @@ import java.util.List;
  */
 public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
 
+    Context context;
     List<GoodsInfo> datas;
 
-    public GoodsSortDetailAdapter(List<GoodsInfo> datas) {
+    public GoodsSortDetailAdapter(Context context, List<GoodsInfo> datas) {
         this.datas = datas;
+        this.context = context;
     }
 
     public void setData(List<GoodsInfo> datas) {
@@ -68,8 +73,12 @@ public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(
-                        new GoodsItemClickEvent(info.getGoodsName(), info.getPrice(), "/"+info.getWeight()+info.getUnit(), info.getGoodsCode(), info.getPriceType()));
+                if (info.getPriceType() == Constants.WEIGHT_PRICE_TYPE) {
+                    Toast.makeText(context, "称重商品只能通过扫描商品条形码才能加入已购列表", Toast.LENGTH_SHORT).show();
+                } else {
+                    EventBus.getDefault().post(
+                            new GoodsItemClickEvent(info.getGoodsName(), info.getPrice(), "/"+info.getWeight()+info.getUnit(), info.getGoodsCode(), info.getPriceType()));
+                }
             }
         });
     }

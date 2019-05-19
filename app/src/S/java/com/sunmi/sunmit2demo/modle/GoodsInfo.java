@@ -14,7 +14,7 @@ public class GoodsInfo extends BaseModle{
     private int price;          //价格(分)
     private int weight;         //商品规格
     private int num;            //库存
-    private int priceType;      //价格类型：1-几件 2-称重
+    private int priceType;      //价格类型：1-计件 2-称重
     private String unit;        //规格单位：g或者ml，与weight组成类似300g或者300ml作为完整规格描述
     private int plu;            //plu吗，用于对接条码秤
     private String faceImg;     //商品封面图片

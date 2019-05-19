@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sunmi.sunmit2demo.Constants;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.modle.MenuItemModule;
 
@@ -91,40 +92,47 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
             menuViewHolder.mGoodsCountTv.setText(String.valueOf(module.getGoodsCount()));
             menuViewHolder.mGoodsTotalPrice.setText("￥"+(module.getPrice() * module.getGoodsCount() * 1.0 / 100));
 
-            menuViewHolder.mAddGoodsIv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goodsCount++;
-                    goodsTotalPrice += module.getPrice();
-                    module.setGoodsCount(module.getGoodsCount() + 1);
-                    notifyItemChanged(position);
-                    if (changeListener != null) {
-                        changeListener.change(CHANGE_TYPE_ADD, module.getPrice());
-                    }
-                }
-            });
-            menuViewHolder.mdeleaseGoodsIv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (module.getGoodsCount() <= 0) return;
-                    if (goodsCount > 0) {
-                        goodsCount--;
-                    }
-                    goodsTotalPrice -= module.getPrice();
-                    goodsTotalPrice = goodsTotalPrice < 0 ? 0 : goodsTotalPrice;
-
-                    module.setGoodsCount(module.getGoodsCount() - 1);
-                    if (module.getGoodsCount() == 0) {
-                        datas.remove(position);
-                        notifyDataSetChanged();
-                    } else {
+            //称重的商品无法通过“+”或“-”来增减商品数量
+            if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
+                menuViewHolder.mAddGoodsIv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goodsCount++;
+                        goodsTotalPrice += module.getPrice();
+                        module.setGoodsCount(module.getGoodsCount() + 1);
                         notifyItemChanged(position);
+                        if (changeListener != null) {
+                            changeListener.change(CHANGE_TYPE_ADD, module.getPrice());
+                        }
                     }
-                    if (changeListener != null) {
-                        changeListener.change(CHANGE_TYPE_DELEASE, module.getPrice());
+                });
+            }
+
+            if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
+                menuViewHolder.mdeleaseGoodsIv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (module.getGoodsCount() <= 0) return;
+                        if (goodsCount > 0) {
+                            goodsCount--;
+                        }
+                        goodsTotalPrice -= module.getPrice();
+                        goodsTotalPrice = goodsTotalPrice < 0 ? 0 : goodsTotalPrice;
+
+                        module.setGoodsCount(module.getGoodsCount() - 1);
+                        if (module.getGoodsCount() == 0) {
+                            datas.remove(position);
+                            notifyDataSetChanged();
+                        } else {
+                            notifyItemChanged(position);
+                        }
+                        if (changeListener != null) {
+                            changeListener.change(CHANGE_TYPE_DELEASE, module.getPrice());
+                        }
                     }
-                }
-            });
+                });
+            }
+
             menuViewHolder.mDeleteIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

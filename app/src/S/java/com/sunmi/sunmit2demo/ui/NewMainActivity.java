@@ -37,8 +37,11 @@ import com.sunmi.peripheral.printer.InnerPrinterManager;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.sunmi.sunmit2demo.BaseActivity;
 import com.sunmi.sunmit2demo.BasePresentationHelper;
+import com.sunmi.sunmit2demo.Constants;
 import com.sunmi.sunmit2demo.MyApplication;
+import com.sunmi.sunmit2demo.PreferenceUtil;
 import com.sunmi.sunmit2demo.R;
+import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.adapter.GoodsAdapter;
 import com.sunmi.sunmit2demo.adapter.GoodsSortAdapter;
 import com.sunmi.sunmit2demo.adapter.HomeGoodsViewPagerAdapter;
@@ -535,6 +538,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 resetViewData(currPage + 1);
                 break;
             case R.id.tv_scan_data_confirm:
+//                addGoods("2002794016551");
                 if (inputEt == null && TextUtils.isEmpty(inputEt.getText())) {
                     Toast.makeText(this, "输入内容不能为空", Toast.LENGTH_SHORT).show();
                 }
@@ -672,7 +676,29 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         GoodsInfo goodsInfo = allGoodsInfo.get(code);
         if (goodsInfo == null) {
-            Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
+            String[] datas = Util.getGoodsPluCodeAndPrice(code);
+            if (datas != null) {
+                //称重物品
+                String plu = datas[0];
+                GoodsInfo pluGoodsInfo = allGoodsInfo.get(plu);
+                if (pluGoodsInfo == null) {
+                    Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int price = pluGoodsInfo.getPrice();
+                try {
+                    price = Integer.parseInt(datas[1]);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                goodsItemClickEvent(new GoodsItemClickEvent(pluGoodsInfo.getGoodsName(), price, pluGoodsInfo.getUnit(), String.valueOf(pluGoodsInfo.getPlu()), pluGoodsInfo.getPriceType()));
+            } else if (!TextUtils.isEmpty(code)
+                        && !TextUtils.isEmpty(PreferenceUtil.getInstance(this).getString(PreferenceUtil.KEY.PAYING_TYPE, ""))) {
+                //在支付中。。。
+
+            } else {
+                Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
+            }
         } else {
             goodsItemClickEvent(new GoodsItemClickEvent(goodsInfo.getGoodsName(), goodsInfo.getPrice(), goodsInfo.getUnit(), goodsInfo.getGoodsCode(), goodsInfo.getPriceType()));
         }
@@ -809,7 +835,11 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         mMenuAdapter.addGoodsTotalPrice(event.price);
 
         List<MenuItemModule> modules = mMenuAdapter.getDatas();
-        if (modules.size() > 0) {
+        if (event.priceType == Constants.WEIGHT_PRICE_TYPE) {
+            //称重类型商品直接添加
+            modules.add(0, menuItemModule);
+            mMenuAdapter.notifyDataSetChanged();
+        } else if (modules.size() > 0) {
             int size = modules.size();
             boolean hasThisGood = false;
             for (int i = 0; i < size; i++) {
@@ -955,7 +985,12 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 List<GoodsInfo> goodsList = datas.get(i).getGoodsList();
                 for (int j = 0; j < goodsList.size(); j++) {
                     GoodsInfo goodsInfo = goodsList.get(j);
-                    allGoodsInfo.put(goodsInfo.getGoodsCode(), goodsInfo);
+                    if (goodsInfo.getPriceType() == 1) {
+                        allGoodsInfo.put(goodsInfo.getGoodsCode(), goodsInfo);
+                    } else {
+                        //称重商品已plu码为key
+                        allGoodsInfo.put(String.valueOf(goodsInfo.getPlu()), goodsInfo);
+                    }
                 }
             }
 
