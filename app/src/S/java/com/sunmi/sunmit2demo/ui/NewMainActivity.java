@@ -525,6 +525,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 if (mMenuAdapter.getDatas().size() == 0) {
                     Toast.makeText(this, "请添加商品", Toast.LENGTH_SHORT).show();
                 }
+                System.out.print("");
                 if (mPresenter != null) {
                     mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
                 }
