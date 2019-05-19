@@ -98,7 +98,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private TextView mGoodsCountTv, mGoodsDiscountTv, mGoodsTotalPriceTv, mPayTv, mScanDataConfirmTv;
     private TextView mPrePageTv, mNextPageTv;
 
-    private EditText inputEt;
+//    private EditText inputEt;
 
     private HomeMenuAdapter mMenuAdapter;
     private GoodsSortAdapter mGoodsSortAdapter;
@@ -302,28 +302,28 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         mPrePageTv = findViewById(R.id.tv_pre_page);
         mNextPageTv = findViewById(R.id.tv_next_page);
         mPayTv = findViewById(R.id.tv_pay);
-        mScanDataConfirmTv = findViewById(R.id.tv_scan_data_confirm);
-
-        inputEt = findViewById(R.id.et_scan_data);
-        inputEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String data = inputEt.getText().toString();
-                if (!s.toString().equals(data)) {
-                    inputEt.setText(s.toString());
-                }
-            }
-        });
+//        mScanDataConfirmTv = findViewById(R.id.tv_scan_data_confirm);
+//
+//        inputEt = findViewById(R.id.et_scan_data);
+//        inputEt.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                String data = inputEt.getText().toString();
+//                if (!s.toString().equals(data)) {
+//                    inputEt.setText(s.toString());
+//                }
+//            }
+//        });
 
         mPayTv.setOnClickListener(this);
         mPrePageTv.setOnClickListener(this);
@@ -537,20 +537,20 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_next_page:
                 resetViewData(currPage + 1);
                 break;
-            case R.id.tv_scan_data_confirm:
+//            case R.id.tv_scan_data_confirm:
 //                addGoods("2002794016551");
-                if (inputEt == null && TextUtils.isEmpty(inputEt.getText())) {
-                    Toast.makeText(this, "输入内容不能为空", Toast.LENGTH_SHORT).show();
-                }
-                authoData = inputEt.getText().toString();
-                if (mMenuAdapter.getDatas().size() == 0) {
-                    Toast.makeText(this, "请添加商品", Toast.LENGTH_SHORT).show();
-                }
-                System.out.print("");
-                if (mPresenter != null) {
-                    mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
-                }
-                break;
+//                if (inputEt == null && TextUtils.isEmpty(inputEt.getText())) {
+//                    Toast.makeText(this, "输入内容不能为空", Toast.LENGTH_SHORT).show();
+//                }
+//                authoData = inputEt.getText().toString();
+//                if (mMenuAdapter.getDatas().size() == 0) {
+//                    Toast.makeText(this, "请添加商品", Toast.LENGTH_SHORT).show();
+//                }
+//                System.out.print("");
+//                if (mPresenter != null) {
+//                    mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
+//                }
+//                break;
 
             default:
                 break;
@@ -672,7 +672,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private void addGoods(String code) {
         code = code.replaceAll("[^0-9a-zA-Z]", "");
         Log.e(TAG, "扫码===" + code + "   " + GoodsCode.getInstance().getGood().containsKey(code));
-        inputEt.setText(sb.toString());
+//        inputEt.setText(sb.toString());
 
         GoodsInfo goodsInfo = allGoodsInfo.get(code);
         if (goodsInfo == null) {
