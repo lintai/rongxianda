@@ -986,24 +986,26 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         if (totalDatas <= 0 || page * DEFAULT_PAGE_SIZE >= totalDatas) {
             //没有该页对应的数据
             Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT).show();
-            mNextPageTv.setEnabled(false);
+//            mNextPageTv.setEnabled(false);
             currPage = page - 1;
             return;
         } else {
             currPage = page;
             if ((page + 1) * DEFAULT_PAGE_SIZE >= totalDatas) {
-                mNextPageTv.setEnabled(false);
+//                mNextPageTv.setEnabled(false);
             } else {
-                mNextPageTv.setEnabled(true);
+//                mNextPageTv.setEnabled(true);
             }
         }
 
-        if (page <= 0) {
+        if (page < 0) {
             this.currPage = 0;
-            mPrePageTv.setEnabled(false);
+            Toast.makeText(this, "已经是第一页了", Toast.LENGTH_SHORT).show();
+//            mPrePageTv.setEnabled(false);
+            return;
         } else {
             currPage = page;
-            mPrePageTv.setEnabled(true);
+//            mPrePageTv.setEnabled(true);
         }
 
         int fromIndex = page * DEFAULT_PAGE_SIZE;
