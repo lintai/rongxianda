@@ -3,7 +3,7 @@ package com.sunmi.sunmit2demo.adapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.sunmi.sunmit2demo.fragment.HomeGoodsSortFragment;
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
@@ -15,7 +15,7 @@ import java.util.List;
  * date   : 2019/5/2  2:18 PM
  * desc   :
  */
-public class HomeGoodsViewPagerAdapter extends FragmentPagerAdapter {
+public class HomeGoodsViewPagerAdapter extends FragmentStatePagerAdapter {
 
     List<ClassAndGoodsModle> datas;
 

@@ -52,6 +52,7 @@ import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
 import com.sunmi.sunmit2demo.eventbus.UpdateUnLockUserEvent;
 import com.sunmi.sunmit2demo.fragment.GoodsManagerFragment;
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
+import com.sunmi.sunmit2demo.modle.GoodsInfo;
 import com.sunmi.sunmit2demo.modle.GoodsSortTagModle;
 import com.sunmi.sunmit2demo.modle.MenuItemModule;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
@@ -80,8 +81,10 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class NewMainActivity extends BaseActivity implements View.OnClickListener, HomeClassAndGoodsContact.View, HomeMenuAdapter.GoodsCountChangeListener {
 
@@ -103,6 +106,11 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private GoodsAdapter snackAdapter;
     private GoodsAdapter vegetableAdapter;
     private GoodsAdapter othersAdapter;
+
+    //保存所有 商品信息
+    private Map<String, GoodsInfo> allGoodsInfo;
+    //保存所有 商品信息，结构跟allGoodsInfo不一样
+    private List<ClassAndGoodsModle> classAndGoodsModles;
 
     private List<GvBeans> mDrinksBean;
     private List<GvBeans> mFruitsBean;
@@ -140,6 +148,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     //测试代码
     private String authoData;
+
+    private int currPage;
+    private int totalDatas;
+    private final int DEFAULT_PAGE_SIZE = 6;
 
 
     @Override
@@ -389,7 +401,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initViewPager(List<ClassAndGoodsModle> datas) {
+        if (datas == null || datas.size() == 0) return;
+
         mHomeGoodsViewPagerAdapter = new HomeGoodsViewPagerAdapter(getSupportFragmentManager(), datas);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mHomeGoodsViewPagerAdapter);
         mViewPager.setCurrentItem(0);
     }
@@ -514,8 +529,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.tv_pre_page:
+                resetViewData(currPage - 1);
                 break;
             case R.id.tv_next_page:
+                resetViewData(currPage + 1);
                 break;
             case R.id.tv_scan_data_confirm:
                 if (inputEt == null && TextUtils.isEmpty(inputEt.getText())) {
@@ -635,11 +652,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                             if (payDialog.isVisible()) {
                                 Log.e(TAG, "支付中");
                             } else {
-                                addDrink(sb.toString());
+                                addGoods(sb.toString());
                             }
                             sb.setLength(0);
                         }
-                        inputEt.setText(sb.toString());
                     }
                 }, 200);
                 return true;
@@ -649,10 +665,17 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         return super.dispatchKeyEvent(event);
     }
 
-    private void addDrink(String code) {
+    private void addGoods(String code) {
         code = code.replaceAll("[^0-9a-zA-Z]", "");
         Log.e(TAG, "扫码===" + code + "   " + GoodsCode.getInstance().getGood().containsKey(code));
+        inputEt.setText(sb.toString());
 
+        GoodsInfo goodsInfo = allGoodsInfo.get(code);
+        if (goodsInfo == null) {
+            Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
+        } else {
+            goodsItemClickEvent(new GoodsItemClickEvent(goodsInfo.getGoodsName(), goodsInfo.getPrice(), goodsInfo.getUnit(), goodsInfo.getGoodsCode(), goodsInfo.getPriceType()));
+        }
     }
 
     private void checkScaleGoods(int position, int type) {
@@ -772,7 +795,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void GoodsItemClickEvent(GoodsItemClickEvent event) {
+    public void goodsItemClickEvent(GoodsItemClickEvent event) {
         //加入购物清单
         MenuItemModule menuItemModule = new MenuItemModule();
         menuItemModule.setGoodsName(event.goodsName);
@@ -922,17 +945,79 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void loadComplete(List<ClassAndGoodsModle> datas) {
         if (datas != null && datas.size() > 0) {
-            List<GoodsSortTagModle> tags = mGoodsSortAdapter.getDatas();
-            int size = datas.size();
-            for (int i = 0; i < size; i++) {
-                ClassAndGoodsModle modle = datas.get(i);
-                if (modle != null && !TextUtils.isEmpty(modle.getClassName())) {
-                    tags.add(new GoodsSortTagModle(modle.getClassId(), modle.getClassName()));
+            //保存所有商品信息
+            if (allGoodsInfo == null) {
+                allGoodsInfo = new HashMap<>();
+            } else {
+                allGoodsInfo.clear();
+            }
+            for (int i = 0; i < datas.size(); i++) {
+                List<GoodsInfo> goodsList = datas.get(i).getGoodsList();
+                for (int j = 0; j < goodsList.size(); j++) {
+                    GoodsInfo goodsInfo = goodsList.get(j);
+                    allGoodsInfo.put(goodsInfo.getGoodsCode(), goodsInfo);
                 }
             }
-            mGoodsSortAdapter.notifyDataSetChanged();
-            initViewPager(datas);
+
+            if (classAndGoodsModles == null) {
+                classAndGoodsModles = new ArrayList<>();
+            } else {
+                classAndGoodsModles.clear();
+            }
+
+            for (int i = 0; i < datas.size(); i++) {
+                ClassAndGoodsModle classAndGoodsModle = datas.get(i);
+                if (classAndGoodsModle != null && classAndGoodsModle.getGoodsList() != null && classAndGoodsModle.getGoodsList().size() > 0) {
+                    classAndGoodsModles.add(classAndGoodsModle);
+                }
+            }
+
+            currPage = 0;
+            totalDatas = classAndGoodsModles.size();
+            resetViewData(0);
         }
+    }
+
+    //选择 商品分类的分页数据
+    private void resetViewData(int page) {
+        List<GoodsSortTagModle> tags = mGoodsSortAdapter.getDatas();
+        tags.clear();
+
+        if (totalDatas <= 0 || page * DEFAULT_PAGE_SIZE >= totalDatas) {
+            //没有该页对应的数据
+            Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT).show();
+            mNextPageTv.setEnabled(false);
+            currPage = page - 1;
+            return;
+        } else {
+            currPage = page;
+            if ((page + 1) * DEFAULT_PAGE_SIZE >= totalDatas) {
+                mNextPageTv.setEnabled(false);
+            } else {
+                mNextPageTv.setEnabled(true);
+            }
+        }
+
+        if (page <= 0) {
+            this.currPage = 0;
+            mPrePageTv.setEnabled(false);
+        } else {
+            currPage = page;
+            mPrePageTv.setEnabled(true);
+        }
+
+        int fromIndex = page * DEFAULT_PAGE_SIZE;
+        int toIndex = (page + 1) * DEFAULT_PAGE_SIZE > totalDatas  ? totalDatas : (page + 1) * DEFAULT_PAGE_SIZE;
+        List<ClassAndGoodsModle> modles = classAndGoodsModles.subList(fromIndex, toIndex);
+        for (int i = 0; i < modles.size(); i++) {
+            ClassAndGoodsModle modle = modles.get(i);
+            if (modle != null && !TextUtils.isEmpty(modle.getClassName())) {
+                tags.add(new GoodsSortTagModle(modle.getClassId(), modle.getClassName()));
+            }
+        }
+        mGoodsSortAdapter.notifyDataSetChanged();
+
+        initViewPager(modles);
     }
 
     @Override
