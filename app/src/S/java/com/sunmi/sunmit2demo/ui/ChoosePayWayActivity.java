@@ -1,9 +1,11 @@
 package com.sunmi.sunmit2demo.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
@@ -23,12 +25,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ChoosePayWayActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String ORDER_RESULT = "order_result";
-    public static final String GOODS_COUNT = "goods_count";
-    public static final String GOODS_ORIGINAL_PRICE = "goods_original_price";
-
-    public static final String GOODS_AUTHO_DATA = "goods_autho_data";
-
     private TextView goodsCountTv, goodsPriceTv, goodsDiscountTv;
     private TextView cashPayTv, memberPayTv, wxPayTv, aliPayTv;
     private TextView nextTv;
@@ -39,6 +35,8 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
     private OrderInfo orderInfo;
 
     private String authoData;
+    private String goodsCount;
+    private float goodsOriginalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +70,10 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
     private void initData() {
         Bundle bundle = getIntent().getExtras();
         try {
-            authoData = bundle.getString(GOODS_AUTHO_DATA);
-            orderInfo = (OrderInfo) bundle.getSerializable(ORDER_RESULT);
-            String goodsCount = bundle.getString(GOODS_COUNT);
-            float goodsOriginalPrice = bundle.getFloat(GOODS_ORIGINAL_PRICE);
+            authoData = bundle.getString(PayingActivity.GOODS_AUTHO_DATA);
+            orderInfo = (OrderInfo) bundle.getSerializable(PayingActivity.ORDER_RESULT);
+            goodsCount = bundle.getString(PayingActivity.GOODS_COUNT);
+            goodsOriginalPrice = bundle.getFloat(PayingActivity.GOODS_ORIGINAL_PRICE);
 
 
             goodsCountTv.setText("总共"+goodsCount+"商品");
@@ -114,46 +112,21 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
                 payType = 2;
                 break;
             case R.id.tv_next:
-                pay();
+                if (orderInfo != null) {
+                    Intent intent = new Intent(this, PayingActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(PayingActivity.ORDER_RESULT, orderInfo);
+                    bundle.putString(PayingActivity.GOODS_COUNT, String.valueOf(goodsCount));
+                    bundle.putFloat(PayingActivity.GOODS_ORIGINAL_PRICE, goodsOriginalPrice);
+                    bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
+                    bundle.putInt(PayingActivity.GOODS_PAY_TYPE, payType);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "订单生成失败，请稍后再试", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
-    }
-
-    private void pay() {
-        Observable.create(new ObservableOnSubscribe<PayInfo>() {
-            @Override
-            public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
-                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, authoData,  2);
-                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
-                    e.onNext(result.getResult());
-                } else {
-                    e.onError(new Throwable());
-                }
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new Observer<PayInfo>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(PayInfo value) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
     private void cancelLastViewFocus(View view) {

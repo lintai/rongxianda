@@ -52,6 +52,7 @@ import com.sunmi.sunmit2demo.bean.MenusBean;
 import com.sunmi.sunmit2demo.decoration.GoodsSortGridSpacingItemDecoration;
 import com.sunmi.sunmit2demo.dialog.PayDialog;
 import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
+import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
 import com.sunmi.sunmit2demo.eventbus.UpdateUnLockUserEvent;
 import com.sunmi.sunmit2demo.fragment.GoodsManagerFragment;
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
@@ -318,17 +319,14 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 //
 //            @Override
 //            public void afterTextChanged(Editable s) {
-//                String data = inputEt.getText().toString();
-//                if (!s.toString().equals(data)) {
-//                    inputEt.setText(s.toString());
-//                }
+//
 //            }
 //        });
 
         mPayTv.setOnClickListener(this);
         mPrePageTv.setOnClickListener(this);
         mNextPageTv.setOnClickListener(this);
-        mScanDataConfirmTv.setOnClickListener(this);
+//        mScanDataConfirmTv.setOnClickListener(this);
 
         this.myHandler.postDelayed(new Runnable() {
             public void run() {
@@ -677,7 +675,11 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         GoodsInfo goodsInfo = allGoodsInfo.get(code);
         if (goodsInfo == null) {
             String[] datas = Util.getGoodsPluCodeAndPrice(code);
-            if (datas != null) {
+            if (!TextUtils.isEmpty(code)
+                    && !TextUtils.isEmpty(PreferenceUtil.getString(this,PreferenceUtil.KEY.PAYING_TYPE, ""))) {
+                //在支付中。。。
+                EventBus.getDefault().post(new PayCodeEvent(code));
+            } else if (datas != null) {
                 //称重物品
                 String plu = datas[0];
                 GoodsInfo pluGoodsInfo = allGoodsInfo.get(plu);
@@ -692,10 +694,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     e.printStackTrace();
                 }
                 goodsItemClickEvent(new GoodsItemClickEvent(pluGoodsInfo.getGoodsName(), price, pluGoodsInfo.getUnit(), String.valueOf(pluGoodsInfo.getPlu()), pluGoodsInfo.getPriceType()));
-            } else if (!TextUtils.isEmpty(code)
-                        && !TextUtils.isEmpty(PreferenceUtil.getInstance(this).getString(PreferenceUtil.KEY.PAYING_TYPE, ""))) {
-                //在支付中。。。
-
             } else {
                 Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
             }
@@ -1062,10 +1060,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         if (orderInfo != null) {
             Intent intent = new Intent(this, ChoosePayWayActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(ChoosePayWayActivity.ORDER_RESULT, orderInfo);
-            bundle.putString(ChoosePayWayActivity.GOODS_COUNT, String.valueOf(mMenuAdapter.getGoodsCount()));
-            bundle.putFloat(ChoosePayWayActivity.GOODS_ORIGINAL_PRICE, mMenuAdapter.getGoodsTotalPrice());
-            bundle.putString(ChoosePayWayActivity.GOODS_AUTHO_DATA, authoData);
+            bundle.putSerializable(PayingActivity.ORDER_RESULT, orderInfo);
+            bundle.putString(PayingActivity.GOODS_COUNT, String.valueOf(mMenuAdapter.getGoodsCount()));
+            bundle.putFloat(PayingActivity.GOODS_ORIGINAL_PRICE, mMenuAdapter.getGoodsTotalPrice());
+            bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
             intent.putExtras(bundle);
             startActivity(intent);
         } else {

@@ -24,13 +24,13 @@ public class PreferenceUtil {
         String PAYING_TYPE = "paying_type";
     }
 
-    public void putString(Context context, String key, String value) {
+    public static void putString(Context context, String key, String value) {
         SharedPreferences.Editor editor = getInstance(context).edit();
         editor.putString(key,value);
         editor.apply();
     }
 
-    public String getString(Context context, String key, String defValue) {
+    public static String getString(Context context, String key, String defValue) {
         String data = getInstance(context).getString(key, defValue);
         return data;
     }
