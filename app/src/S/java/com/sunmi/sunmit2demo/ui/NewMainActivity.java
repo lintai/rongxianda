@@ -16,7 +16,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -24,6 +26,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,8 +89,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 //    private TextView tv_user_lock;
     private RecyclerView mMenuRecyclerVeiew, mGoodsSortRecyclerView;
     private ViewPager mViewPager;
-    private TextView mGoodsCountTv, mGoodsDiscountTv, mGoodsTotalPriceTv, mPayTv;
+    private TextView mGoodsCountTv, mGoodsDiscountTv, mGoodsTotalPriceTv, mPayTv, mScanDataConfirmTv;
     private TextView mPrePageTv, mNextPageTv;
+
+    private EditText inputEt;
 
     private HomeMenuAdapter mMenuAdapter;
     private GoodsSortAdapter mGoodsSortAdapter;
@@ -132,6 +137,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     Input2Dialog mInputDialog;
 
     private HomePresenter mPresenter;
+
+    //测试代码
+    private String authoData;
 
 
     @Override
@@ -279,10 +287,33 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         mPrePageTv = findViewById(R.id.tv_pre_page);
         mNextPageTv = findViewById(R.id.tv_next_page);
         mPayTv = findViewById(R.id.tv_pay);
+        mScanDataConfirmTv = findViewById(R.id.tv_scan_data_confirm);
+
+        inputEt = findViewById(R.id.et_scan_data);
+        inputEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String data = inputEt.getText().toString();
+                if (!s.toString().equals(data)) {
+                    inputEt.setText(s.toString());
+                }
+            }
+        });
 
         mPayTv.setOnClickListener(this);
         mPrePageTv.setOnClickListener(this);
         mNextPageTv.setOnClickListener(this);
+        mScanDataConfirmTv.setOnClickListener(this);
 
         this.myHandler.postDelayed(new Runnable() {
             public void run() {
@@ -486,6 +517,18 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_next_page:
                 break;
+            case R.id.tv_scan_data_confirm:
+                if (inputEt == null && TextUtils.isEmpty(inputEt.getText())) {
+                    Toast.makeText(this, "输入内容不能为空", Toast.LENGTH_SHORT).show();
+                }
+                authoData = inputEt.getText().toString();
+                if (mMenuAdapter.getDatas().size() == 0) {
+                    Toast.makeText(this, "请添加商品", Toast.LENGTH_SHORT).show();
+                }
+                if (mPresenter != null) {
+                    mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
+                }
+                break;
 
             default:
                 break;
@@ -595,6 +638,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                             }
                             sb.setLength(0);
                         }
+                        inputEt.setText(sb.toString());
                     }
                 }, 200);
                 return true;
@@ -898,6 +942,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             bundle.putSerializable(ChoosePayWayActivity.ORDER_RESULT, orderInfo);
             bundle.putString(ChoosePayWayActivity.GOODS_COUNT, String.valueOf(mMenuAdapter.getGoodsCount()));
             bundle.putFloat(ChoosePayWayActivity.GOODS_ORIGINAL_PRICE, mMenuAdapter.getGoodsTotalPrice());
+            bundle.putString(ChoosePayWayActivity.GOODS_AUTHO_DATA, authoData);
             intent.putExtras(bundle);
             startActivity(intent);
         } else {

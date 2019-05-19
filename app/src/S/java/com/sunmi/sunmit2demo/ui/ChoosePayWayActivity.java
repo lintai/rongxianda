@@ -27,6 +27,8 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
     public static final String GOODS_COUNT = "goods_count";
     public static final String GOODS_ORIGINAL_PRICE = "goods_original_price";
 
+    public static final String GOODS_AUTHO_DATA = "goods_autho_data";
+
     private TextView goodsCountTv, goodsPriceTv, goodsDiscountTv;
     private TextView cashPayTv, memberPayTv, wxPayTv, aliPayTv;
     private TextView nextTv;
@@ -35,6 +37,8 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
 
     private int payType;
     private OrderInfo orderInfo;
+
+    private String authoData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
     private void initData() {
         Bundle bundle = getIntent().getExtras();
         try {
+            authoData = bundle.getString(GOODS_AUTHO_DATA);
             orderInfo = (OrderInfo) bundle.getSerializable(ORDER_RESULT);
             String goodsCount = bundle.getString(GOODS_COUNT);
             float goodsOriginalPrice = bundle.getFloat(GOODS_ORIGINAL_PRICE);
@@ -118,7 +123,7 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
         Observable.create(new ObservableOnSubscribe<PayInfo>() {
             @Override
             public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
-                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, "",  2);
+                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, authoData,  2);
                 if (result != null && result.getErrno() == 0 && result.getResult() != null) {
                     e.onNext(result.getResult());
                 } else {
