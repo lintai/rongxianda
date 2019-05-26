@@ -172,7 +172,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         int width = dm.widthPixels;// 屏幕宽度
         int height = dm.heightPixels;// 屏幕宽度
         Log.e("@@@", dm.densityDpi + "  " + dm.density);
-        Toast.makeText(this, dm.densityDpi + "  " + dm.density, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, dm.densityDpi + "  " + dm.density, Toast.LENGTH_LONG).show();
         isVertical = height > width;
 
         isK1 = MyApplication.getInstance().isHaveCamera() && isVertical;
@@ -622,6 +622,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     public boolean dispatchKeyEvent(KeyEvent event) {
         int action = event.getAction();
         Log.e("action",action + "");
+        printerPresenter.print(goods_data, 0);
         switch (action) {
             case KeyEvent.ACTION_DOWN:
                 int unicodeChar = event.getUnicodeChar();
