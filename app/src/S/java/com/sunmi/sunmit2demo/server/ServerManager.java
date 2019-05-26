@@ -6,6 +6,7 @@ import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.modle.AllClassAndGoodsResult;
 import com.sunmi.sunmit2demo.modle.CreateOrderResult;
 import com.sunmi.sunmit2demo.modle.GoodsOrderModle;
+import com.sunmi.sunmit2demo.modle.PayCheckInfo;
 import com.sunmi.sunmit2demo.modle.PayInfo;
 import com.sunmi.sunmit2demo.modle.Result;
 
@@ -135,6 +136,44 @@ public class ServerManager {
             if (response != null && response.isSuccessful()) {
                 String bodyString = response.body().string();
                 return new Gson().fromJson(bodyString, new TypeToken<Result<PayInfo>>(){}.getType());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Result<PayCheckInfo> payStatusCheck(String appId, String orderId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("appid", appId);
+        params.put("orderid", orderId);
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("appid", appId)
+                .add("sign", Util.getSignStringBuffer(params))
+                .add("orderid", orderId)
+                .build();
+
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < ((FormBody) requestBody).size(); i++) {
+            sb.append(((FormBody) requestBody).encodedName(i));
+            sb.append(" - ");
+            sb.append(((FormBody) requestBody).encodedValue(i));
+            sb.append("\n");
+        }
+        String body = sb.toString();
+
+        Request request = new Request.Builder()
+                .url(Api.PAY_CHECK)
+                .post(requestBody)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response != null && response.isSuccessful()) {
+                String bodyString = response.body().string();
+                return new Gson().fromJson(bodyString, new TypeToken<Result<PayCheckInfo>>(){}.getType());
             }
         } catch (IOException e) {
             e.printStackTrace();

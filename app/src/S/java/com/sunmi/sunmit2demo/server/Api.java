@@ -7,9 +7,13 @@ package com.sunmi.sunmit2demo.server;
  */
 public interface Api {
 
-    String HOME_CLASS_GOODS_LIST = "http://47.92.54.128:9801/GoodsInfo/GoodsInfo/getClassGoodsList";
+    String HOST = "http://47.92.54.128:9801";
 
-    String CREATE_ORDER = "http://47.92.54.128:9801/Order/Order/createOrderFromMc";
+    String HOME_CLASS_GOODS_LIST = HOST + "/GoodsInfo/GoodsInfo/getClassGoodsList";
 
-    String PAY = "http://47.92.54.128:9801/Order/Order/Pay";
+    String CREATE_ORDER = HOST + "/Order/Order/createOrderFromMc";
+
+    String PAY = HOST + "/Order/Order/Pay";
+
+    String PAY_CHECK = HOST + "/Order/Order/payCheck";
 }
