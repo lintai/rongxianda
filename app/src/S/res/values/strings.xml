@@ -1,3 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="goods_single_price">1%$s</string>
+
+    <string name="str_enter_print_counts">Please enter the number of Prints:</string>
+    <string name="str_choice_printer_command">Please select the correct printer instructions</string>
+    <string name="str_printer_conn_normal">Printer connected normal</string>
+    <string name="str_printer_out_of_paper">Printer out of paper</string>
+    <string name="str_printer_open_cover">Printer open cover</string>
+    <string name="str_printer_error">Printer error</string>
+    <string name="str_state">State: </string>
+    <string name="str_interface_undefine">Interface: Undefine</string>
+    <string name="str_select_printer_id">Select a printer with a ID of {0}</string>
+
+    <string name="str_printer_printmode_esc">Print Mode:ESC</string>
+    <string name="str_printer_printmode_tsc">Print Mode:TSC</string>
+    <string name="str_printer_printmode_cpcl">Print Mode:CPCL</string>
+
+    <string name="str_cann_printer">Please connect the printer first</string>
 </resources>
