@@ -5,12 +5,18 @@
 
 package com.sunmi.sunmit2demo.utils;
 
+import android.content.Context;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
+import android.widget.Toast;
+
 import com.sunmi.sunmit2demo.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class Utils {
@@ -79,5 +85,22 @@ public class Utils {
     public static String numberFormat(float number) {
         NumberFormat nf = new DecimalFormat("#.##");
         return nf.format(number);
+    }
+
+    private static Toast toast;
+
+    public static UsbDevice getUsbDeviceFromName(Context context, String usbName) {
+        UsbManager usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+        HashMap<String,UsbDevice> usbDeviceList = usbManager.getDeviceList();
+        return usbDeviceList.get(usbName);
+    }
+
+    public static void toast(Context context, String message) {
+        if (toast == null) {
+            toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        } else {
+            toast.setText(message);
+        }
+        toast.show();
     }
 }

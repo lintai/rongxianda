@@ -231,38 +231,6 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 });
         compositeDisposable.add(disposable);
 
-//        disposable = Observable.create(new ObservableOnSubscribe<PayCheckInfo>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<PayCheckInfo> e) throws Exception {
-//                Result<PayCheckInfo> result = ServerManager.payStatusCheck(Util.appId, orderInfo.getOrderId());
-//                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
-//                    e.onNext(result.getResult());
-//                } else {
-//                    e.onError(new Throwable());
-//                }
-//            }
-//        })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(new DisposableObserver<PayCheckInfo>() {
-//                    @Override
-//                    public void onNext(PayCheckInfo payCheckInfo) {
-//                        loadingView.setVisibility(View.GONE);
-//                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        loadingView.setVisibility(View.GONE);
-//                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
-
     }
 
     @Override

@@ -1,24 +1,31 @@
 package com.sunmi.sunmit2demo.ui;
 
+import android.Manifest;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -26,7 +33,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +49,6 @@ import com.sunmi.sunmit2demo.MyApplication;
 import com.sunmi.sunmit2demo.PreferenceUtil;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
-import com.sunmi.sunmit2demo.adapter.GoodsAdapter;
 import com.sunmi.sunmit2demo.adapter.GoodsSortAdapter;
 import com.sunmi.sunmit2demo.adapter.HomeGoodsViewPagerAdapter;
 import com.sunmi.sunmit2demo.adapter.HomeMenuAdapter;
@@ -69,6 +75,7 @@ import com.sunmi.sunmit2demo.presenter.PayMentPayPresenter;
 import com.sunmi.sunmit2demo.presenter.PrinterPresenter;
 import com.sunmi.sunmit2demo.presenter.ScalePresenter;
 import com.sunmi.sunmit2demo.presenter.contact.HomeClassAndGoodsContact;
+import com.sunmi.sunmit2demo.print.DeviceConnFactoryManager;
 import com.sunmi.sunmit2demo.unlock.UnlockServer;
 import com.sunmi.sunmit2demo.utils.ResourcesUtils;
 import com.sunmi.sunmit2demo.utils.ScreenManager;
@@ -91,38 +98,31 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
+import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
+import static com.sunmi.sunmit2demo.print.DeviceConnFactoryManager.ACTION_QUERY_PRINTER_STATE;
+import static com.sunmi.sunmit2demo.print.DeviceConnFactoryManager.CONN_STATE_FAILED;
+
 public class NewMainActivity extends BaseActivity implements View.OnClickListener, HomeClassAndGoodsContact.View, HomeMenuAdapter.GoodsCountChangeListener {
 
     private final String TAG = "NewMainActivity";
-//    private TextView tv_user_lock;
+
+    public static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+
     private RecyclerView mMenuRecyclerVeiew, mGoodsSortRecyclerView;
     private ViewPager mViewPager;
     private TextView mGoodsCountTv, mGoodsDiscountTv, mGoodsTotalPriceTv, mPayTv, mScanDataConfirmTv;
     private TextView mPrePageTv, mNextPageTv;
-
-//    private EditText inputEt;
+    private LinearLayout goodsDiscountLayout;
 
     private HomeMenuAdapter mMenuAdapter;
     private GoodsSortAdapter mGoodsSortAdapter;
     private HomeGoodsViewPagerAdapter mHomeGoodsViewPagerAdapter;
 
-    private GoodsAdapter drinkAdapter;
-    private GoodsAdapter fruitAdapter;
-    private GoodsAdapter snackAdapter;
-    private GoodsAdapter vegetableAdapter;
-    private GoodsAdapter othersAdapter;
-
     //保存所有 商品信息
     private Map<String, GoodsInfo> allGoodsInfo;
     //保存所有 商品信息，结构跟allGoodsInfo不一样
     private List<ClassAndGoodsModle> classAndGoodsModles;
-
-    private List<GvBeans> mDrinksBean;
-    private List<GvBeans> mFruitsBean;
-    private List<GvBeans> mSnacksBean;
-    private List<GvBeans> mVegetablesBean;
-    private List<GvBeans> mOthers;
-
 
     private DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private VideoDisplay videoDisplay = null;
@@ -149,14 +149,24 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private ScalePresenter scalePresenter;
     Input2Dialog mInputDialog;
 
-    private HomePresenter mPresenter;
+    private UsbManager usbManager;
+    private	String[] permissions = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.BLUETOOTH
+    };
+    ArrayList<String> notAllowPermit = new ArrayList<>();
+    private static final int	REQUEST_CODE = 0x004;
+    private PendingIntent mPermissionIntent;
 
-    //测试代码
-    private String authoData;
+    private HomePresenter mPresenter;
 
     private int currPage;
     private int totalDatas;
     private final int DEFAULT_PAGE_SIZE = 6;
+
+    private int id;
+    private String usbName;
 
 
     @Override
@@ -177,28 +187,75 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         isVertical = height > width;
 
         isK1 = MyApplication.getInstance().isHaveCamera() && isVertical;
+        checkPermission();
+        requestPermission();
 
-        if (isK1) {
-            connectKPrintService();
-        } else {
-            connectPrintService();
-        }
         EventBus.getDefault().register(this);
         initView();
         initData();
         initAction();
 
+//        if (isK1) {
+//            connectKPrintService();
+//        } else {
+            connectPrintService();
+//        }
     }
 
 
     //连接打印服务
     private void connectPrintService() {
 
-        try {
-            InnerPrinterManager.getInstance().bindService(this,
-                    innerPrinterCallback);
-        } catch (InnerPrinterException e) {
-            e.printStackTrace();
+        closeport();
+        /* 获取USB设备名 */
+        usbName = mPresenter.getUsbDeviceList();
+        if (TextUtils.isEmpty(usbName)) {
+            Utils.toast(this, "no usb device");
+            return;
+        }
+        /* 通过USB设备名找到USB设备 */
+        UsbDevice usbDevice = Utils.getUsbDeviceFromName( NewMainActivity.this, usbName );
+        /* 判断USB设备是否有权限 */
+        if (usbManager.hasPermission( usbDevice ) ) {
+            usbConn(usbDevice);
+        } else {        /* 请求权限 */
+            mPermissionIntent = PendingIntent.getBroadcast( this, 0, new Intent( ACTION_USB_PERMISSION ), 0 );
+            usbManager.requestPermission( usbDevice, mPermissionIntent );
+        }
+//        try {
+//            InnerPrinterManager.getInstance().bindService(this,
+//                    innerPrinterCallback);
+//        } catch (InnerPrinterException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    /**
+     * usb连接
+     *
+     * @param usbDevice
+     */
+    private void usbConn( UsbDevice usbDevice )
+    {
+        new DeviceConnFactoryManager.Build()
+                .setId(id)
+                .setConnMethod( DeviceConnFactoryManager.CONN_METHOD.USB )
+                .setUsbDevice( usbDevice )
+                .setContext( this )
+                .build();
+        DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].openPort();
+    }
+
+    /**
+     * 重新连接回收上次连接的对象，避免内存泄漏
+     */
+    private void closeport()
+    {
+        if ( DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] != null &&DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].mPort != null )
+        {
+            DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].reader.cancel();
+            DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].mPort.closePort();
+            DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].mPort = null;
         }
     }
 
@@ -242,6 +299,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onStop() {
         super.onStop();
         this.willwelcome = false;
+
+        unregisterReceiver(receiver);
     }
 
     @Override
@@ -262,6 +321,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onStart() {
         super.onStart();
 
+        IntentFilter filter = new IntentFilter( ACTION_USB_PERMISSION );
+        filter.addAction( ACTION_USB_DEVICE_DETACHED );
+        filter.addAction( ACTION_QUERY_PRINTER_STATE );
+        filter.addAction( DeviceConnFactoryManager.ACTION_CONN_STATE );
+        filter.addAction( ACTION_USB_DEVICE_ATTACHED );
+        registerReceiver( receiver, filter );
+
         int goodsMode = (int) SharePreferenceUtil.getParam(this, GoodsManagerFragment.GOODSMODE_KEY, GoodsManagerFragment.defaultGoodsMode);
         switch (goodsMode) {
             case 0:
@@ -277,11 +343,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
                 break;
         }
-        othersAdapter.notifyDataSetChanged();
-        drinkAdapter.notifyDataSetChanged();
-        fruitAdapter.notifyDataSetChanged();
-        snackAdapter.notifyDataSetChanged();
-        vegetableAdapter.notifyDataSetChanged();
 
         int payMode = (int) SharePreferenceUtil.getParam(this, PayDialog.PAY_MODE_KEY, 7);
         switch (payMode) {
@@ -304,6 +365,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         mPrePageTv = findViewById(R.id.tv_pre_page);
         mNextPageTv = findViewById(R.id.tv_next_page);
         mPayTv = findViewById(R.id.tv_pay);
+
+        goodsDiscountLayout = findViewById(R.id.layout_goods_discount);
+        goodsDiscountLayout.setOnClickListener(this);
 //        mScanDataConfirmTv = findViewById(R.id.tv_scan_data_confirm);
 //
 //        inputEt = findViewById(R.id.et_scan_data);
@@ -334,6 +398,21 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 NewMainActivity.this.welcomeUserAnim();
             }
         }, 1000L);
+    }
+
+    private void checkPermission() {
+        for ( String permission : permissions ) {
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission( this, permission ) ) {
+                notAllowPermit.add(permission);
+            }
+        }
+    }
+
+    private void requestPermission() {
+        if (notAllowPermit.size() > 0 ) {
+            String[] p = new String[notAllowPermit.size()];
+            ActivityCompat.requestPermissions( this, notAllowPermit.toArray( p ), REQUEST_CODE);
+        }
     }
 
 
@@ -368,6 +447,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     private void initData() {
         mPresenter = new HomePresenter(this, this);
+        usbManager = (UsbManager) getSystemService( Context.USB_SERVICE);
 
         mMenuAdapter = new HomeMenuAdapter(new ArrayList<MenuItemModule>());
         mMenuAdapter.setChangeListener(this);
@@ -401,17 +481,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             videoMenuDisplay = new VideoMenuDisplay(this, display, Environment.getExternalStorageDirectory().getPath() + "/video_02.mp4");
             textDisplay = new TextDisplay(this, display);
         }
-        mDrinksBean = GoodsCode.getInstance().getDrinks();
-        mFruitsBean = GoodsCode.getInstance().getFruits();
-        mSnacksBean = GoodsCode.getInstance().getSnacks();
-        mVegetablesBean = GoodsCode.getInstance().getVegetables();
-        mOthers = GoodsCode.getInstance().getOthers();
-
-        drinkAdapter = new GoodsAdapter(mDrinksBean, 1);
-        fruitAdapter = new GoodsAdapter(mFruitsBean, 2);
-        snackAdapter = new GoodsAdapter(mSnacksBean, 3);
-        vegetableAdapter = new GoodsAdapter(mVegetablesBean, 2);
-        othersAdapter = new GoodsAdapter(mOthers, 0);
 
         payDialog = new PayDialog();
         payMentPayPresenter = new PayMentPayPresenter(this);
@@ -505,6 +574,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 //                }
 //                break;
 
+            case R.id.layout_goods_discount:
+                mPresenter.printReceipt(myHandler, id);
+                break;
             default:
                 break;
         }
@@ -664,27 +736,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         } else {
             goodsItemClickEvent(new GoodsItemClickEvent(goodsInfo.getGoodsName(), goodsInfo.getPrice(), goodsInfo.getUnit(), goodsInfo.getGoodsCode(), goodsInfo.getPriceType()));
         }
-    }
-
-    private void checkScaleGoods(int position, int type) {
-        GvBeans gvBeans = null;
-        switch (type) {
-            case 0:
-                gvBeans = mVegetablesBean.get(position);
-                scalePresenter.setGvBeans(mVegetablesBean.get(position));
-                fruitAdapter.setSelectPosition(-1);
-                vegetableAdapter.setSelectPosition(position);
-                break;
-            case 1:
-                gvBeans = mFruitsBean.get(position);
-                scalePresenter.setGvBeans(mFruitsBean.get(position));
-                fruitAdapter.setSelectPosition(position);
-                vegetableAdapter.setSelectPosition(-1);
-                break;
-        }
-
-        vegetableAdapter.notifyDataSetChanged();
-        fruitAdapter.notifyDataSetChanged();
     }
 
     private void addGoodsByScale(String total, GvBeans gvBeans) {
@@ -1027,7 +1078,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             bundle.putSerializable(PayingActivity.ORDER_RESULT, orderInfo);
             bundle.putString(PayingActivity.GOODS_COUNT, String.valueOf(mMenuAdapter.getGoodsCount()));
             bundle.putFloat(PayingActivity.GOODS_ORIGINAL_PRICE, mMenuAdapter.getGoodsTotalPrice());
-            bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
+//            bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
             intent.putExtras(bundle);
             startActivity(intent);
         } else {
@@ -1050,4 +1101,62 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         }
     }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive( Context context, Intent intent )
+        {
+            String action = intent.getAction();
+            switch ( action )
+            {
+                case ACTION_USB_PERMISSION:
+                    synchronized (this) {
+                        UsbDevice device = intent.getParcelableExtra( UsbManager.EXTRA_DEVICE );
+                        if ( intent.getBooleanExtra( UsbManager.EXTRA_PERMISSION_GRANTED, false ) )
+                        {
+                            if ( device != null )
+                            {
+                                System.out.println( "permission ok for device " + device );
+                                usbConn( device );
+                            }
+                        } else {
+                            System.out.println( "permission denied for device " + device );
+                        }
+                    }
+                    break;
+                /* Usb连接断开、蓝牙连接断开广播 */
+                case ACTION_USB_DEVICE_DETACHED:
+//                    mHandler.obtainMessage( CONN_STATE_DISCONN ).sendToTarget();
+                    break;
+                case DeviceConnFactoryManager.ACTION_CONN_STATE:
+                    int state = intent.getIntExtra( DeviceConnFactoryManager.STATE, -1 );
+                    int deviceId = intent.getIntExtra( DeviceConnFactoryManager.DEVICE_ID, -1 );
+                    switch ( state )
+                    {
+                        case DeviceConnFactoryManager.CONN_STATE_DISCONNECT:
+                            if ( id == deviceId ) {
+
+                            }
+                            break;
+                        case DeviceConnFactoryManager.CONN_STATE_CONNECTING:
+
+                            break;
+                        case DeviceConnFactoryManager.CONN_STATE_CONNECTED:
+
+                            break;
+                        case CONN_STATE_FAILED:
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case ACTION_QUERY_PRINTER_STATE:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }
