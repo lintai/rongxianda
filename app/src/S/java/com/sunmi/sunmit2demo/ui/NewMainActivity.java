@@ -73,6 +73,7 @@ import com.sunmi.sunmit2demo.unlock.UnlockServer;
 import com.sunmi.sunmit2demo.utils.ResourcesUtils;
 import com.sunmi.sunmit2demo.utils.ScreenManager;
 import com.sunmi.sunmit2demo.utils.SharePreferenceUtil;
+import com.sunmi.sunmit2demo.utils.Utils;
 import com.sunmi.sunmit2demo.view.CustomPopWindow;
 import com.sunmi.sunmit2demo.view.Input2Dialog;
 import com.sunmi.widget.dialog.InputDialog;
@@ -350,52 +351,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void isScaleCanUse(boolean isCan) {
-            }
-        });
-
-        othersAdapter.setOnItemClickListener(new GoodsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-
-            }
-
-        });
-        drinkAdapter.setOnItemClickListener(new GoodsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-
-                Log.e("@@@@", "code==" + mDrinksBean.get(position).getCode());
-            }
-
-        });
-        snackAdapter.setOnItemClickListener(new GoodsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-            }
-
-        });
-        vegetableAdapter.setOnItemClickListener(new GoodsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                checkScaleGoods(position, 0);
-            }
-
-            @Override
-            public void onItemCarClick(View view, int position) {
-                super.onItemCarClick(view, position);
-                addGoodsByScale(scalePresenter.formatTotalMoney(), scalePresenter.getGvBeans());
-            }
-        });
-        fruitAdapter.setOnItemClickListener(new GoodsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                checkScaleGoods(position, 1);
-            }
-
-            @Override
-            public void onItemCarClick(View view, int position) {
-                super.onItemCarClick(view, position);
-                addGoodsByScale(scalePresenter.formatTotalMoney(), scalePresenter.getGvBeans());
             }
         });
 
@@ -688,12 +643,20 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     return;
                 }
                 int price = pluGoodsInfo.getPrice();
+                String weight = "";
                 try {
                     price = Integer.parseInt(datas[1]);
+                    int w = Integer.parseInt(datas[2]);
+                    if (w >= 1000) {
+                        weight = Utils.numberFormat(w * 1.0f / 1000) + "kg";
+                    } else {
+                        weight = w + "g";
+                    }
+
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
-                goodsItemClickEvent(new GoodsItemClickEvent(pluGoodsInfo.getGoodsName(), price, pluGoodsInfo.getUnit(), String.valueOf(pluGoodsInfo.getPlu()), pluGoodsInfo.getPriceType()));
+                goodsItemClickEvent(new GoodsItemClickEvent(pluGoodsInfo.getGoodsName(), price, weight, String.valueOf(pluGoodsInfo.getPlu()), pluGoodsInfo.getPriceType()));
             } else {
                 Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
             }
