@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
+import com.sunmi.sunmit2demo.modle.PayCheckInfo;
 import com.sunmi.sunmit2demo.modle.PayInfo;
 import com.sunmi.sunmit2demo.modle.Result;
 import com.sunmi.sunmit2demo.server.ServerManager;
@@ -24,14 +26,18 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -51,7 +57,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
 
     private LoadingView loadingView;
 
-    private Disposable disposable;
+    private CompositeDisposable compositeDisposable;
     private OrderInfo orderInfo;
     private String authoCode;
     private int payType;
@@ -98,6 +104,8 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initData() {
+        compositeDisposable = new CompositeDisposable();
+
         Bundle bundle = getIntent().getExtras();
         try {
             authoCode = bundle.getString(GOODS_AUTHO_DATA);
@@ -138,7 +146,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
             isWaiting = false;
         }
 
-        disposable = Observable.create(new ObservableOnSubscribe<PayInfo>() {
+        Disposable disposable = Observable.create(new ObservableOnSubscribe<PayInfo>() {
             @Override
             public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
                 Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, authoCode,  2);
@@ -154,8 +162,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 .subscribeWith(new DisposableObserver<PayInfo>() {
                     @Override
                     public void onNext(PayInfo payInfo) {
-                        loadingView.setVisibility(View.GONE);
-                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+                        checkPayStatus();
                     }
 
                     @Override
@@ -169,6 +176,93 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
 
                     }
                 });
+        compositeDisposable.add(disposable);
+    }
+
+    private void checkPayStatus() {
+        final long currTime = System.currentTimeMillis();
+        Disposable disposable = Observable.interval(0, 2, TimeUnit.SECONDS)
+                .flatMap(new Function<Long, ObservableSource<PayCheckInfo>>() {
+                    @Override
+                    public ObservableSource<PayCheckInfo> apply(Long aLong) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<PayCheckInfo>() {
+                            @Override
+                            public void subscribe(ObservableEmitter<PayCheckInfo> e) throws Exception {
+                                Log.i("timer_time==="," request_time="+String.valueOf(System.currentTimeMillis() - currTime));
+                                Result<PayCheckInfo> result = ServerManager.payStatusCheck(Util.appId, orderInfo.getOrderId());
+                                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
+                                    e.onNext(result.getResult());
+                                } else {
+                                    e.onError(new Throwable());
+                                }
+                            }
+                        });
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<PayCheckInfo>() {
+                    @Override
+                    public void onNext(PayCheckInfo payCheckInfo) {
+                        Log.i("timer_time==="," response_time="+String.valueOf(System.currentTimeMillis() - currTime));
+                        if (payCheckInfo != null && "1".equals(payCheckInfo)) {
+                            loadingView.setVisibility(View.GONE);
+                            PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+                            compositeDisposable.remove(this);
+                        } else if (System.currentTimeMillis() - currTime > 60 * 1000){
+                            loadingView.setVisibility(View.GONE);
+                            PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+                            compositeDisposable.remove(this);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        loadingView.setVisibility(View.GONE);
+                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+                        compositeDisposable.remove(this);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        compositeDisposable.add(disposable);
+
+//        disposable = Observable.create(new ObservableOnSubscribe<PayCheckInfo>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<PayCheckInfo> e) throws Exception {
+//                Result<PayCheckInfo> result = ServerManager.payStatusCheck(Util.appId, orderInfo.getOrderId());
+//                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
+//                    e.onNext(result.getResult());
+//                } else {
+//                    e.onError(new Throwable());
+//                }
+//            }
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeWith(new DisposableObserver<PayCheckInfo>() {
+//                    @Override
+//                    public void onNext(PayCheckInfo payCheckInfo) {
+//                        loadingView.setVisibility(View.GONE);
+//                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        loadingView.setVisibility(View.GONE);
+//                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
+
     }
 
     @Override
@@ -197,8 +291,8 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if (disposable != null) {
-            disposable.dispose();
+        if (compositeDisposable != null) {
+            compositeDisposable.dispose();
         }
     }
 }

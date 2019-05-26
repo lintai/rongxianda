@@ -100,22 +100,23 @@ public class Util {
     }
 
     /**
-     * 前3为是标志位，固定200
-     * 接下来4为是plu码用来跟接口中的plu匹配来识别商品
-     * 倒数第6到倒数第2是价格，单位是分
-     * 最后一位应该是标志位
+     *第1位：店名， 2-7为plu码， 8-12为价格（单位分）， 13-17为重量（单位g）， 18校验码
      *
-     * ps:200 2794 01655 1
+     * ps:2 000052 00305 00150 7
      */
     public static String[] getGoodsPluCodeAndPrice(String code) {
         String[] datas = null;
         try {
-            String plu = code.substring(3, 7);
-            String price = code.substring(7, code.length() - 1);
-            if (!TextUtils.isEmpty(plu) && !TextUtils.isEmpty(price)) {
+            String plu = code.substring(1, 7);
+            String price = code.substring(7, 12);
+            String w = code.substring(12, 16);
+            String weight = w.replaceAll("^(0+)", "");
+            if (!TextUtils.isEmpty(plu) && !TextUtils.isEmpty(price)
+                    && !TextUtils.isEmpty(weight)) {
                 datas = new String[2];
                 datas[0] = plu;
                 datas[1] = price;
+                datas[2] = weight;
             }
         } catch (Exception e) {
             e.printStackTrace();
