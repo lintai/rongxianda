@@ -187,11 +187,9 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
             return;
         }
         ThreadPool threadPool = ThreadPool.getInstantiation();
-        threadPool.addTask( new Runnable()
-        {
+        threadPool.addTask( new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 if ( DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
                     sendReceiptWithResponse(id);
                 } else {

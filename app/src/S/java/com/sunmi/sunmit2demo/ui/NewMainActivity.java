@@ -331,6 +331,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 NewMainActivity.this.welcomeUserAnim();
             }
         }, 1000L);
+
+        findViewById(R.id.tv_has_selected).setOnClickListener(this);
     }
 
     private void checkPermission() {
@@ -419,6 +421,14 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
             case R.id.layout_goods_discount:
                 mPresenter.printReceipt(myHandler, id);
+                break;
+            case R.id.tv_has_selected:
+                try {
+                    connectPrintService();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;
@@ -604,7 +614,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
         //更新所有清单总价格
         mGoodsCountTv.setText(String.valueOf(mMenuAdapter.getGoodsCount()));
-        mGoodsTotalPriceTv.setText(String.valueOf(mMenuAdapter.getGoodsTotalPrice() / 100));
+        mGoodsTotalPriceTv.setText(Utils.numberFormat(mMenuAdapter.getGoodsTotalPrice() / 100));
     }
 
 
