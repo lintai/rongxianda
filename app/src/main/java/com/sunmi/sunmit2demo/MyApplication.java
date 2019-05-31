@@ -11,9 +11,8 @@ import android.util.Log;
 
 import com.bst.bsbandlib.sdk.BSBandSDKManager;
 import com.sunmi.payment.PaymentService;
-import com.sunmi.sunmit2demo.bean.blescan.DaoMaster;
-import com.sunmi.sunmit2demo.bean.blescan.DaoSession;
-import com.sunmi.sunmit2demo.utils.InstallApkUtils;
+import com.sunmi.sunmit2demo.bean.DaoMaster;
+import com.sunmi.sunmit2demo.bean.DaoSession;
 
 
 import java.io.File;

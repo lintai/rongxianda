@@ -190,8 +190,10 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
 
     private void cancelLastViewFocus(View view) {
         if (focusView != null) {
-            focusView.setSelected(false);
-            focusView = view;
+            if (focusView != view) {
+                focusView.setSelected(false);
+                focusView = view;
+            }
         } else {
             focusView = view;
         }
