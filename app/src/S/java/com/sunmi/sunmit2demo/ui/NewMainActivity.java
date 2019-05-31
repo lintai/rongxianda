@@ -441,8 +441,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int action = event.getAction();
-        Log.e("action",action + "");
-        printerPresenter.print(goods_data, 0);
         switch (action) {
             case KeyEvent.ACTION_DOWN:
                 int unicodeChar = event.getUnicodeChar();
