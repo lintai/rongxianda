@@ -71,34 +71,11 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="支付方式："
-                android:textSize="33dp"
-                android:textColor="#333333"/>
-
-            <TextView
-                android:id="@+id/tv_pay_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="11dp"
-                android:text=""
-                android:textSize="33dp"
-                android:textColor="#333333"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
-            android:orientation="horizontal">
-
-            <TextView
+                android:id="@+id/code_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="付款码："
@@ -107,12 +84,68 @@
 
             <EditText
                 android:id="@+id/et_pay_code"
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="33dp"
+                android:textColor="#333333"
+                android:background="@drawable/pay_code_rectangle_bg"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_other_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="支付方式："
+                android:textSize="24dp"
+                android:textColor="#bfbfbf"/>
+
+            <TextView
+                android:id="@+id/tv_pay_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="11dp"
-                android:hint="请扫描二维码得到付款码"
+                android:text=""
+                android:textSize="24dp"
+                android:textColor="#bfbfbf"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_cash_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="找零："
                 android:textSize="33dp"
-                android:textColor="#333333"/>
+                android:textColor="#233333"/>
+
+            <TextView
+                android:id="@+id/tv_cash_return"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
+                android:text=""
+                android:textSize="33dp"
+                android:textColor="#233333"/>
 
         </LinearLayout>
 
@@ -127,11 +160,10 @@
 
         <TextView
             android:id="@+id/tv_pre"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
+            android:gravity="center"
+            android:layout_marginRight="30dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="上一步"
@@ -141,10 +173,9 @@
 
         <TextView
             android:id="@+id/tv_pay"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
+            android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="结 算"

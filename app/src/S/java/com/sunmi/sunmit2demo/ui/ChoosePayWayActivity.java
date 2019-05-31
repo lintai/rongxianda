@@ -25,6 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ChoosePayWayActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int CHOOSE_PAY = 1;
     private TextView goodsCountTv, goodsPriceTv, goodsDiscountTv;
     private TextView cashPayTv, memberPayTv, wxPayTv, aliPayTv;
     private TextView nextTv;
@@ -95,21 +96,22 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
             case R.id.tv_cash_pay:
                 cashPayTv.setSelected(true);
                 cancelLastViewFocus(cashPayTv);
-                payType = 4;
+                payType = PayingActivity.CASH_PAYT_TYPE;
                 break;
             case R.id.tv_member_pay:
                 memberPayTv.setSelected(true);
                 cancelLastViewFocus(memberPayTv);
+                payType = PayingActivity.MEMBER_PAYT_TYPE;
                 break;
             case R.id.tv_wx_pay:
                 wxPayTv.setSelected(true);
                 cancelLastViewFocus(wxPayTv);
-                payType = 1;
+                payType = PayingActivity.WX_PAY_TYPE;
                 break;
             case R.id.tv_ali_pay:
                 aliPayTv.setSelected(true);
                 cancelLastViewFocus(aliPayTv);
-                payType = 2;
+                payType = PayingActivity.ALI_PAY_TYPE;
                 break;
             case R.id.tv_next:
                 if (orderInfo != null) {
@@ -121,7 +123,7 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
                     bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
                     bundle.putInt(PayingActivity.GOODS_PAY_TYPE, payType);
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    startActivityForResult(intent, CHOOSE_PAY);
                 } else {
                     Toast.makeText(this, "订单生成失败，请稍后再试", Toast.LENGTH_SHORT).show();
                 }
@@ -135,6 +137,14 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
             focusView = view;
         } else {
             focusView = view;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_PAY && resultCode == RESULT_OK) {
+            finish();
         }
     }
 }
