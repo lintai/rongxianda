@@ -304,6 +304,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 payTv.setSelected(true);
                 cancelLastViewFocus(payTv);
                 if (payType == CASH_PAYT_TYPE) {
+                    EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), getPayType(payType)));
                     setResult(-1);
                     finish();
                 } else if (!TextUtils.isEmpty(payCodeEt.getText().toString())) {
