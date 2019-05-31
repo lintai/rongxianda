@@ -66,7 +66,8 @@ public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
         if (!TextUtils.isEmpty(info.getGoodsName())) {
             viewHolder.goodsNameTv.setText(info.getGoodsName());
         }
-        String price = "￥"+ (Utils.numberFormat(info.getPrice() * 1.0f / 100)) + "/" + info.getWeight() + info.getUnit();
+        String weight = (info.getWeight() > 0 && !TextUtils.isEmpty(info.getUnit())) ? "/" + info.getWeight() + info.getUnit() : "";
+        String price = "￥"+ (Utils.numberFormat(info.getPrice() * 1.0f / 100)) + weight;
         if (!TextUtils.isEmpty(price)) {
             viewHolder.goodsPriceTv.setText(price);
         }

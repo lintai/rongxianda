@@ -30,9 +30,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,10 +51,7 @@ import com.sunmi.sunmit2demo.adapter.GoodsSortAdapter;
 import com.sunmi.sunmit2demo.adapter.HomeGoodsViewPagerAdapter;
 import com.sunmi.sunmit2demo.adapter.HomeMenuAdapter;
 import com.sunmi.sunmit2demo.bean.GoodsCode;
-import com.sunmi.sunmit2demo.bean.GvBeans;
-import com.sunmi.sunmit2demo.bean.MenusBean;
 import com.sunmi.sunmit2demo.decoration.GoodsSortGridSpacingItemDecoration;
-import com.sunmi.sunmit2demo.dialog.PayDialog;
 import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
 import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
 import com.sunmi.sunmit2demo.eventbus.UpdateUnLockUserEvent;
@@ -73,7 +68,6 @@ import com.sunmi.sunmit2demo.presenter.HomePresenter;
 import com.sunmi.sunmit2demo.presenter.KPrinterPresenter;
 import com.sunmi.sunmit2demo.presenter.PayMentPayPresenter;
 import com.sunmi.sunmit2demo.presenter.PrinterPresenter;
-import com.sunmi.sunmit2demo.presenter.ScalePresenter;
 import com.sunmi.sunmit2demo.presenter.contact.HomeClassAndGoodsContact;
 import com.sunmi.sunmit2demo.print.DeviceConnFactoryManager;
 import com.sunmi.sunmit2demo.unlock.UnlockServer;
@@ -81,15 +75,10 @@ import com.sunmi.sunmit2demo.utils.ResourcesUtils;
 import com.sunmi.sunmit2demo.utils.ScreenManager;
 import com.sunmi.sunmit2demo.utils.SharePreferenceUtil;
 import com.sunmi.sunmit2demo.utils.Utils;
-import com.sunmi.sunmit2demo.view.CustomPopWindow;
-import com.sunmi.sunmit2demo.view.Input2Dialog;
-import com.sunmi.widget.dialog.InputDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -129,15 +118,12 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private ScreenManager screenManager = ScreenManager.getInstance();
     private VideoMenuDisplay videoMenuDisplay = null;
     public TextDisplay textDisplay = null;
-    private PayDialog payDialog;
     private SunmiPrinterService woyouService = null;//商米标准打印 打印服务
     private ExtPrinterService extPrinterService = null;//k1 打印服务
 
-    private String goods_data;
     public static PrinterPresenter printerPresenter;
     public static KPrinterPresenter kPrinterPresenter;
     public UnlockServer.Proxy mProxy = null;
-    CustomPopWindow popWindow;
     private boolean willwelcome;
 
     public static boolean isK1 = false;
@@ -146,8 +132,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
 
     private PayMentPayPresenter payMentPayPresenter;
-    private ScalePresenter scalePresenter;
-    Input2Dialog mInputDialog;
 
     private UsbManager usbManager;
     private	String[] permissions = {
@@ -193,7 +177,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         EventBus.getDefault().register(this);
         initView();
         initData();
-        initAction();
 
 //        if (isK1) {
 //            connectKPrintService();
@@ -222,12 +205,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             mPermissionIntent = PendingIntent.getBroadcast( this, 0, new Intent( ACTION_USB_PERMISSION ), 0 );
             usbManager.requestPermission( usbDevice, mPermissionIntent );
         }
-//        try {
-//            InnerPrinterManager.getInstance().bindService(this,
-//                    innerPrinterCallback);
-//        } catch (InnerPrinterException e) {
-//            e.printStackTrace();
-//        }
     }
 
     /**
@@ -327,30 +304,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         filter.addAction( DeviceConnFactoryManager.ACTION_CONN_STATE );
         filter.addAction( ACTION_USB_DEVICE_ATTACHED );
         registerReceiver( receiver, filter );
-
-        int goodsMode = (int) SharePreferenceUtil.getParam(this, GoodsManagerFragment.GOODSMODE_KEY, GoodsManagerFragment.defaultGoodsMode);
-        switch (goodsMode) {
-            case 0:
-
-                break;
-            case GoodsManagerFragment.Goods_1 | GoodsManagerFragment.Goods_2:
-
-                break;
-            case GoodsManagerFragment.Goods_3 | GoodsManagerFragment.Goods_4:
-
-                break;
-            case GoodsManagerFragment.Goods_1 | GoodsManagerFragment.Goods_2 + GoodsManagerFragment.Goods_3 | GoodsManagerFragment.Goods_4:
-
-                break;
-        }
-
-        int payMode = (int) SharePreferenceUtil.getParam(this, PayDialog.PAY_MODE_KEY, 7);
-        switch (payMode) {
-            case PayDialog.PAY_FACE:
-                break;
-            case PayDialog.PAY_FACE | PayDialog.PAY_CODE | PayDialog.PAY_CASH:
-                break;
-        }
     }
 
 
@@ -368,36 +321,18 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         goodsDiscountLayout = findViewById(R.id.layout_goods_discount);
         goodsDiscountLayout.setOnClickListener(this);
-//        mScanDataConfirmTv = findViewById(R.id.tv_scan_data_confirm);
-//
-//        inputEt = findViewById(R.id.et_scan_data);
-//        inputEt.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
 
         mPayTv.setOnClickListener(this);
         mPrePageTv.setOnClickListener(this);
         mNextPageTv.setOnClickListener(this);
-//        mScanDataConfirmTv.setOnClickListener(this);
 
         this.myHandler.postDelayed(new Runnable() {
             public void run() {
                 NewMainActivity.this.welcomeUserAnim();
             }
         }, 1000L);
+
+        findViewById(R.id.tv_has_selected).setOnClickListener(this);
     }
 
     private void checkPermission() {
@@ -413,26 +348,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             String[] p = new String[notAllowPermit.size()];
             ActivityCompat.requestPermissions( this, notAllowPermit.toArray( p ), REQUEST_CODE);
         }
-    }
-
-
-    private void initAction() {
-        scalePresenter = new ScalePresenter(this, new ScalePresenter.ScalePresenterCallback() {
-            @Override
-            public void getData(final int net, final int pnet, final int statu) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateScaleInfo(net, pnet, statu);
-                    }
-                });
-            }
-
-            @Override
-            public void isScaleCanUse(boolean isCan) {
-            }
-        });
-
     }
 
     private void initViewPager(List<ClassAndGoodsModle> datas) {
@@ -482,68 +397,12 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             textDisplay = new TextDisplay(this, display);
         }
 
-        payDialog = new PayDialog();
         payMentPayPresenter = new PayMentPayPresenter(this);
-
-        payDialog.setPayMentPayPresenter(payMentPayPresenter);
-
-        payDialog.setCompleteListener(new PayDialog.OnCompleteListener() {
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onSuccess(final int payMode) {
-                playSound(payMode);
-                myHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        paySuccessToPrinter(payMode);
-                        payDialog.setPhoneNumber("");
-
-                    }
-                }, 1000);
-
-            }
-
-            @Override
-            public void onComplete(int payMode) {
-                payCompleteToReMenu();
-            }
-        });
 
         soundPool.load(NewMainActivity.this, R.raw.audio, 1);// 1
         soundPool.load(NewMainActivity.this, isZh(this) ? R.raw.alipay : R.raw.alipay_en, 1);// 2
         mPresenter.load();
     }
-
-
-    private void payCompleteToReMenu() {
-        if (!isVertical) {
-
-
-            standByTime();
-
-        } else {
-
-        }
-    }
-
-
-    private void paySuccessToPrinter(int payMode) {
-        if (isK1) {
-            if (kPrinterPresenter != null) {
-                kPrinterPresenter.print(goods_data, payMode);
-            }
-        } else {
-
-            if (printerPresenter != null) {
-                printerPresenter.print(goods_data, payMode);
-            }
-        }
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -559,86 +418,20 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_next_page:
                 resetViewData(currPage + 1);
                 break;
-//            case R.id.tv_scan_data_confirm:
-//                addGoods("2002794016551");
-//                if (inputEt == null && TextUtils.isEmpty(inputEt.getText())) {
-//                    Toast.makeText(this, "输入内容不能为空", Toast.LENGTH_SHORT).show();
-//                }
-//                authoData = inputEt.getText().toString();
-//                if (mMenuAdapter.getDatas().size() == 0) {
-//                    Toast.makeText(this, "请添加商品", Toast.LENGTH_SHORT).show();
-//                }
-//                System.out.print("");
-//                if (mPresenter != null) {
-//                    mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
-//                }
-//                break;
 
             case R.id.layout_goods_discount:
                 mPresenter.printReceipt(myHandler, id);
                 break;
+            case R.id.tv_has_selected:
+                try {
+                    connectPrintService();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
             default:
                 break;
-        }
-    }
-
-    private void buildMenuJson(List<MenusBean> menus, String price) {
-        try {
-            JSONObject data = new JSONObject();
-            data.put("title", "Sunmi " + ResourcesUtils.getString(this, R.string.menus_title));
-            JSONObject head = new JSONObject();
-            head.put("param1", ResourcesUtils.getString(this, R.string.menus_number));
-            head.put("param2", ResourcesUtils.getString(this, R.string.menus_goods_name));
-            head.put("param3", ResourcesUtils.getString(this, R.string.menus_unit_price));
-            data.put("head", head);
-            data.put("flag", "true");
-            JSONArray list = new JSONArray();
-            for (int i = 0; i < menus.size(); i++) {
-                JSONObject listItem = new JSONObject();
-                listItem.put("param1", "" + (i + 1));
-                listItem.put("param2", menus.get(i).getName());
-                listItem.put("param3", menus.get(i).getMoney());
-                listItem.put("type", menus.get(i).getType());
-                listItem.put("code", menus.get(i).getCode());
-                listItem.put("net", menus.get(i).getNet());
-                list.put(listItem);
-            }
-            data.put("list", list);
-            JSONArray KVPList = new JSONArray();
-            JSONObject KVPListOne = new JSONObject();
-            KVPListOne.put("name", ResourcesUtils.getString(this, R.string.shop_car_total) + " ");
-            KVPListOne.put("value", price);
-            JSONObject KVPListTwo = new JSONObject();
-            KVPListTwo.put("name", ResourcesUtils.getString(this, R.string.shop_car_offer) + " ");
-            KVPListTwo.put("value", "0.00");
-            JSONObject KVPListThree = new JSONObject();
-            KVPListThree.put("name", ResourcesUtils.getString(this, R.string.shop_car_number) + " ");
-            KVPListThree.put("value", "" + menus.size());
-            JSONObject KVPListFour = new JSONObject();
-            KVPListFour.put("name", ResourcesUtils.getString(this, R.string.shop_car_receivable) + " ");
-            KVPListFour.put("value", price);
-            KVPList.put(0, KVPListOne);
-            KVPList.put(1, KVPListTwo);
-            KVPList.put(2, KVPListThree);
-            KVPList.put(3, KVPListFour);
-            data.put("KVPList", KVPList);
-            Log.d("HHHH", "onClick: ---------->" + data.toString());
-            goods_data = data.toString();
-            Log.d(TAG, "buildMenuJson: ------->" + (videoMenuDisplay != null));
-            if (payDialog.isVisible()) {
-                return;
-            }
-            if (videoMenuDisplay != null && !videoMenuDisplay.isShow) {
-                videoMenuDisplay.show();
-                videoMenuDisplay.update(menus, data.toString());
-            } else if (null != videoMenuDisplay) {
-                videoMenuDisplay.update(menus, data.toString());
-            }
-            // 购物车有东西
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -679,11 +472,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                         if (len != sb.length()) return;
                         Log.e(TAG, "isQRcode");
                         if (sb.length() > 0) {
-                            if (payDialog.isVisible()) {
-                                Log.e(TAG, "支付中");
-                            } else {
-                                addGoods(sb.toString());
-                            }
+                            addGoods(sb.toString());
                             sb.setLength(0);
                         }
                     }
@@ -738,49 +527,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private void addGoodsByScale(String total, GvBeans gvBeans) {
-        if (!scalePresenter.isStable() || scalePresenter.net <= 0) {
-            return;
-        }
-    }
-
-    /**
-     * 更新秤显示信息
-     *
-     * @param net
-     * @param pnet
-     * @param statu
-     */
-    private void updateScaleInfo(final int net, int pnet, int statu) {
-
-    }
-
-    private void showPresetTare() {
-
-        mInputDialog = new Input2Dialog.Builder(this)
-                .setTitle(ResourcesUtils.getString(R.string.more_num_peele) + "/kg")
-                .setLeftText(ResourcesUtils.getString(R.string.cancel))
-                .setRightText(ResourcesUtils.getString(R.string.confrim))
-                .setHint("0.00kg")
-                .setCallBack(new InputDialog.DialogOnClickCallback() {
-                    @Override
-                    public void onSure(String text) {
-                        if (!TextUtils.isEmpty(text)) {
-                            float pnet = Float.parseFloat(text);
-                            scalePresenter.setNumPnet((int) (pnet * 1000.0f));
-                        }
-                        mInputDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        mInputDialog.dismiss();
-                    }
-                })
-                .build();
-        mInputDialog.show();
-    }
-
     //待机
     private void standByTime() {
         if (videoDisplay != null && !videoDisplay.isShow) {
@@ -810,15 +556,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             return false;
     }
 
-    private View createBottomSheetView() {
-
-        return null;
-    }
-
-
-    @Subscribe(
-            threadMode = ThreadMode.MAIN
-    )
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(UpdateUnLockUserEvent var1) {
         this.willwelcome = true;
 //        this.tv_user_lock.setAlpha(0.0F);
@@ -877,7 +615,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
         //更新所有清单总价格
         mGoodsCountTv.setText(String.valueOf(mMenuAdapter.getGoodsCount()));
-        mGoodsTotalPriceTv.setText(String.valueOf(mMenuAdapter.getGoodsTotalPrice() / 100));
+        mGoodsTotalPriceTv.setText(Utils.numberFormat(mMenuAdapter.getGoodsTotalPrice() / 100));
     }
 
 
@@ -914,16 +652,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private void showDomainLock() {
-        if (this.popWindow == null) {
-            View var1 = LayoutInflater.from(this).inflate(R.layout.pop_lock, (ViewGroup) null);
-            var1.setOnClickListener(this);
-            this.popWindow = (new CustomPopWindow.PopupWindowBuilder(this)).setView(var1).create();
-        }
-
-//        this.popWindow.showAsDropDown(this.ivUserHeadIcon, -133, 15);
-    }
-
 
     @Override
     protected void onDestroy() {
@@ -941,10 +669,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
         if (mProxy != null) {
             unbindService(mServiceConnection);
-        }
-
-        if (scalePresenter != null && scalePresenter.isScaleSuccess()) {
-            scalePresenter.onDestroy();
         }
 
         if (payMentPayPresenter != null) {
@@ -1034,26 +758,19 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         if (totalDatas <= 0 || page * DEFAULT_PAGE_SIZE >= totalDatas) {
             //没有该页对应的数据
             Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT).show();
-//            mNextPageTv.setEnabled(false);
             currPage = page - 1;
             return;
         } else {
             currPage = page;
-            if ((page + 1) * DEFAULT_PAGE_SIZE >= totalDatas) {
-//                mNextPageTv.setEnabled(false);
-            } else {
-//                mNextPageTv.setEnabled(true);
-            }
+
         }
 
         if (page < 0) {
             this.currPage = 0;
             Toast.makeText(this, "已经是第一页了", Toast.LENGTH_SHORT).show();
-//            mPrePageTv.setEnabled(false);
             return;
         } else {
             currPage = page;
-//            mPrePageTv.setEnabled(true);
         }
 
         int fromIndex = page * DEFAULT_PAGE_SIZE;

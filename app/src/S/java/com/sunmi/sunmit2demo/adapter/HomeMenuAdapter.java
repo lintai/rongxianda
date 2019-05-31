@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.sunmi.sunmit2demo.Constants;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.modle.MenuItemModule;
+import com.sunmi.sunmit2demo.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,9 +89,9 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
             if (!TextUtils.isEmpty(module.getGoodsName())) {
                 menuViewHolder.mGoodsNameTv.setText(module.getGoodsName());
             }
-            menuViewHolder.mSingleGoodsPriceTv.setText("￥"+module.getPrice() * 1.0f / 100 + module.getUnit());
+            menuViewHolder.mSingleGoodsPriceTv.setText("￥"+ Utils.numberFormat(module.getPrice() * 1.0f / 100) + module.getUnit());
             menuViewHolder.mGoodsCountTv.setText(String.valueOf(module.getGoodsCount()));
-            menuViewHolder.mGoodsTotalPrice.setText("￥"+(module.getPrice() * module.getGoodsCount() * 1.0 / 100));
+            menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getPrice() * module.getGoodsCount() * 1.0f / 100));
 
             //称重的商品无法通过“+”或“-”来增减商品数量
             if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
