@@ -7,12 +7,6 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipeline;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunmi.sunmit2demo.PreferenceUtil;
@@ -79,11 +73,11 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                     Result<ShopInfo> shopInfoResult = ServerManager.getShopInfo(Util.appId);
                     if (shopInfoResult != null && shopInfoResult.getErrno() == 0 && shopInfoResult.getResult() != null) {
                         ShopInfo shopInfo = shopInfoResult.getResult();
-                        if (!TextUtils.isEmpty(shopInfo.getQrcode())) {
-                            ImageRequest imageRequest = ImageRequest.fromUri(shopInfo.getQrcode());
-                            ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                            imagePipeline.prefetchToDiskCache(imageRequest, context);
-                        }
+//                        if (!TextUtils.isEmpty(shopInfo.getQrcode())) {
+//                            ImageRequest imageRequest = ImageRequest.fromUri(shopInfo.getQrcode());
+//                            ImagePipeline imagePipeline = Fresco.getImagePipeline();
+//                            imagePipeline.prefetchToDiskCache(imageRequest, context);
+//                        }
                         PreferenceUtil.putString(context, PreferenceUtil.KEY.PAYING_TYPE, new Gson().toJson(shopInfoResult.getResult()));
                     }
                 } catch (Exception e1) {
