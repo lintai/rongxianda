@@ -54,6 +54,7 @@ import com.sunmi.sunmit2demo.bean.GoodsCode;
 import com.sunmi.sunmit2demo.decoration.GoodsSortGridSpacingItemDecoration;
 import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
 import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
+import com.sunmi.sunmit2demo.eventbus.PrintDataEvent;
 import com.sunmi.sunmit2demo.eventbus.UpdateUnLockUserEvent;
 import com.sunmi.sunmit2demo.fragment.GoodsManagerFragment;
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
@@ -61,6 +62,7 @@ import com.sunmi.sunmit2demo.modle.GoodsInfo;
 import com.sunmi.sunmit2demo.modle.GoodsSortTagModle;
 import com.sunmi.sunmit2demo.modle.MenuItemModule;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
+import com.sunmi.sunmit2demo.modle.PrinterModle;
 import com.sunmi.sunmit2demo.present.TextDisplay;
 import com.sunmi.sunmit2demo.present.VideoDisplay;
 import com.sunmi.sunmit2demo.present.VideoMenuDisplay;
@@ -419,19 +421,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.layout_goods_discount:
-                if (mMenuAdapter == null
-                    || mMenuAdapter.getDatas() == null
-                    || mMenuAdapter.getDatas().size() == 0) {
-                    return;
-                }
-                String discountPrice = mGoodsDiscountTv.getText().toString();
-                String totalPrice = mGoodsTotalPriceTv.getText().toString();
-                mPresenter.printReceipt(myHandler, id,
-                        mMenuAdapter.getDatas(),
-                        Utils.parseFloat(totalPrice + discountPrice),
-                        Utils.parseFloat(discountPrice),
-                        Utils.parseFloat(totalPrice),
-                        "微信支付");
+
                 break;
             case R.id.tv_has_selected:
                 try {
@@ -578,6 +568,33 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 //                }
 //            });
 //        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void printDataEvent(PrintDataEvent event) {
+        if (mMenuAdapter == null
+                || mMenuAdapter.getDatas() == null
+                || mMenuAdapter.getDatas().size() == 0) {
+            return;
+        }
+        String discountPrice = null;
+        String totalPrice = null;
+        try {
+            discountPrice = mGoodsDiscountTv.getText().toString();
+            totalPrice = mGoodsTotalPriceTv.getText().toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        mPresenter.printReceipt(myHandler, id,
+                new PrinterModle(mMenuAdapter.getDatas(),
+                        event.orderNo,
+                        event.time,
+                        Utils.parseFloat(totalPrice + discountPrice),
+                        Utils.parseFloat(discountPrice),
+                        Utils.parseFloat(totalPrice),
+                        event.payType));
 
     }
 

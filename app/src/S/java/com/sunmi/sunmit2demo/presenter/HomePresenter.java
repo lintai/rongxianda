@@ -10,6 +10,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunmi.sunmit2demo.PreferenceUtil;
@@ -21,6 +24,7 @@ import com.sunmi.sunmit2demo.modle.CreateOrderResult;
 import com.sunmi.sunmit2demo.modle.GoodsOrderModle;
 import com.sunmi.sunmit2demo.modle.MenuItemModule;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
+import com.sunmi.sunmit2demo.modle.PrinterModle;
 import com.sunmi.sunmit2demo.modle.Result;
 import com.sunmi.sunmit2demo.modle.ShopInfo;
 import com.sunmi.sunmit2demo.presenter.contact.HomeClassAndGoodsContact;
@@ -74,6 +78,12 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                     //这个请求不是必要的，不能中断整个流程。故try catch
                     Result<ShopInfo> shopInfoResult = ServerManager.getShopInfo(Util.appId);
                     if (shopInfoResult != null && shopInfoResult.getErrno() == 0 && shopInfoResult.getResult() != null) {
+                        ShopInfo shopInfo = shopInfoResult.getResult();
+                        if (!TextUtils.isEmpty(shopInfo.getQrcode())) {
+                            ImageRequest imageRequest = ImageRequest.fromUri(shopInfo.getQrcode());
+                            ImagePipeline imagePipeline = Fresco.getImagePipeline();
+                            imagePipeline.prefetchToDiskCache(imageRequest, context);
+                        }
                         PreferenceUtil.putString(context, PreferenceUtil.KEY.PAYING_TYPE, new Gson().toJson(shopInfoResult.getResult()));
                     }
                 } catch (Exception e1) {
@@ -197,11 +207,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
      */
     public void printReceipt(final Handler mHandler,
                              final int id,
-                             final List<MenuItemModule> modules,
-                             final float totalPrice,
-                             final float discountPrice,
-                             final float realPrice,
-                             final String payType) {
+                             final PrinterModle printerModle) {
         if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
                 !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
             Utils.toast( context, context.getString( R.string.str_cann_printer ) );
@@ -212,7 +218,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
             @Override
             public void run() {
                 if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
-                    sendReceiptWithResponse(id, modules, totalPrice, discountPrice, realPrice, payType);
+                    sendReceiptWithResponse(id, printerModle);
                 } else {
                     mHandler.obtainMessage(PrinterCode.PRINTER_COMMAND_ERROR).sendToTarget();
                 }
@@ -223,16 +229,11 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
     /**
      * 发送票据
      */
-    void sendReceiptWithResponse(int id,
-                                 List<MenuItemModule> modules,
-                                 float totalPrice,
-                                 float discountPrice,
-                                 float realPrice,
-                                 String payType) {
+    void sendReceiptWithResponse(int id, PrinterModle printerModle) {
         ShopInfo shopInfo = null;
         String shopInfoString = PreferenceUtil.getString(context, PreferenceUtil.KEY.PAYING_TYPE, "");
         if (!TextUtils.isEmpty(shopInfoString)) {
-            shopInfo = new Gson().fromJson(shopInfoString, new TypeToken<Result<ShopInfo>>(){}.getType());
+            shopInfo = new Gson().fromJson(shopInfoString, new TypeToken<ShopInfo>(){}.getType());
         }
 
 

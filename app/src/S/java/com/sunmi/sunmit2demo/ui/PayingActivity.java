@@ -17,6 +17,7 @@ import com.sunmi.sunmit2demo.PreferenceUtil;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
+import com.sunmi.sunmit2demo.eventbus.PrintDataEvent;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
 import com.sunmi.sunmit2demo.modle.PayCheckInfo;
 import com.sunmi.sunmit2demo.modle.PayInfo;
@@ -197,46 +198,47 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void pay() {
-        loadingView.setVisibility(View.VISIBLE);
-        PreferenceUtil.putString(this, PreferenceUtil.KEY.PAYING_TYPE, "paying");
-        if (TextUtils.isEmpty(authoCode)) {
-            isWaiting = true;
-            return;
-        } else {
-            isWaiting = false;
-        }
-
-        Disposable disposable = Observable.create(new ObservableOnSubscribe<PayInfo>() {
-            @Override
-            public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
-                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, authoCode,  2);
-                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
-                    e.onNext(result.getResult());
-                } else {
-                    e.onError(new Throwable());
-                }
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<PayInfo>() {
-                    @Override
-                    public void onNext(PayInfo payInfo) {
-                        checkPayStatus();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        loadingView.setVisibility(View.GONE);
-                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-        compositeDisposable.add(disposable);
+        EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), getPayType(payType)));
+//        loadingView.setVisibility(View.VISIBLE);
+//        PreferenceUtil.putString(this, PreferenceUtil.KEY.PAYING_TYPE, "paying");
+//        if (TextUtils.isEmpty(authoCode)) {
+//            isWaiting = true;
+//            return;
+//        } else {
+//            isWaiting = false;
+//        }
+//
+//        Disposable disposable = Observable.create(new ObservableOnSubscribe<PayInfo>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
+//                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, authoCode,  2);
+//                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
+//                    e.onNext(result.getResult());
+//                } else {
+//                    e.onError(new Throwable());
+//                }
+//            }
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeWith(new DisposableObserver<PayInfo>() {
+//                    @Override
+//                    public void onNext(PayInfo payInfo) {
+//                        checkPayStatus();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        loadingView.setVisibility(View.GONE);
+//                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
+//        compositeDisposable.add(disposable);
     }
 
     private void checkPayStatus() {
