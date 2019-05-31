@@ -419,6 +419,11 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.layout_goods_discount:
+                if (mMenuAdapter == null
+                    || mMenuAdapter.getDatas() == null
+                    || mMenuAdapter.getDatas().size() == 0) {
+                    return;
+                }
                 String discountPrice = mGoodsDiscountTv.getText().toString();
                 String totalPrice = mGoodsTotalPriceTv.getText().toString();
                 mPresenter.printReceipt(myHandler, id,
