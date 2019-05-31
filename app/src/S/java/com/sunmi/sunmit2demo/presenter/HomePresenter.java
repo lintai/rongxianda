@@ -6,9 +6,13 @@ import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.sunmi.sunmit2demo.PreferenceUtil;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.modle.AllClassAndGoodsResult;
@@ -17,6 +21,8 @@ import com.sunmi.sunmit2demo.modle.CreateOrderResult;
 import com.sunmi.sunmit2demo.modle.GoodsOrderModle;
 import com.sunmi.sunmit2demo.modle.MenuItemModule;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
+import com.sunmi.sunmit2demo.modle.Result;
+import com.sunmi.sunmit2demo.modle.ShopInfo;
 import com.sunmi.sunmit2demo.presenter.contact.HomeClassAndGoodsContact;
 import com.sunmi.sunmit2demo.print.DeviceConnFactoryManager;
 import com.sunmi.sunmit2demo.print.PrinterCode;
@@ -64,6 +70,15 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
             @Override
             public void subscribe(ObservableEmitter<List<ClassAndGoodsModle>> e) throws Exception {
                 AllClassAndGoodsResult result = ServerManager.getClassGoodsList(Util.appId);
+                try {
+                    //这个请求不是必要的，不能中断整个流程。故try catch
+                    Result<ShopInfo> shopInfoResult = ServerManager.getShopInfo(Util.appId);
+                    if (shopInfoResult != null && shopInfoResult.getErrno() == 0 && shopInfoResult.getResult() != null) {
+                        PreferenceUtil.putString(context, PreferenceUtil.KEY.PAYING_TYPE, new Gson().toJson(shopInfoResult.getResult()));
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
                 if (result != null && result.getErrno() == 0 && result.getResult() != null) {
                     e.onNext(result.getResult());
                 } else {
@@ -180,7 +195,13 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
     /**
      * 打印票据
      */
-    public void printReceipt(final Handler mHandler, final int id) {
+    public void printReceipt(final Handler mHandler,
+                             final int id,
+                             final List<MenuItemModule> modules,
+                             final float totalPrice,
+                             final float discountPrice,
+                             final float realPrice,
+                             final String payType) {
         if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
                 !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
             Utils.toast( context, context.getString( R.string.str_cann_printer ) );
@@ -190,8 +211,8 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         threadPool.addTask( new Runnable() {
             @Override
             public void run() {
-                if ( DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
-                    sendReceiptWithResponse(id);
+                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
+                    sendReceiptWithResponse(id, modules, totalPrice, discountPrice, realPrice, payType);
                 } else {
                     mHandler.obtainMessage(PrinterCode.PRINTER_COMMAND_ERROR).sendToTarget();
                 }
@@ -202,7 +223,19 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
     /**
      * 发送票据
      */
-    void sendReceiptWithResponse(int id) {
+    void sendReceiptWithResponse(int id,
+                                 List<MenuItemModule> modules,
+                                 float totalPrice,
+                                 float discountPrice,
+                                 float realPrice,
+                                 String payType) {
+        ShopInfo shopInfo = null;
+        String shopInfoString = PreferenceUtil.getString(context, PreferenceUtil.KEY.PAYING_TYPE, "");
+        if (!TextUtils.isEmpty(shopInfoString)) {
+            shopInfo = new Gson().fromJson(shopInfoString, new TypeToken<Result<ShopInfo>>(){}.getType());
+        }
+
+
         EscCommand esc = new EscCommand();
         esc.addInitializePrinter();
         esc.addPrintAndFeedLines( (byte) 3 );

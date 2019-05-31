@@ -212,8 +212,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      *
      * @param usbDevice
      */
-    private void usbConn( UsbDevice usbDevice )
-    {
+    private void usbConn( UsbDevice usbDevice ) {
         new DeviceConnFactoryManager.Build()
                 .setId(id)
                 .setConnMethod( DeviceConnFactoryManager.CONN_METHOD.USB )
@@ -420,7 +419,14 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.layout_goods_discount:
-                mPresenter.printReceipt(myHandler, id);
+                String discountPrice = mGoodsDiscountTv.getText().toString();
+                String totalPrice = mGoodsTotalPriceTv.getText().toString();
+                mPresenter.printReceipt(myHandler, id,
+                        mMenuAdapter.getDatas(),
+                        Utils.parseFloat(totalPrice + discountPrice),
+                        Utils.parseFloat(discountPrice),
+                        Utils.parseFloat(totalPrice),
+                        "微信支付");
                 break;
             case R.id.tv_has_selected:
                 try {

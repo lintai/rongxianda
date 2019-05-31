@@ -9,10 +9,9 @@ import com.sunmi.sunmit2demo.modle.GoodsOrderModle;
 import com.sunmi.sunmit2demo.modle.PayCheckInfo;
 import com.sunmi.sunmit2demo.modle.PayInfo;
 import com.sunmi.sunmit2demo.modle.Result;
+import com.sunmi.sunmit2demo.modle.ShopInfo;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -174,6 +173,45 @@ public class ServerManager {
             if (response != null && response.isSuccessful()) {
                 String bodyString = response.body().string();
                 return new Gson().fromJson(bodyString, new TypeToken<Result<PayCheckInfo>>(){}.getType());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Result<ShopInfo> getShopInfo(String appId) {
+        String currTime = Util.getCurrData();
+        Map<String, String> params = new HashMap<>();
+        params.put("appid", appId);
+        params.put("requesttime", currTime);
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("appid", appId)
+                .add("sign", Util.getSignStringBuffer(params))
+                .add("requesttime", currTime)
+                .build();
+
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < ((FormBody) requestBody).size(); i++) {
+            sb.append(((FormBody) requestBody).encodedName(i));
+            sb.append(" - ");
+            sb.append(((FormBody) requestBody).encodedValue(i));
+            sb.append("\n");
+        }
+        String body = sb.toString();
+
+        Request request = new Request.Builder()
+                .url(Api.SHOP_INFO)
+                .post(requestBody)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response != null && response.isSuccessful()) {
+                String bodyString = response.body().string();
+                return new Gson().fromJson(bodyString, new TypeToken<Result<ShopInfo>>(){}.getType());
             }
         } catch (IOException e) {
             e.printStackTrace();
