@@ -245,7 +245,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 设置为倍高倍宽 */
         esc.addSelectPrintModes( EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF );
         /* 打印文字 */
-        esc.addText( "Sample\n" );
+        esc.addText( "榕鲜达\n" );
         esc.addPrintAndLineFeed();
 
         /* 打印文字 */
@@ -254,23 +254,32 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 设置打印左对齐 */
         esc.addSelectJustification( EscCommand.JUSTIFICATION.LEFT );
         /* 打印文字 */
-        esc.addText( "Print text\n" );
-        /* 打印文字 */
-        esc.addText( "Welcome to use SMARNET printer!\n" );
-
-        /* 打印繁体中文 需要打印机支持繁体字库 */
-        String message = "佳博智匯票據打印機\n";
-        esc.addText( message, "GB2312" );
-        esc.addPrintAndLineFeed();
-
-        /* 绝对位置 具体详细信息请查看GP58编程手册 */
-        esc.addText( "智汇" );
+        esc.addText( "订单号：\n" ,"GB2312");
+        /* 打印时间 */
+        esc.addText( "时间：\n","GB2312" );
+        esc.addText( "商品名称","GB2312" );
+        //定位      单价   数量   总价
         esc.addSetHorAndVerMotionUnits( (byte) 7, (byte) 0 );
-        esc.addSetAbsolutePrintPosition( (short) 6 );
-        esc.addText( "网络" );
+        esc.addSetAbsolutePrintPosition( (short) 7 );
+        esc.addText( "单价","GB2312" );
         esc.addSetAbsolutePrintPosition( (short) 10 );
-        esc.addText( "设备" );
+        esc.addText( "数量","GB2312" );
+        esc.addSetAbsolutePrintPosition( (short) 13 );
+        esc.addText( "总价\n","GB2312" );
+        esc.addText( "————————————————\n","GB2312" );
+        /* 打印商品详情 */
+        //TODO
+
+        //打印商品总价
+        esc.addText( "原价：\n" ,"GB2312");
+        esc.addText( "优惠：\n" ,"GB2312");
+        esc.addText( "总价：\n" ,"GB2312");
+        esc.addText( "支付方式：\n" ,"GB2312");
+        esc.addText( "————————————————","GB2312" );
+        //留白
         esc.addPrintAndLineFeed();
+        esc.addText( "店铺地址：\n" ,"GB2312");
+        esc.addText( "联系方式：\n" ,"GB2312");
 
         /* 打印图片 */
         /* 打印文字 */
@@ -280,38 +289,39 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 打印图片 */
         esc.addRastBitImage( b, 380, 0 );
 
-        /* 打印一维条码 */
-        /* 打印文字 */
+        /* 打印一维条码 *//*
+        *//* 打印文字 *//*
         esc.addText( "Print code128\n" );
         esc.addSelectPrintingPositionForHRICharacters( EscCommand.HRI_POSITION.BELOW );
-        /*
+        *//*
          * 设置条码可识别字符位置在条码下方
          * 设置条码高度为60点
-         */
+         *//*
         esc.addSetBarcodeHeight( (byte) 60 );
-        /* 设置条码单元宽度为1 */
+        *//* 设置条码单元宽度为1 *//*
         esc.addSetBarcodeWidth( (byte) 1 );
-        /* 打印Code128码 */
+        *//* 打印Code128码 *//*
         esc.addCODE128( esc.genCodeB( "SMARNET" ) );
         esc.addPrintAndLineFeed();
 
 
-        /*
+        *//*
          * QRCode命令打印 此命令只在支持QRCode命令打印的机型才能使用。 在不支持二维码指令打印的机型上，则需要发送二维条码图片
-         */
-        /* 打印文字 */
+         *//*
+        *//* 打印文字 *//*
         esc.addText( "Print QRcode\n" );
-        /* 设置纠错等级 */
+
+        /* 设置纠错等级 *//*
         esc.addSelectErrorCorrectionLevelForQRCode( (byte) 0x31 );
-        /* 设置qrcode模块大小 */
+        *//* 设置qrcode模块大小 *//*
         esc.addSelectSizeOfModuleForQRCode( (byte) 3 );
-        /* 设置qrcode内容 */
+        *//* 设置qrcode内容 *//*
         esc.addStoreQRCodeData( "www.smarnet.cc" );
-        esc.addPrintQRCode(); /* 打印QRCode */
+        esc.addPrintQRCode(); *//* 打印QRCode *//*
         esc.addPrintAndLineFeed();
 
-        /* 设置打印左对齐 */
-        esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );
+        *//* 设置打印左对齐 *//*
+        esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );*/
         /* 打印文字 */
         esc.addText( "Completed!\r\n" );
 
