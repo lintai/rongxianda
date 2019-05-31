@@ -103,4 +103,13 @@ public class Utils {
         }
         toast.show();
     }
+
+    public static float parseFloat(String data) {
+        try {
+            return Float.parseFloat(data);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

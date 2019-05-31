@@ -22,6 +22,7 @@ public class PreferenceUtil {
 
     public interface KEY{
         String PAYING_TYPE = "paying_type";
+        String SHOP_INFO = "shop_info";
     }
 
     public static void putString(Context context, String key, String value) {
