@@ -239,7 +239,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 设置为倍高倍宽 */
         esc.addSelectPrintModes( EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF );
         /* 打印文字 */
-        esc.addText( "榕鲜达\n" );
+        esc.addText( shopInfo.getShopname()+ "\n" );
         esc.addPrintAndLineFeed();
 
         /* 打印文字 */
@@ -248,9 +248,9 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 设置打印左对齐 */
         esc.addSelectJustification( EscCommand.JUSTIFICATION.LEFT );
         /* 打印文字 */
-        esc.addText( "订单号：\n" ,"GB2312");
+        esc.addText( "订单号：" + printerModle.getOrderNo() + "\n" ,"GB2312");
         /* 打印时间 */
-        esc.addText( "时间：\n","GB2312" );
+        esc.addText( "时间：" + printerModle.getTime() + "\n","GB2312" );
         esc.addText( "商品名称","GB2312" );
         //定位      单价   数量   总价
         esc.addSetHorAndVerMotionUnits( (byte) 7, (byte) 0 );
@@ -263,25 +263,35 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         esc.addText( "————————————————\n","GB2312" );
         /* 打印商品详情 */
         //TODO
-
+        for(MenuItemModule menuItem : printerModle.getModules()){
+            esc.addText( menuItem.getGoodsName()+"\n","GB2312" );
+            esc.addSetHorAndVerMotionUnits( (byte) 7, (byte) 0 );
+            esc.addSetAbsolutePrintPosition( (short) 7 );
+            esc.addText( menuItem.getPrice()/100.0+"","GB2312" );
+            esc.addSetAbsolutePrintPosition( (short) 10 );
+            esc.addText( menuItem.getGoodsCount()+"","GB2312" );
+            esc.addSetAbsolutePrintPosition( (short) 12 );
+            esc.addText( menuItem.getPrice()/100.0*menuItem.getGoodsCount()+"\n","GB2312" );
+        }
+        esc.addText( "————————————————\n","GB2312" );
         //打印商品总价
-        esc.addText( "原价：\n" ,"GB2312");
-        esc.addText( "优惠：\n" ,"GB2312");
-        esc.addText( "总价：\n" ,"GB2312");
-        esc.addText( "支付方式：\n" ,"GB2312");
+        esc.addText( "原价："+printerModle.getTotalPrice()+"\n" ,"GB2312");
+        esc.addText( "优惠："+printerModle.getDiscountPrice()+"\n" ,"GB2312");
+        esc.addText( "总价："+printerModle.getRealPrice()+"\n" ,"GB2312");
+        esc.addText( "支付方式："+printerModle.getPayType()+"\n" ,"GB2312");
         esc.addText( "————————————————","GB2312" );
         //留白
         esc.addPrintAndLineFeed();
-        esc.addText( "店铺地址：\n" ,"GB2312");
-        esc.addText( "联系方式：\n" ,"GB2312");
+        esc.addText( "店铺地址："+shopInfo.getAdress()+"\n" ,"GB2312");
+        esc.addText( "联系方式："+shopInfo.getPhone()+"\n" ,"GB2312");
 
         /* 打印图片 */
         /* 打印文字 */
-        esc.addText( "Print bitmap!\n" );
+        /*esc.addText( "Print bitmap!\n" );
         Bitmap b = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.gprinter );
-        /* 打印图片 */
-        esc.addRastBitImage( b, 380, 0 );
+        *//* 打印图片 *//*
+        esc.addRastBitImage( b, 380, 0 );*/
 
         /* 打印一维条码 *//*
         *//* 打印文字 *//*
