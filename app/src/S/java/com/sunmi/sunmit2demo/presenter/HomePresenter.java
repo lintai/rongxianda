@@ -232,7 +232,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         ShopInfo shopInfo = null;
         String shopInfoString = PreferenceUtil.getString(context, PreferenceUtil.KEY.PAYING_TYPE, "");
         if (!TextUtils.isEmpty(shopInfoString)) {
-            shopInfo = new Gson().fromJson(shopInfoString, new TypeToken<Result<ShopInfo>>(){}.getType());
+            shopInfo = new Gson().fromJson(shopInfoString, new TypeToken<ShopInfo>(){}.getType());
         }
 
 

@@ -428,9 +428,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 String totalPrice = mGoodsTotalPriceTv.getText().toString();
                 mPresenter.printReceipt(myHandler, id,
                         mMenuAdapter.getDatas(),
-                        Utils.parseFloat(totalPrice + discountPrice),
-                        Utils.parseFloat(discountPrice),
-                        Utils.parseFloat(totalPrice),
+                        Utils.parseFloat((TextUtils.isEmpty(totalPrice) ? "":totalPrice) + (TextUtils.isEmpty(discountPrice) ? "":discountPrice)),
+                        Utils.parseFloat(TextUtils.isEmpty(totalPrice) ? "":totalPrice),
+                        Utils.parseFloat(TextUtils.isEmpty(totalPrice) ? "":totalPrice),
                         "微信支付");
                 break;
             case R.id.tv_has_selected:
