@@ -778,9 +778,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     //选择 商品分类的分页数据
     private void resetViewData(int page) {
-        List<GoodsSortTagModle> tags = mGoodsSortAdapter.getDatas();
-        tags.clear();
-
         if (totalDatas <= 0 || page * DEFAULT_PAGE_SIZE >= totalDatas) {
             //没有该页对应的数据
             Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT).show();
@@ -798,6 +795,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         } else {
             currPage = page;
         }
+
+        List<GoodsSortTagModle> tags = mGoodsSortAdapter.getDatas();
+        tags.clear();
 
         int fromIndex = page * DEFAULT_PAGE_SIZE;
         int toIndex = (page + 1) * DEFAULT_PAGE_SIZE > totalDatas  ? totalDatas : (page + 1) * DEFAULT_PAGE_SIZE;

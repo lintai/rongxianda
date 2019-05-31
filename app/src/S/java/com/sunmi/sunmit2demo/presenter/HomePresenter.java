@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sunmi.sunmit2demo.Constants;
 import com.sunmi.sunmit2demo.PreferenceUtil;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
@@ -126,7 +127,8 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                 for (int i = 0; i < size; i++) {
                     MenuItemModule module = goodList.get(i);
                     float price;
-                    if (module.getPriceType() == 2) {
+                    if (module.getPriceType() == Constants.WEIGHT_PRICE_TYPE) {
+                        //称重类型商品的goodscount都为1
                         price = module.getPrice() * module.getGoodsCount();
                     } else {
                         price = module.getPrice();
