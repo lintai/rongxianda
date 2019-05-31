@@ -213,7 +213,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 设置为倍高倍宽 */
         esc.addSelectPrintModes( EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF );
         /* 打印文字 */
-        esc.addText( "Sample\n" );
+        esc.addText( "榕鲜达\n" );
         esc.addPrintAndLineFeed();
 
         /* 打印文字 */
@@ -222,7 +222,9 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 设置打印左对齐 */
         esc.addSelectJustification( EscCommand.JUSTIFICATION.LEFT );
         /* 打印文字 */
-        esc.addText( "Print text\n" );
+        esc.addText( "订单号：\n" ,"GB2312");
+        /* 打印时间 */
+        esc.addText( "时间：\n","GB2312" );
         /* 打印文字 */
         esc.addText( "Welcome to use SMARNET printer!\n" );
 
