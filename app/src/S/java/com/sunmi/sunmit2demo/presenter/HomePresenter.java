@@ -236,6 +236,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );
         /* 设置为倍高倍宽 */
         esc.addSelectPrintModes( EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF );
+        esc.addText( shopInfo.getShopname()+"\n" ,"GB2312");
         /* 打印文字 */
         /* 取消倍高倍宽 */
         esc.addSelectPrintModes( EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF );
@@ -286,7 +287,9 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
             Bitmap b = BitmapFactory.decodeByteArray(bitmaps, 0, bitmaps.length);
             if (b != null) {
                 /* 打印图片 */
-                esc.addRastBitImage( b, 380, 0 );
+                /* 设置打印居中 */
+                esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );
+                esc.addRastBitImage( b, 320, 0 );
             }
         }
 
@@ -324,7 +327,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         *//* 设置打印左对齐 *//*
         esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );*/
         /* 打印文字 */
-        esc.addText( "Completed!\r\n" );
+        //esc.addText( "Completed!\r\n" );
 
         /* 开钱箱 */
         esc.addGeneratePlus( LabelCommand.FOOT.F5, (byte) 255, (byte) 255 );
