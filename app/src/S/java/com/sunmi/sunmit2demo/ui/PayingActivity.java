@@ -1,5 +1,6 @@
 package com.sunmi.sunmit2demo.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,7 +9,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,18 +30,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -75,6 +72,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     private boolean isWaiting;
 
     private float goodsOriginalPrice;
+    private String goodsCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,13 +146,13 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
             authoCode = bundle.getString(GOODS_AUTHO_DATA);
             orderInfo = (OrderInfo) bundle.getSerializable(ORDER_RESULT);
 
-            String goodsCount = bundle.getString(GOODS_COUNT);
+            goodsCount = bundle.getString(GOODS_COUNT);
             goodsOriginalPrice = bundle.getFloat(GOODS_ORIGINAL_PRICE);
 
-            goodsCountTv.setText("总共"+goodsCount+"商品");
-            goodsPriceTv.setText(Utils.numberFormat(goodsOriginalPrice / 100));
+            goodsCountTv.setText("总共"+goodsCount+"件商品");
+            goodsPriceTv.setText("￥"+Utils.numberFormat(goodsOriginalPrice / 100));
             try {
-                goodsDiscountTv.setText(Utils.numberFormat(Float.parseFloat(orderInfo.getCashFee()) / 100));
+                goodsDiscountTv.setText("￥"+Utils.numberFormat(Float.parseFloat(orderInfo.getCashFee()) / 100));
             } catch (NumberFormatException e) {
                 goodsDiscountTv.setText("价格返回错误");
                 e.printStackTrace();
@@ -169,25 +167,11 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 codeNameTv.setText("实收");
             } else {
                 otherPayLayout.setVisibility(View.VISIBLE);
-                payTypeTv.setText(getPayType(payType));
+                payTypeTv.setText(Util.getPayType(payType));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private String getPayType(int payType) {
-        String type = "";
-        if (payType == ALI_PAY_TYPE) {
-            type = "支付宝";
-        } else if (payType == MEMBER_PAYT_TYPE) {
-            type = "会员余额";
-        } else if (payType == CASH_PAYT_TYPE) {
-            type = "现金支付";
-        } else {
-            type = "微信";
-        }
-        return type;
     }
 
     private void cancelLastViewFocus(View view) {
@@ -202,47 +186,52 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void pay() {
-        EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), getPayType(payType)));
-//        loadingView.setVisibility(View.VISIBLE);
-//        PreferenceUtil.putString(this, PreferenceUtil.KEY.PAYING_TYPE, "paying");
-//        if (TextUtils.isEmpty(authoCode)) {
-//            isWaiting = true;
-//            return;
-//        } else {
-//            isWaiting = false;
-//        }
-//
-//        Disposable disposable = Observable.create(new ObservableOnSubscribe<PayInfo>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
-//                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, authoCode,  2);
-//                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
-//                    e.onNext(result.getResult());
-//                } else {
-//                    e.onError(new Throwable());
-//                }
-//            }
-//        })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(new DisposableObserver<PayInfo>() {
-//                    @Override
-//                    public void onNext(PayInfo payInfo) {
-//                        checkPayStatus();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        loadingView.setVisibility(View.GONE);
-//                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
-//        compositeDisposable.add(disposable);
+//        测试代码
+//        EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), getPayType(payType)));
+        loadingView.setVisibility(View.VISIBLE);
+        PreferenceUtil.putString(this, PreferenceUtil.KEY.PAYING_TYPE, "paying");
+        if (TextUtils.isEmpty(authoCode)) {
+            isWaiting = true;
+            return;
+        } else {
+            isWaiting = false;
+        }
+
+        Disposable disposable = Observable.create(new ObservableOnSubscribe<PayInfo>() {
+            @Override
+            public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
+                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, authoCode,  2);
+                if (result != null && result.getErrno() == 0 && result.getResult() != null) {
+                    e.onNext(result.getResult());
+                } else if (result != null && !TextUtils.isEmpty(result.getError())) {
+                    gotoNextActivity();
+                } else {
+                    e.onError(new Throwable());
+                }
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<PayInfo>() {
+                    @Override
+                    public void onNext(PayInfo payInfo) {
+                        checkPayStatus();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        loadingView.setVisibility(View.GONE);
+                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+                        String message = e == null ? "" : e.getMessage();
+                        gotoNextActivity(message);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        compositeDisposable.add(disposable);
     }
 
     private void checkPayStatus() {
@@ -275,6 +264,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                             loadingView.setVisibility(View.GONE);
                             PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                             compositeDisposable.remove(this);
+                            gotoNextActivity();
                         } else if (System.currentTimeMillis() - currTime > 60 * 1000){
                             loadingView.setVisibility(View.GONE);
                             PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
@@ -288,6 +278,8 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                         loadingView.setVisibility(View.GONE);
                         PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                         compositeDisposable.remove(this);
+                        String message = e == null ? "" : e.getMessage();
+                        gotoNextActivity(message);
                     }
 
                     @Override
@@ -298,6 +290,21 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         compositeDisposable.add(disposable);
 
     }
+    private void gotoNextActivity() {
+        gotoNextActivity("");
+    }
+
+    private void gotoNextActivity(String errorMsg) {
+        Intent intent = new Intent(this, PayResultActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(PayingActivity.ORDER_RESULT, orderInfo);
+        bundle.putString(PayingActivity.GOODS_COUNT, String.valueOf(goodsCount));
+        bundle.putFloat(PayingActivity.GOODS_ORIGINAL_PRICE, goodsOriginalPrice);
+        bundle.putInt(PayingActivity.GOODS_PAY_TYPE, payType);
+        bundle.putString(PayResultActivity.ERROR_MSG, errorMsg);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, 1);
+    }
 
     @Override
     public void onClick(View v) {
@@ -306,9 +313,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 payTv.setSelected(true);
                 cancelLastViewFocus(payTv);
                 if (payType == CASH_PAYT_TYPE) {
-                    EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), getPayType(payType)));
-                    setResult(-1);
-                    finish();
+                    gotoNextActivity();
                 } else if (!TextUtils.isEmpty(payCodeEt.getText().toString())) {
                     pay();
                 }
@@ -338,6 +343,15 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         EventBus.getDefault().unregister(this);
         if (compositeDisposable != null) {
             compositeDisposable.dispose();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            setResult(-1);
+            finish();
         }
     }
 }
