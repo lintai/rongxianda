@@ -204,7 +204,8 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 if (result != null && result.getErrno() == 0 && result.getResult() != null) {
                     e.onNext(result.getResult());
                 } else if (result != null && !TextUtils.isEmpty(result.getError())) {
-                    gotoNextActivity();
+                    loadingView.setVisibility(View.GONE);
+                    gotoNextActivity(result.getError());
                 } else {
                     e.onError(new Throwable());
                 }
@@ -260,7 +261,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onNext(PayCheckInfo payCheckInfo) {
                         Log.i("timer_time==="," response_time="+String.valueOf(System.currentTimeMillis() - currTime));
-                        if (payCheckInfo != null && "1".equals(payCheckInfo)) {
+                        if (payCheckInfo != null && "1".equals(payCheckInfo.getPaystatus())) {
                             loadingView.setVisibility(View.GONE);
                             PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                             compositeDisposable.remove(this);
