@@ -267,7 +267,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onNext(PayCheckInfo payCheckInfo) {
                         Log.i("timer_time==="," response_time="+String.valueOf(System.currentTimeMillis() - currTime));
-                        if (payCheckInfo != null && "1".equals(payCheckInfo.getPaystatus())) {
+                        if (payCheckInfo != null && "2".equals(payCheckInfo.getPaystatus())) {
                             loadingView.setVisibility(View.GONE);
                             PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                             compositeDisposable.remove(this);
