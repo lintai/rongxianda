@@ -320,7 +320,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 cancelLastViewFocus(payTv);
                 if (payType == CASH_PAYT_TYPE) {
                     try {
-                        float returnCash = Float.parseFloat(payCodeEt.getText().toString());
+                        float returnCash = Float.parseFloat(cashReturnTv.getText().toString());
                         if (returnCash < 0) {
                             Toast.makeText(this, "实收金额不足", Toast.LENGTH_SHORT).show();
                         } else {

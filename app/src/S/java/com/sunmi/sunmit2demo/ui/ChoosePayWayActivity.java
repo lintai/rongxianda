@@ -77,10 +77,10 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
             goodsOriginalPrice = bundle.getFloat(PayingActivity.GOODS_ORIGINAL_PRICE);
 
 
-            goodsCountTv.setText("总共"+goodsCount+"商品");
-            goodsPriceTv.setText(Utils.numberFormat(goodsOriginalPrice / 100));
+            goodsCountTv.setText("总共"+goodsCount+"件商品");
+            goodsPriceTv.setText("￥"+Utils.numberFormat(goodsOriginalPrice / 100));
             try {
-                goodsDiscountTv.setText(Utils.numberFormat(Float.parseFloat(orderInfo.getCashFee()) / 100));
+                goodsDiscountTv.setText("￥"+Utils.numberFormat(Float.parseFloat(orderInfo.getCashFee()) / 100));
             } catch (NumberFormatException e) {
                 goodsDiscountTv.setText("价格返回错误");
                 e.printStackTrace();
