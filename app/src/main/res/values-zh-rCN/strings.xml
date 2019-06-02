@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sunmi收银Demo</string>
+    <string name="app_name">榕鲜达</string>
     <string name="divide">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   end   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</string>
 
     <string name="more_print">打印一张小票</string>

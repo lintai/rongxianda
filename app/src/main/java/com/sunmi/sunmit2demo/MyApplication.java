@@ -11,8 +11,8 @@ import android.util.Log;
 
 import com.bst.bsbandlib.sdk.BSBandSDKManager;
 import com.sunmi.payment.PaymentService;
-import com.sunmi.sunmit2demo.bean.DaoMaster;
-import com.sunmi.sunmit2demo.bean.DaoSession;
+import com.sunmi.sunmit2demo.bean.blescan.DaoMaster;
+import com.sunmi.sunmit2demo.bean.blescan.DaoSession;
 
 
 import java.io.File;
@@ -31,6 +31,7 @@ import java.util.Map;
 public class MyApplication extends Application {
 
     public static MyApplication app = null;
+
     private DaoSession mDaoSession;
 
     @Override
