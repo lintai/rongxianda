@@ -520,7 +520,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
-                goodsItemClickEvent(new GoodsItemClickEvent(pluGoodsInfo.getGoodsName(), price, weight, String.valueOf(pluGoodsInfo.getPlu()), pluGoodsInfo.getPriceType()));
+                goodsItemClickEvent(new GoodsItemClickEvent(pluGoodsInfo.getGoodsName(), price, "/"+pluGoodsInfo.getWeight()+pluGoodsInfo.getUnit(), String.valueOf(pluGoodsInfo.getGoodsCode()), pluGoodsInfo.getPriceType()));
             } else {
                 Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
             }
