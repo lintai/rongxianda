@@ -236,6 +236,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );
         /* 设置为倍高倍宽 */
         esc.addSelectPrintModes( EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF );
+        esc.addText( shopInfo.getShopname()+"\n" ,"GB2312");
         /* 打印文字 */
         /* 取消倍高倍宽 */
         esc.addSelectPrintModes( EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF );
