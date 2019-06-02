@@ -1,6 +1,7 @@
 package com.sunmi.sunmit2demo.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.sunmi.sunmit2demo.Constants;
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
@@ -63,6 +65,9 @@ public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
         GoodsSortViewHolder viewHolder = (GoodsSortViewHolder) holder;
 //        viewHolder.goodsCoverIv
         final GoodsInfo info = datas.get(position);
+        if (!TextUtils.isEmpty(info.getFaceImg())) {
+            viewHolder.goodsCoverIv.setImageURI(Uri.parse(info.getFaceImg()));
+        }
         if (!TextUtils.isEmpty(info.getGoodsName())) {
             viewHolder.goodsNameTv.setText(info.getGoodsName());
         }
@@ -91,7 +96,7 @@ public class GoodsSortDetailAdapter extends RecyclerView.Adapter {
 
     class GoodsSortViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView goodsCoverIv;
+        public SimpleDraweeView goodsCoverIv;
         public TextView goodsNameTv, goodsPriceTv;
 
         public GoodsSortViewHolder(View itemView) {
