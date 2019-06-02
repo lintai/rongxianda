@@ -593,7 +593,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 || mMenuAdapter.getDatas().size() == 0) {
             return;
         }
-
         String discountPrice = null;
         String totalPrice = null;
         try {
@@ -603,7 +602,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             e.printStackTrace();
             return;
         }
-
 
         List<MenuItemModule> modules = new ArrayList<>();
         modules.addAll(mMenuAdapter.getDatas());
@@ -629,10 +627,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         //加入购物清单
         MenuItemModule menuItemModule = new MenuItemModule();
         menuItemModule.setGoodsName(event.goodsName);
-        //menuItemModule.setPrice(event.price);
+        menuItemModule.setPrice(event.price);
+        menuItemModule.setTotalPrice(event.totalPrice);
         menuItemModule.setUnit(event.unit);
         menuItemModule.setGoodsCount(1);
-        menuItemModule.setPrice(event.priceType == Constants.WEIGHT_PRICE_TYPE ? (int) event.totalPrice : event.price);
         menuItemModule.setGoodsCode(event.goodsCode);
         menuItemModule.setPriceType(event.priceType);
 

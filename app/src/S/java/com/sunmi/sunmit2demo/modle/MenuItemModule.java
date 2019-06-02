@@ -15,6 +15,8 @@ public class MenuItemModule extends BaseModle {
 
     float goodsCount;//数量
 
+    float totalPrice;//只对称重商品有效
+
     public MenuItemModule() {
 
     }
@@ -73,5 +75,13 @@ public class MenuItemModule extends BaseModle {
 
     public void setPriceType(int priceType) {
         this.priceType = priceType;
+    }
+
+    public float getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

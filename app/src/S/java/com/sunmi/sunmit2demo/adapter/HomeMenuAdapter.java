@@ -102,7 +102,7 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
             if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
                 menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getPrice() * module.getGoodsCount() * 1.0f / 100));
             } else {
-                menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getPrice() * 1.0f / 100));
+                menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getTotalPrice() * 1.0f / 100));
             }
 
             //称重的商品无法通过“+”或“-”来增减商品数量
