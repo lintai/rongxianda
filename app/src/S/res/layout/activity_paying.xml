@@ -144,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="11dp"
-                android:text=""
+                android:text="￥0"
                 android:textSize="33dp"
                 android:textColor="#233333"/>
 
@@ -164,7 +164,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="60dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="上一步"
