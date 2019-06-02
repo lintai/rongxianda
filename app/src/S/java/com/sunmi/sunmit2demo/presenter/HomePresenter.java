@@ -75,7 +75,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                     if (shopInfoResult != null && shopInfoResult.getErrno() == 0 && shopInfoResult.getResult() != null) {
                         ShopInfo shopInfo = shopInfoResult.getResult();
                         ServerManager.downloadPic(shopInfo.getQrcode());
-                        PreferenceUtil.putString(context, PreferenceUtil.KEY.PAYING_TYPE, new Gson().toJson(shopInfoResult.getResult()));
+                        PreferenceUtil.putString(context, PreferenceUtil.KEY.SHOP_INFO, new Gson().toJson(shopInfoResult.getResult()));
                     }
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -223,7 +223,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
      */
     void sendReceiptWithResponse(int id, PrinterModle printerModle) {
         ShopInfo shopInfo = null;
-        String shopInfoString = PreferenceUtil.getString(context, PreferenceUtil.KEY.PAYING_TYPE, "");
+        String shopInfoString = PreferenceUtil.getString(context, PreferenceUtil.KEY.SHOP_INFO, "");
         if (!TextUtils.isEmpty(shopInfoString)) {
             shopInfo = new Gson().fromJson(shopInfoString, new TypeToken<ShopInfo>(){}.getType());
         }

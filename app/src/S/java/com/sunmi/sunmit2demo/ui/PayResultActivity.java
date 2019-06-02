@@ -86,7 +86,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
                 preTv.setSelected(true);
                 cancelLastViewFocus(preTv);
                 cancelPayTv.setText("取消支付");
-                payIv.setImageResource(R.drawable.close);
+                payIv.setImageResource(R.drawable.pay_failed_icon);
             } else {
                 payType = bundle.getInt(PayingActivity.GOODS_PAY_TYPE);
                 payTypeTv.setText("支付方式："+Util.getPayType(payType));

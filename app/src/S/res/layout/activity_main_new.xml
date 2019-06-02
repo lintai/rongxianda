@@ -9,7 +9,7 @@
         android:layout_width="380dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#f8d451">
+        android:background="#fece23">
 
         <TextView
             android:id="@+id/tv_has_selected"

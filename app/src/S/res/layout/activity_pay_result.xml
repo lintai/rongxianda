@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/pay_success_icon"/>
 
         <TextView
             android:id="@+id/tv_pay_tip"
