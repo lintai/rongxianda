@@ -514,15 +514,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     return;
                 }
                 int price = pluGoodsInfo.getPrice();
-                String weight = "";
+                int weight = 0;
                 try {
                     price = Integer.parseInt(datas[1]);
-                    int w = Integer.parseInt(datas[2]);
-                    if (w >= 1000) {
-                        weight = Utils.numberFormat(w * 1.0f / 1000) + "kg";
-                    } else {
-                        weight = w + "g";
-                    }
+                    weight = Integer.parseInt(datas[2]);
 
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
@@ -533,7 +528,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                         pluGoodsInfo.getUnit(),
                         String.valueOf(pluGoodsInfo.getPlu()),
                         pluGoodsInfo.getPriceType(),
-                        price / pluGoodsInfo.getPrice()));
+                        weight,
+                        price));
             } else {
                 Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
             }
@@ -614,6 +610,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             e.printStackTrace();
             return;
         }
+
+
         mPresenter.printReceipt(myHandler, id,
                 new PrinterModle(modules,
                         event.orderNo,
@@ -637,12 +635,12 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         menuItemModule.setPriceType(event.priceType);
 
         mMenuAdapter.addGoodsCount(1);
-        mMenuAdapter.addGoodsTotalPrice(event.price);
+        mMenuAdapter.addGoodsTotalPrice(event.priceType == Constants.WEIGHT_PRICE_TYPE ? event.totalPrice : event.price);
 
         List<MenuItemModule> modules = mMenuAdapter.getDatas();
         if (event.priceType == Constants.WEIGHT_PRICE_TYPE) {
             //称重类型商品直接添加
-            menuItemModule.setGoodsCount(event.count);
+            menuItemModule.setGoodsCount(event.weight);
             modules.add(0, menuItemModule);
             mMenuAdapter.notifyDataSetChanged();
         } else if (modules.size() > 0) {

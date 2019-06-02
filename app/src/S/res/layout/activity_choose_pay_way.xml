@@ -73,14 +73,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/tv_cash_pay"
-                android:layout_toLeftOf="@+id/tv_cash_pay"
+                android:layout_alignTop="@+id/layout_cash_pay"
+                android:layout_toLeftOf="@+id/layout_cash_pay"
                 android:text="请选择支付方式："
                 android:textSize="33dp"
                 android:textColor="#333333"/>
 
-            <TextView
-                android:id="@+id/tv_cash_pay"
+            <LinearLayout
+                android:id="@+id/layout_cash_pay"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
@@ -89,55 +89,116 @@
                 android:paddingBottom="10dp"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:text="现金支付"
-                android:textSize="33dp"
-                android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
-                android:background="@drawable/goods_choose_pay_way_selector"/>
+                android:orientation="horizontal"
+                android:background="@drawable/goods_choose_pay_way_selector">
 
-            <TextView
-                android:id="@+id/tv_member_pay"
+                <ImageView
+                    android:id="@+id/iv_cash_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/goods_cash_pay_selector"/>
+
+                <TextView
+                    android:id="@+id/tv_cash_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="现金支付"
+                    android:textSize="33dp"
+                    android:textColor="@drawable/goods_choose_pay_way_text_color_selector" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_vip_pay"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_cash_pay"
+                android:layout_below="@+id/layout_cash_pay"
                 android:layout_marginTop="18dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:text="会员卡支付"
-                android:textSize="33dp"
-                android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
-                android:background="@drawable/goods_choose_pay_way_selector"/>
+                android:orientation="horizontal"
+                android:background="@drawable/goods_choose_pay_way_selector">
 
-            <TextView
-                android:id="@+id/tv_wx_pay"
+                <ImageView
+                    android:id="@+id/iv_vip_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/goods_vip_pay_selector"/>
+
+                <TextView
+                    android:id="@+id/tv_member_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="会员卡支付"
+                    android:textSize="33dp"
+                    android:textColor="@drawable/goods_choose_pay_way_text_color_selector"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_wx_pay"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_member_pay"
+                android:layout_below="@+id/layout_vip_pay"
                 android:layout_marginTop="18dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:text="微信支付"
-                android:textSize="33dp"
-                android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
-                android:background="@drawable/goods_choose_pay_way_selector"/>
+                android:orientation="horizontal"
+                android:background="@drawable/goods_choose_pay_way_selector">
 
-            <TextView
-                android:id="@+id/tv_ali_pay"
+                <ImageView
+                    android:id="@+id/iv_wx_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/goods_wechat_pay_selector"/>
+
+                <TextView
+                    android:id="@+id/tv_wx_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="微信支付"
+                    android:textSize="33dp"
+                    android:textColor="@drawable/goods_choose_pay_way_text_color_selector"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_ali_pay"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_wx_pay"
+                android:layout_below="@+id/layout_wx_pay"
                 android:layout_marginTop="18dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:text="支付宝支付"
-                android:textSize="33dp"
-                android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
-                android:background="@drawable/goods_choose_pay_way_selector"/>
+                android:orientation="horizontal"
+                android:background="@drawable/goods_choose_pay_way_selector">
+
+                <ImageView
+                    android:id="@+id/iv_ali_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/goods_ali_pay_selector"/>
+
+                <TextView
+                    android:id="@+id/tv_ali_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="支付宝支付"
+                    android:textSize="33dp"
+                    android:textColor="@drawable/goods_choose_pay_way_text_color_selector"/>
+
+            </LinearLayout>
 
         </RelativeLayout>
 

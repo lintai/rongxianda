@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,8 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
     private TextView goodsCountTv, goodsPriceTv, goodsDiscountTv;
     private TextView cashPayTv, memberPayTv, wxPayTv, aliPayTv;
     private TextView nextTv, preTv;
+    private LinearLayout cashPayLayout, vipPayLayout, wxPayLayout, aliPayLayout;
+    private ImageView cashPayIv, vipPayIv, wxPayIv, aliPayIv;
 
     private View focusView;
 
@@ -63,18 +67,28 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
         nextTv = findViewById(R.id.tv_next);
         preTv = findViewById(R.id.tv_pre);
 
-        cashPayTv.setOnClickListener(this);
-        memberPayTv.setOnClickListener(this);
-        wxPayTv.setOnClickListener(this);
-        aliPayTv.setOnClickListener(this);
+        cashPayLayout = findViewById(R.id.layout_cash_pay);
+        vipPayLayout = findViewById(R.id.layout_vip_pay);
+        wxPayLayout = findViewById(R.id.layout_wx_pay);
+        aliPayLayout = findViewById(R.id.layout_ali_pay);
+
+        cashPayIv = findViewById(R.id.iv_cash_pay);
+        vipPayIv = findViewById(R.id.iv_vip_pay);
+        wxPayIv = findViewById(R.id.iv_wx_pay);
+        aliPayIv = findViewById(R.id.iv_ali_pay);
+
+        cashPayLayout.setOnClickListener(this);
+        vipPayLayout.setOnClickListener(this);
+        wxPayLayout.setOnClickListener(this);
+        aliPayLayout.setOnClickListener(this);
         nextTv.setOnClickListener(this);
         preTv.setOnClickListener(this);
 
         nextTv.setSelected(true);
         cancelLastFunViewFocus(nextTv);
 
-        cashPayTv.setSelected(true);
-        cancelLastViewFocus(cashPayTv);
+        cashPayLayout.setSelected(true);
+        cancelLastViewFocus(cashPayLayout);
         payType = 4;
     }
 
@@ -103,24 +117,25 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_cash_pay:
-                cashPayTv.setSelected(true);
-                cancelLastViewFocus(cashPayTv);
+            case R.id.layout_cash_pay:
+                cashPayLayout.setSelected(true);
+//                cashPayTv.setSelected(true);
+                cancelLastViewFocus(cashPayLayout);
                 payType = PayingActivity.CASH_PAYT_TYPE;
                 break;
-            case R.id.tv_member_pay:
-                memberPayTv.setSelected(true);
-                cancelLastViewFocus(memberPayTv);
+            case R.id.layout_vip_pay:
+                vipPayLayout.setSelected(true);
+                cancelLastViewFocus(vipPayLayout);
                 payType = PayingActivity.MEMBER_PAYT_TYPE;
                 break;
-            case R.id.tv_wx_pay:
-                wxPayTv.setSelected(true);
-                cancelLastViewFocus(wxPayTv);
+            case R.id.layout_wx_pay:
+                wxPayLayout.setSelected(true);
+                cancelLastViewFocus(wxPayLayout);
                 payType = PayingActivity.WX_PAY_TYPE;
                 break;
-            case R.id.tv_ali_pay:
-                aliPayTv.setSelected(true);
-                cancelLastViewFocus(aliPayTv);
+            case R.id.layout_ali_pay:
+                aliPayLayout.setSelected(true);
+                cancelLastViewFocus(aliPayLayout);
                 payType = PayingActivity.ALI_PAY_TYPE;
                 break;
             case R.id.tv_next:
