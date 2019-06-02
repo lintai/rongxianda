@@ -116,7 +116,7 @@ public class Util {
             int pluInt = Integer.parseInt(plu);
 
             String price = code.substring(7, 12);
-            String w = code.substring(12, 16);
+            String w = code.substring(12, 17);
             String weight = Integer.parseInt(w) + "";
 
             if (!TextUtils.isEmpty(plu) && !TextUtils.isEmpty(price)
