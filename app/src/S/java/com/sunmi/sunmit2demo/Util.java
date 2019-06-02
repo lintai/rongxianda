@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunmi.sunmit2demo.modle.Dto;
+import com.sunmi.sunmit2demo.ui.PayingActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -182,5 +183,19 @@ public class Util {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static String getPayType(int payType) {
+        String type = "";
+        if (payType == PayingActivity.ALI_PAY_TYPE) {
+            type = "支付宝";
+        } else if (payType == PayingActivity.MEMBER_PAYT_TYPE) {
+            type = "会员余额";
+        } else if (payType == PayingActivity.CASH_PAYT_TYPE) {
+            type = "现金支付";
+        } else {
+            type = "微信";
+        }
+        return type;
     }
 }
