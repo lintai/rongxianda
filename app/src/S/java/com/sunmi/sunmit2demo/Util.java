@@ -6,8 +6,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunmi.sunmit2demo.modle.Dto;
-import com.sunmi.sunmit2demo.utils.Utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -125,4 +129,58 @@ public class Util {
         return datas;
     }
 
+    public static byte[] read() {
+        File file = new File(Constants.SHOPLOGO);
+        if (file == null || !file.exists()) {
+            return null;
+        }
+        byte[] saveData = null;
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            byte[] b = new byte[fileInputStream.available()];
+            fileInputStream.read(b);
+            saveData = b;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return saveData;
+    }
+
+    public static void writeTo(byte[] bytes) {
+        File file = new File(Constants.SHOPLOGO);
+        if (file != null && file.exists()) {
+            file.delete();
+            file = new File(Constants.SHOPLOGO);
+        } else if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        FileOutputStream writer = null;
+        try {
+            writer = new FileOutputStream(file, true);
+            writer.write(bytes);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                    writer = null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

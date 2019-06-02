@@ -182,6 +182,8 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
             type = "支付宝";
         } else if (payType == MEMBER_PAYT_TYPE) {
             type = "会员余额";
+        } else if (payType == CASH_PAYT_TYPE) {
+            type = "现金支付";
         } else {
             type = "微信";
         }
