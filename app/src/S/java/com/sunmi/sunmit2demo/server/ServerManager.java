@@ -1,7 +1,11 @@
 package com.sunmi.sunmit2demo.server;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sunmi.sunmit2demo.Constants;
 import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.modle.AllClassAndGoodsResult;
 import com.sunmi.sunmit2demo.modle.CreateOrderResult;
@@ -11,6 +15,7 @@ import com.sunmi.sunmit2demo.modle.PayInfo;
 import com.sunmi.sunmit2demo.modle.Result;
 import com.sunmi.sunmit2demo.modle.ShopInfo;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -217,5 +222,22 @@ public class ServerManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void downloadPic(String imgUrl) {
+        Request request = new Request.Builder()
+                .url(imgUrl)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response != null && response.isSuccessful()) {
+//                return BitmapFactory.decodeStream(response.body().byteStream());
+                Util.writeTo(response.body().bytes());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

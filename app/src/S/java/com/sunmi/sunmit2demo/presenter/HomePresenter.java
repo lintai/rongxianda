@@ -74,11 +74,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                     Result<ShopInfo> shopInfoResult = ServerManager.getShopInfo(Util.appId);
                     if (shopInfoResult != null && shopInfoResult.getErrno() == 0 && shopInfoResult.getResult() != null) {
                         ShopInfo shopInfo = shopInfoResult.getResult();
-//                        if (!TextUtils.isEmpty(shopInfo.getQrcode())) {
-//                            ImageRequest imageRequest = ImageRequest.fromUri(shopInfo.getQrcode());
-//                            ImagePipeline imagePipeline = Fresco.getImagePipeline();
-//                            imagePipeline.prefetchToDiskCache(imageRequest, context);
-//                        }
+                        ServerManager.downloadPic(shopInfo.getQrcode());
                         PreferenceUtil.putString(context, PreferenceUtil.KEY.PAYING_TYPE, new Gson().toJson(shopInfoResult.getResult()));
                     }
                 } catch (Exception e1) {
@@ -280,10 +276,16 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 打印图片 */
         /* 打印文字 */
         esc.addText( "Print bitmap!\n" );
-        Bitmap b = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.gprinter );
-        /* 打印图片 */
-        esc.addRastBitImage( b, 380, 0 );
+        /*Bitmap b = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.gprinter );*/
+        byte[] bitmaps = Util.read();
+        if (bitmaps != null) {
+            Bitmap b = BitmapFactory.decodeByteArray(bitmaps, 0, bitmaps.length);
+            if (b != null) {
+                /* 打印图片 */
+                esc.addRastBitImage( b, 380, 0 );
+            }
+        }
 
         /* 打印一维条码 *//*
         *//* 打印文字 *//*
