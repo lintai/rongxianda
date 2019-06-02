@@ -575,6 +575,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void printDataEvent(PrintDataEvent event) {
+        if (event.openCashBox) {
+            mPresenter.openCashBox(myHandler, id);
+            return;
+        }
         if (mMenuAdapter == null
                 || mMenuAdapter.getDatas() == null
                 || mMenuAdapter.getDatas().size() == 0) {

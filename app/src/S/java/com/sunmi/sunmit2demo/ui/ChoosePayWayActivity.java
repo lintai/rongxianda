@@ -9,11 +9,14 @@ import android.widget.Toast;
 
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
+import com.sunmi.sunmit2demo.eventbus.PrintDataEvent;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
 import com.sunmi.sunmit2demo.modle.PayInfo;
 import com.sunmi.sunmit2demo.modle.Result;
 import com.sunmi.sunmit2demo.server.ServerManager;
 import com.sunmi.sunmit2demo.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -114,6 +117,9 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
                 payType = PayingActivity.ALI_PAY_TYPE;
                 break;
             case R.id.tv_next:
+                if (payType == PayingActivity.CASH_PAYT_TYPE) {
+                    EventBus.getDefault().post(new PrintDataEvent(true));
+                }
                 if (orderInfo != null) {
                     Intent intent = new Intent(this, PayingActivity.class);
                     Bundle bundle = new Bundle();
