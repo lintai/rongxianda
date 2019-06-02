@@ -74,6 +74,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
 
     private float goodsOriginalPrice;
     private String goodsCount;
+    private float cashReturn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,8 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                             payCodeEt.setText("");
                         } else if (!TextUtils.isEmpty(priceData)){
                             float price = Float.parseFloat(priceData);
-                            cashReturnTv.setText("￥"+Utils.numberFormat(price - goodsOriginalPrice / 100));
+                            cashReturn = price - goodsOriginalPrice / 100;
+                            cashReturnTv.setText("￥"+Utils.numberFormat(cashReturn));
                         } else {
                             cashReturnTv.setText("");
                         }
@@ -270,6 +272,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                             PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                             compositeDisposable.remove(this);
                             gotoNextActivity();
+                            EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
                         } else if (System.currentTimeMillis() - currTime > 60 * 1000){
                             loadingView.setVisibility(View.GONE);
                             PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
@@ -319,16 +322,11 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 payTv.setSelected(true);
                 cancelLastViewFocus(payTv);
                 if (payType == CASH_PAYT_TYPE) {
-                    try {
-                        float returnCash = Float.parseFloat(cashReturnTv.getText().toString());
-                        if (returnCash < 0) {
-                            Toast.makeText(this, "实收金额不足", Toast.LENGTH_SHORT).show();
-                        } else {
-                            gotoNextActivity();
-                        }
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(this, "实收金额不对", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
+                    if (cashReturn < 0) {
+                        Toast.makeText(this, "实收金额不足", Toast.LENGTH_SHORT).show();
+                    } else {
+                        EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                        gotoNextActivity();
                     }
                 } else if (!TextUtils.isEmpty(payCodeEt.getText().toString())) {
                     pay();

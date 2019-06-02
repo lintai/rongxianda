@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sunmi.sunmit2demo.R;
@@ -14,17 +15,20 @@ import com.sunmi.sunmit2demo.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class PayResultActivity extends AppCompatActivity {
+public class PayResultActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String ERROR_MSG = "errorMsg";
 
     private TextView goodsCountTv, goodsPriceTv, goodsDiscountTv, payTypeTv;
     private TextView payTv, resultTipTv;
+    private TextView preTv, cancelPayTv;
+    private LinearLayout failLayout;
 
     private OrderInfo orderInfo;
     private int payType;
 
     private float goodsOriginalPrice;
+    private View focusView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +45,13 @@ public class PayResultActivity extends AppCompatActivity {
         payTv = findViewById(R.id.tv_pay);
         payTypeTv = findViewById(R.id.tv_pay_type);
         resultTipTv = findViewById(R.id.tv_pay_tip);
+        preTv = findViewById(R.id.tv_pre);
+        cancelPayTv = findViewById(R.id.tv_cancel_pay);
+        failLayout = findViewById(R.id.layout_pay_fail);
 
-
-        payTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
-                setResult(-1);
-                finish();
-            }
-        });
+        payTv.setOnClickListener(this);
+        preTv.setOnClickListener(this);
+        cancelPayTv.setOnClickListener(this);
 
     }
 
@@ -76,13 +77,52 @@ public class PayResultActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(errorMsg)) {
                 resultTipTv.setText("支付失败");
                 payTypeTv.setText(errorMsg);
+                failLayout.setVisibility(View.VISIBLE);
+                payTv.setVisibility(View.GONE);
+                preTv.setSelected(true);
+                cancelLastViewFocus(preTv);
+                cancelPayTv.setText("取消支付");
             } else {
                 payType = bundle.getInt(PayingActivity.GOODS_PAY_TYPE);
                 payTypeTv.setText("支付方式："+Util.getPayType(payType));
+                payTv.setVisibility(View.VISIBLE);
+                failLayout.setVisibility(View.GONE);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_pay:
+                setResult(-1);
+                finish();
+                break;
+            case R.id.tv_pre:
+                preTv.setSelected(true);
+                cancelLastViewFocus(preTv);
+                finish();
+                break;
+            case R.id.tv_cancel_pay:
+                cancelPayTv.setSelected(true);
+                cancelLastViewFocus(cancelPayTv);
+                setResult(-1);
+                finish();
+                break;
+        }
+    }
+
+    private void cancelLastViewFocus(View view) {
+        if (focusView != null) {
+            if (focusView != view) {
+                focusView.setSelected(false);
+                focusView = view;
+            }
+        } else {
+            focusView = view;
         }
     }
 }
