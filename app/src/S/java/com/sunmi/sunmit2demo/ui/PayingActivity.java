@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sunmi.sunmit2demo.PreferenceUtil;
 import com.sunmi.sunmit2demo.R;
@@ -204,8 +205,10 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 if (result != null && result.getErrno() == 0 && result.getResult() != null) {
                     e.onNext(result.getResult());
                 } else if (result != null && !TextUtils.isEmpty(result.getError())) {
-                    gotoNextActivity();
+                    gotoNextActivity(result.getError());
+                    e.onError(new Throwable());
                 } else {
+                    gotoNextActivity("");
                     e.onError(new Throwable());
                 }
             }
@@ -222,8 +225,6 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     public void onError(Throwable e) {
                         loadingView.setVisibility(View.GONE);
                         PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
-                        String message = e == null ? "" : e.getMessage();
-                        gotoNextActivity(message);
                     }
 
                     @Override
@@ -247,7 +248,11 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                                 Result<PayCheckInfo> result = ServerManager.payStatusCheck(Util.appId, orderInfo.getOrderId());
                                 if (result != null && result.getErrno() == 0 && result.getResult() != null) {
                                     e.onNext(result.getResult());
+                                } else if (result != null && !TextUtils.isEmpty(result.getError())) {
+                                    gotoNextActivity(result.getError());
+                                    e.onError(new Throwable());
                                 } else {
+                                    gotoNextActivity("");
                                     e.onError(new Throwable());
                                 }
                             }
@@ -260,7 +265,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onNext(PayCheckInfo payCheckInfo) {
                         Log.i("timer_time==="," response_time="+String.valueOf(System.currentTimeMillis() - currTime));
-                        if (payCheckInfo != null && "1".equals(payCheckInfo)) {
+                        if (payCheckInfo != null && "1".equals(payCheckInfo.getPaystatus())) {
                             loadingView.setVisibility(View.GONE);
                             PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                             compositeDisposable.remove(this);
@@ -269,6 +274,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                             loadingView.setVisibility(View.GONE);
                             PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                             compositeDisposable.remove(this);
+                            gotoNextActivity("支付失败");
                         }
 
                     }
@@ -279,7 +285,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                         PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                         compositeDisposable.remove(this);
                         String message = e == null ? "" : e.getMessage();
-                        gotoNextActivity(message);
+                        gotoNextActivity("支付失败");
                     }
 
                     @Override
@@ -313,7 +319,17 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 payTv.setSelected(true);
                 cancelLastViewFocus(payTv);
                 if (payType == CASH_PAYT_TYPE) {
-                    gotoNextActivity();
+                    try {
+                        float returnCash = Float.parseFloat(payCodeEt.getText().toString());
+                        if (returnCash < 0) {
+                            Toast.makeText(this, "实收金额不足", Toast.LENGTH_SHORT).show();
+                        } else {
+                            gotoNextActivity();
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(this, "实收金额不对", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                 } else if (!TextUtils.isEmpty(payCodeEt.getText().toString())) {
                     pay();
                 }
