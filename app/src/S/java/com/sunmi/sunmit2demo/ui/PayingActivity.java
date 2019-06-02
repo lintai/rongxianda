@@ -325,8 +325,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     if (cashReturn < 0) {
                         Toast.makeText(this, "实收金额不足", Toast.LENGTH_SHORT).show();
                     } else {
-                        EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
-                        gotoNextActivity();
+                        pay();
                     }
                 } else if (!TextUtils.isEmpty(payCodeEt.getText().toString())) {
                     pay();
