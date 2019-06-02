@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.sunmi.sunmit2demo.Constants;
 import com.sunmi.sunmit2demo.R;
+import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.modle.MenuItemModule;
 import com.sunmi.sunmit2demo.utils.Utils;
 
@@ -97,11 +98,12 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
                 menuViewHolder.mGoodsNameTv.setText(module.getGoodsName());
             }
             menuViewHolder.mSingleGoodsPriceTv.setText("￥"+ Utils.numberFormat(module.getPrice() * 1.0f / 100) + module.getUnit());
-            menuViewHolder.mGoodsCountTv.setText(String.valueOf(module.getGoodsCount()));
+            menuViewHolder.mGoodsCountTv.setText(Utils.numberFormat(module.getGoodsCount()));
             menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getPrice() * module.getGoodsCount() * 1.0f / 100));
 
             //称重的商品无法通过“+”或“-”来增减商品数量
             if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
+                menuViewHolder.mAddGoodsIv.setVisibility(View.VISIBLE);
                 menuViewHolder.mAddGoodsIv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -114,9 +116,12 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
                         }
                     }
                 });
+            } else {
+                menuViewHolder.mAddGoodsIv.setVisibility(View.GONE);
             }
 
             if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
+                menuViewHolder.mdeleaseGoodsIv.setVisibility(View.VISIBLE);
                 menuViewHolder.mdeleaseGoodsIv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -139,12 +144,14 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
                         }
                     }
                 });
+            } else {
+                menuViewHolder.mdeleaseGoodsIv.setVisibility(View.GONE);
             }
 
             menuViewHolder.mDeleteIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    goodsCount = goodsCount - module.getGoodsCount();
+                    goodsCount = module.getPriceType()  == Constants.WEIGHT_PRICE_TYPE ? goodsCount  - 1 : (int) (goodsCount - module.getGoodsCount());
                     goodsTotalPrice -= module.getGoodsCount() * module.getPrice();
                     datas.remove(position);
                     notifyDataSetChanged();

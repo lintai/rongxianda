@@ -519,15 +519,21 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     price = Integer.parseInt(datas[1]);
                     int w = Integer.parseInt(datas[2]);
                     if (w >= 1000) {
-                        weight = "/"+Utils.numberFormat(w * 1.0f / 1000) + "kg";
+                        weight = Utils.numberFormat(w * 1.0f / 1000) + "kg";
                     } else {
-                        weight = "/"+w + "g";
+                        weight = w + "g";
                     }
 
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
-                goodsItemClickEvent(new GoodsItemClickEvent(pluGoodsInfo.getGoodsName(), price, weight, String.valueOf(pluGoodsInfo.getPlu()), pluGoodsInfo.getPriceType()));
+                goodsItemClickEvent(new GoodsItemClickEvent(
+                        pluGoodsInfo.getGoodsName(),
+                        pluGoodsInfo.getPrice(),
+                        pluGoodsInfo.getUnit(),
+                        String.valueOf(pluGoodsInfo.getPlu()),
+                        pluGoodsInfo.getPriceType(),
+                        price / pluGoodsInfo.getPrice()));
             } else {
                 Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
             }
@@ -636,6 +642,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         List<MenuItemModule> modules = mMenuAdapter.getDatas();
         if (event.priceType == Constants.WEIGHT_PRICE_TYPE) {
             //称重类型商品直接添加
+            menuItemModule.setGoodsCount(event.count);
             modules.add(0, menuItemModule);
             mMenuAdapter.notifyDataSetChanged();
         } else if (modules.size() > 0) {

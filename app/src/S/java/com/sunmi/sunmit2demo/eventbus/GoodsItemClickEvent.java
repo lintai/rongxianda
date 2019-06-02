@@ -12,12 +12,18 @@ public class GoodsItemClickEvent {
     public String unit;//计量单位，比如38元/300g 中的/300g
     public String goodsCode;//商品编码，称重物品则是plu吗
     public int priceType;//价格类型；1-计件 2-称重
+    public float count;//称重商品专用
 
     public GoodsItemClickEvent(String goodsName, int price, String unit, String goodsCode, int priceType) {
+        this(goodsName, price, unit, goodsCode, priceType, 0);
+    }
+
+    public GoodsItemClickEvent(String goodsName, int price, String unit, String goodsCode, int priceType, float count) {
         this.goodsName = goodsName;
         this.price = price;
         this.unit = unit;
         this.goodsCode = goodsCode;
         this.priceType = priceType;
+        this.count = count;
     }
 }

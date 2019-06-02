@@ -13,7 +13,7 @@ public class MenuItemModule extends BaseModle {
     String goodsCode;//商品编码
     int priceType;//价格类型；1-计件 2-称重
 
-    int goodsCount;//数量
+    float goodsCount;//数量
 
     public MenuItemModule() {
 
@@ -51,11 +51,11 @@ public class MenuItemModule extends BaseModle {
         this.unit = unit;
     }
 
-    public int getGoodsCount() {
+    public float getGoodsCount() {
         return goodsCount;
     }
 
-    public void setGoodsCount(int goodsCount) {
+    public void setGoodsCount(float goodsCount) {
         this.goodsCount = goodsCount;
     }
 
