@@ -211,7 +211,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     gotoNextActivity(result.getError());
                     e.onError(new Throwable());
                 } else {
-                    gotoNextActivity("");
+                    gotoNextActivity("支付失败");
                     e.onError(new Throwable());
                 }
             }
