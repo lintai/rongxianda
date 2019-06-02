@@ -113,13 +113,16 @@ public class Util {
         String[] datas = null;
         try {
             String plu = code.substring(1, 7);
+            int pluInt = Integer.parseInt(plu);
+
             String price = code.substring(7, 12);
-            String w = code.substring(12, 16);
-            String weight = w.replaceAll("^(0+)", "");
+            String w = code.substring(12, 17);
+            String weight = Integer.parseInt(w) + "";
+
             if (!TextUtils.isEmpty(plu) && !TextUtils.isEmpty(price)
                     && !TextUtils.isEmpty(weight)) {
-                datas = new String[2];
-                datas[0] = plu;
+                datas = new String[3];
+                datas[0] = pluInt + "";
                 datas[1] = price;
                 datas[2] = weight;
             }

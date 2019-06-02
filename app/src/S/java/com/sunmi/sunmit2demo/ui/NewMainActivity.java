@@ -525,7 +525,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 goodsItemClickEvent(new GoodsItemClickEvent(
                         pluGoodsInfo.getGoodsName(),
                         pluGoodsInfo.getPrice(),
-                        pluGoodsInfo.getUnit(),
+                        "/"+pluGoodsInfo.getWeight() + pluGoodsInfo.getUnit(),
                         String.valueOf(pluGoodsInfo.getPlu()),
                         pluGoodsInfo.getPriceType(),
                         weight,
@@ -641,6 +641,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         if (event.priceType == Constants.WEIGHT_PRICE_TYPE) {
             //称重类型商品直接添加
             menuItemModule.setGoodsCount(event.weight);
+
             modules.add(0, menuItemModule);
             mMenuAdapter.notifyDataSetChanged();
         } else if (modules.size() > 0) {
