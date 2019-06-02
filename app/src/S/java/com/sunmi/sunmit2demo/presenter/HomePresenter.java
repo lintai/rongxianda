@@ -343,9 +343,17 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
             esc.addSetAbsolutePrintPosition( (short) 7 );
             esc.addText( menuItem.getPrice()/100.0+"","GB2312" );
             esc.addSetAbsolutePrintPosition( (short) 10 );
-            esc.addText( menuItem.getGoodsCount()+"","GB2312" );
+            if(menuItem.getPriceType() == Constants.WEIGHT_PRICE_TYPE){
+                esc.addText( menuItem.getGoodsCount()+"g","GB2312" );
+            }else{
+                esc.addText( menuItem.getGoodsCount()+"","GB2312" );
+            }
             esc.addSetAbsolutePrintPosition( (short) 12 );
-            esc.addText( menuItem.getPrice()/100.0*menuItem.getGoodsCount()+"\n","GB2312" );
+            if(menuItem.getPriceType() == Constants.WEIGHT_PRICE_TYPE){
+                esc.addText( menuItem.getTotalPrice()+"\n","GB2312" );
+            }else{
+                esc.addText( menuItem.getPrice()/100.0*menuItem.getGoodsCount()+"\n","GB2312" );
+            }
         }
         esc.addText( "————————————————\n","GB2312" );
         //打印商品总价

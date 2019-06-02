@@ -679,8 +679,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         //加入购物清单
         MenuItemModule menuItemModule = new MenuItemModule();
         menuItemModule.setGoodsName(event.goodsName);
-        menuItemModule.setPrice(event.price);
-        menuItemModule.setTotalPrice(event.totalPrice);
+        menuItemModule.setPrice(event.priceType == Constants.WEIGHT_PRICE_TYPE ? (int) event.totalPrice : event.price);        menuItemModule.setTotalPrice(event.totalPrice);
         menuItemModule.setUnit(event.unit);
         menuItemModule.setGoodsCount(1);
         menuItemModule.setGoodsCode(event.goodsCode);
