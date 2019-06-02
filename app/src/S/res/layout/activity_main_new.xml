@@ -83,7 +83,7 @@
                     android:id="@+id/tv_goods_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="0"
                     android:textSize="24dp"
                     android:textColor="#ffffff"/>
 
@@ -109,7 +109,7 @@
                     android:id="@+id/tv_goods_discount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="0"
                     android:textSize="24dp"
                     android:textColor="#ffffff"/>
 
@@ -134,7 +134,7 @@
                     android:id="@+id/tv_goods_total_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="0"
                     android:textSize="34dp"
                     android:textColor="#ffffff"/>
 

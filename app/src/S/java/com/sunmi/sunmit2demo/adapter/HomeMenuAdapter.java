@@ -63,6 +63,13 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
         this.goodsCount += goodsCount;
     }
 
+    public void clear() {
+        this.goodsCount = 0;
+        this.goodsTotalPrice = 0;
+        this.datas.clear();
+        notifyDataSetChanged();
+    }
+
     public void addGoodsTotalPrice(float goodsPrice) {
         this.goodsTotalPrice += goodsPrice;
     }

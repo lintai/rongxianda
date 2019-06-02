@@ -200,6 +200,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
             isWaiting = false;
         }
 
+        authoCode = authoCode == null ? "" : authoCode;
         Disposable disposable = Observable.create(new ObservableOnSubscribe<PayInfo>() {
             @Override
             public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
