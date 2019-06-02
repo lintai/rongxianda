@@ -210,6 +210,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             mPermissionIntent = PendingIntent.getBroadcast( this, 0, new Intent( ACTION_USB_PERMISSION ), 0 );
             usbManager.requestPermission( usbDevice, mPermissionIntent );
         }
+
+        try {
+            InnerPrinterManager.getInstance().bindService(this,
+                    innerPrinterCallback);
+        } catch (InnerPrinterException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -520,7 +527,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
-                goodsItemClickEvent(new GoodsItemClickEvent(pluGoodsInfo.getGoodsName(), price, "/"+pluGoodsInfo.getWeight()+pluGoodsInfo.getUnit(), String.valueOf(pluGoodsInfo.getGoodsCode()), pluGoodsInfo.getPriceType()));
+                goodsItemClickEvent(new GoodsItemClickEvent(
+                        pluGoodsInfo.getGoodsName(),
+                        pluGoodsInfo.getPrice(),
+                        pluGoodsInfo.getUnit(),
+                        String.valueOf(pluGoodsInfo.getPlu()),
+                        pluGoodsInfo.getPriceType(),
+                        price / pluGoodsInfo.getPrice()));
             } else {
                 Toast.makeText(NewMainActivity.this, "未找到符合的商品", Toast.LENGTH_SHORT).show();
             }
@@ -629,6 +642,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         List<MenuItemModule> modules = mMenuAdapter.getDatas();
         if (event.priceType == Constants.WEIGHT_PRICE_TYPE) {
             //称重类型商品直接添加
+            menuItemModule.setGoodsCount(event.count);
             modules.add(0, menuItemModule);
             mMenuAdapter.notifyDataSetChanged();
         } else if (modules.size() > 0) {

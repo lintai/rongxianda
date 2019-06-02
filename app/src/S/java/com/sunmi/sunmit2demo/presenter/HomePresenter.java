@@ -123,12 +123,11 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                 for (int i = 0; i < size; i++) {
                     MenuItemModule module = goodList.get(i);
                     float price;
-                    if (module.getPriceType() == Constants.WEIGHT_PRICE_TYPE) {
-                        //称重类型商品的goodscount都为1
-                        price = module.getPrice() * module.getGoodsCount();
-                    } else {
+//                    if (module.getPriceType() == Constants.WEIGHT_PRICE_TYPE) {
+//                        price = module.getPrice();
+//                    } else {
                         price = module.getPrice();
-                    }
+//                    }
                     GoodsOrderModle orderModle = new GoodsOrderModle(module.getGoodsCode(), String.valueOf(module.getGoodsCount()), price);
                     orderModles.add(orderModle);
                 }
