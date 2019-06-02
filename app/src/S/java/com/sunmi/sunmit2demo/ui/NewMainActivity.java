@@ -526,7 +526,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                         pluGoodsInfo.getGoodsName(),
                         pluGoodsInfo.getPrice(),
                         "/"+pluGoodsInfo.getWeight() + pluGoodsInfo.getUnit(),
-                        String.valueOf(pluGoodsInfo.getPlu()),
+                        String.valueOf(pluGoodsInfo.getGoodsCode()),
                         pluGoodsInfo.getPriceType(),
                         weight,
                         price));
