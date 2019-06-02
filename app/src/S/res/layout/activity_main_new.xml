@@ -199,7 +199,7 @@
                     android:textSize="30dp"
                     android:gravity="center"
                     android:textColor="#856c00"
-                    android:background="#f8d451"/>
+                    android:background="#fece23"/>
 
                 <TextView
                     android:id="@+id/tv_next_page"
@@ -209,7 +209,7 @@
                     android:textSize="30dp"
                     android:gravity="center"
                     android:textColor="#856c00"
-                    android:background="#f8d451"/>
+                    android:background="#fece23"/>
 
             </LinearLayout>
 
