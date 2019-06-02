@@ -13,6 +13,12 @@ public class PrintDataEvent {
 
     public String payType;
 
+    public boolean openCashBox;
+
+    public PrintDataEvent(boolean openCashBox) {
+        this.openCashBox = openCashBox;
+    }
+
     public PrintDataEvent(String orderNo, String time, String payType) {
         this.orderNo = orderNo;
         this.time = time;

@@ -219,6 +219,33 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
     }
 
     /**
+     * 开钱箱
+     */
+    public void openCashBox(final Handler mHandler, final int id) {
+        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
+                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
+            Utils.toast( context, context.getString( R.string.str_cann_printer ) );
+            return;
+        }
+        ThreadPool threadPool = ThreadPool.getInstantiation();
+        threadPool.addTask( new Runnable() {
+            @Override
+            public void run() {
+                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
+                    /* 开钱箱 */
+                    EscCommand esc = new EscCommand();
+                    esc.addGeneratePlus( LabelCommand.FOOT.F5, (byte) 255, (byte) 255 );
+                    Vector<Byte> datas = esc.getCommand();
+                    /* 发送数据 */
+                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately( datas );
+                } else {
+                    mHandler.obtainMessage(PrinterCode.PRINTER_COMMAND_ERROR).sendToTarget();
+                }
+            }
+        } );
+    }
+
+    /**
      * 发送票据
      */
     void sendReceiptWithResponse(int id, PrinterModle printerModle) {
@@ -332,7 +359,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         //esc.addText( "Completed!\r\n" );
 
         /* 开钱箱 */
-        esc.addGeneratePlus( LabelCommand.FOOT.F5, (byte) 255, (byte) 255 );
+//        esc.addGeneratePlus( LabelCommand.FOOT.F5, (byte) 255, (byte) 255 );
         esc.addPrintAndFeedLines( (byte) 8 );
         /* 加入查询打印机状态，用于连续打印 */
         byte[] bytes = { 29, 114, 1 };
@@ -341,4 +368,5 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         /* 发送数据 */
         DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately( datas );
     }
+
 }
