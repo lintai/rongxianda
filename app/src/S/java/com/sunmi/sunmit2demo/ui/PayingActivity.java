@@ -112,12 +112,13 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                         String priceData = payCodeEt.getText().toString();
                         if (priceData != null && priceData.length() == 1 && (priceData.equals(".") || priceData.equals("0"))) {
                             payCodeEt.setText("");
+                            cashReturnTv.setText("￥0");
                         } else if (!TextUtils.isEmpty(priceData)){
                             float price = Float.parseFloat(priceData);
                             cashReturn = price - goodsOriginalPrice / 100;
                             cashReturnTv.setText("￥"+Utils.numberFormat(cashReturn));
                         } else {
-                            cashReturnTv.setText("");
+                            cashReturnTv.setText("￥0");
                         }
 
                     } catch (NumberFormatException e) {

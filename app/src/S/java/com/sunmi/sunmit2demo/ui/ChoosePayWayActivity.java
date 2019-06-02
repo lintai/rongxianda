@@ -31,9 +31,11 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
     private static final int CHOOSE_PAY = 1;
     private TextView goodsCountTv, goodsPriceTv, goodsDiscountTv;
     private TextView cashPayTv, memberPayTv, wxPayTv, aliPayTv;
-    private TextView nextTv;
+    private TextView nextTv, preTv;
 
     private View focusView;
+
+    private View funFocusView;
 
     private int payType;
     private OrderInfo orderInfo;
@@ -59,12 +61,17 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
         wxPayTv = findViewById(R.id.tv_wx_pay);
         aliPayTv = findViewById(R.id.tv_ali_pay);
         nextTv = findViewById(R.id.tv_next);
+        preTv = findViewById(R.id.tv_pre);
 
         cashPayTv.setOnClickListener(this);
         memberPayTv.setOnClickListener(this);
         wxPayTv.setOnClickListener(this);
         aliPayTv.setOnClickListener(this);
         nextTv.setOnClickListener(this);
+        preTv.setOnClickListener(this);
+
+        nextTv.setSelected(true);
+        cancelLastFunViewFocus(nextTv);
 
         cashPayTv.setSelected(true);
         cancelLastViewFocus(cashPayTv);
@@ -117,6 +124,8 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
                 payType = PayingActivity.ALI_PAY_TYPE;
                 break;
             case R.id.tv_next:
+                nextTv.setSelected(true);
+                cancelLastFunViewFocus(nextTv);
                 if (payType == PayingActivity.CASH_PAYT_TYPE) {
                     EventBus.getDefault().post(new PrintDataEvent(true));
                 }
@@ -134,6 +143,11 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
                     Toast.makeText(this, "订单生成失败，请稍后再试", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.tv_pre:
+                preTv.setSelected(true);
+                cancelLastFunViewFocus(preTv);
+                finish();
+                break;
         }
     }
 
@@ -145,6 +159,16 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
             }
         } else {
             focusView = view;
+        }
+    }
+    private void cancelLastFunViewFocus(View view) {
+        if (funFocusView != null) {
+            if (funFocusView != view) {
+                funFocusView.setSelected(false);
+                funFocusView = view;
+            }
+        } else {
+            funFocusView = view;
         }
     }
 
