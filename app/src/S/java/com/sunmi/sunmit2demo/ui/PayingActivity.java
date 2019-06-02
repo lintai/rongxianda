@@ -193,7 +193,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
 //        EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), getPayType(payType)));
         loadingView.setVisibility(View.VISIBLE);
         PreferenceUtil.putString(this, PreferenceUtil.KEY.PAYING_TYPE, "paying");
-        if (TextUtils.isEmpty(authoCode)) {
+        if (payType != CASH_PAYT_TYPE && TextUtils.isEmpty(authoCode)) {
             isWaiting = true;
             return;
         } else {
