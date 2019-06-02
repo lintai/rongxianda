@@ -593,14 +593,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 || mMenuAdapter.getDatas().size() == 0) {
             return;
         }
-        List<MenuItemModule> modules = new ArrayList<>();
-        modules.addAll(mMenuAdapter.getDatas());
-
-        mMenuAdapter.clear();
-        //更新所有清单总价格
-        mGoodsCountTv.setText("0");
-        mGoodsTotalPriceTv.setText("0");
-
         String discountPrice = null;
         String totalPrice = null;
         try {
@@ -611,6 +603,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             return;
         }
 
+        List<MenuItemModule> modules = new ArrayList<>();
+        modules.addAll(mMenuAdapter.getDatas());
+
+        mMenuAdapter.clear();
+        //更新所有清单总价格
+        mGoodsCountTv.setText("0");
+        mGoodsTotalPriceTv.setText("0");
 
         mPresenter.printReceipt(myHandler, id,
                 new PrinterModle(modules,
@@ -629,6 +628,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         MenuItemModule menuItemModule = new MenuItemModule();
         menuItemModule.setGoodsName(event.goodsName);
         menuItemModule.setPrice(event.price);
+        menuItemModule.setTotalPrice(event.totalPrice);
         menuItemModule.setUnit(event.unit);
         menuItemModule.setGoodsCount(1);
         menuItemModule.setGoodsCode(event.goodsCode);
