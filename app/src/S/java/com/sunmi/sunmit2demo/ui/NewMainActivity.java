@@ -210,6 +210,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             mPermissionIntent = PendingIntent.getBroadcast( this, 0, new Intent( ACTION_USB_PERMISSION ), 0 );
             usbManager.requestPermission( usbDevice, mPermissionIntent );
         }
+
+        try {
+            InnerPrinterManager.getInstance().bindService(this,
+                    innerPrinterCallback);
+        } catch (InnerPrinterException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -512,9 +519,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     price = Integer.parseInt(datas[1]);
                     int w = Integer.parseInt(datas[2]);
                     if (w >= 1000) {
-                        weight = Utils.numberFormat(w * 1.0f / 1000) + "kg";
+                        weight = "/"+Utils.numberFormat(w * 1.0f / 1000) + "kg";
                     } else {
-                        weight = w + "g";
+                        weight = "/"+w + "g";
                     }
 
                 } catch (NumberFormatException e) {
