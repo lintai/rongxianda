@@ -155,8 +155,14 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
             menuViewHolder.mDeleteIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    goodsCount = module.getPriceType()  == Constants.WEIGHT_PRICE_TYPE ? goodsCount  - 1 : (int) (goodsCount - module.getGoodsCount());
-                    goodsTotalPrice -= module.getGoodsCount() * module.getPrice();
+                    if (module.getPriceType()  == Constants.WEIGHT_PRICE_TYPE) {
+                        goodsCount = goodsCount  - 1;
+                        goodsTotalPrice -= module.getTotalPrice();
+                    } else {
+                        goodsCount = (int) (goodsCount - module.getGoodsCount());
+                        goodsTotalPrice -= module.getGoodsCount() * module.getPrice();
+                    }
+
                     datas.remove(position);
                     notifyDataSetChanged();
                     if (changeListener != null) {
