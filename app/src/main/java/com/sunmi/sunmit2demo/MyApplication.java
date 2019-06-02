@@ -10,9 +10,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.bst.bsbandlib.sdk.BSBandSDKManager;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.sunmi.payment.PaymentService;
-import com.sunmi.sunmit2demo.bean.blescan.DaoMaster;
-import com.sunmi.sunmit2demo.bean.blescan.DaoSession;
+import com.sunmi.sunmit2demo.bean.DaoMaster;
+import com.sunmi.sunmit2demo.bean.DaoSession;
 
 
 import java.io.File;
@@ -31,7 +32,6 @@ import java.util.Map;
 public class MyApplication extends Application {
 
     public static MyApplication app = null;
-
     private DaoSession mDaoSession;
 
     @Override
@@ -54,6 +54,7 @@ public class MyApplication extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Fresco.initialize(this);
 
     }
 

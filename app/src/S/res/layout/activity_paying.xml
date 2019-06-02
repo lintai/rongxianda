@@ -93,6 +93,7 @@
                 android:paddingBottom="10dp"
                 android:textSize="33dp"
                 android:textColor="#333333"
+                android:inputType="number"
                 android:background="@drawable/pay_code_rectangle_bg"/>
 
         </LinearLayout>

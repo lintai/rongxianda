@@ -133,8 +133,10 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
 
     private void cancelLastViewFocus(View view) {
         if (focusView != null) {
-            focusView.setSelected(false);
-            focusView = view;
+            if (focusView != view) {
+                focusView.setSelected(false);
+                focusView = view;
+            }
         } else {
             focusView = view;
         }
