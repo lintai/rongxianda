@@ -99,7 +99,11 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
             }
             menuViewHolder.mSingleGoodsPriceTv.setText("￥"+ Utils.numberFormat(module.getPrice() * 1.0f / 100) + module.getUnit());
             menuViewHolder.mGoodsCountTv.setText(Utils.numberFormat(module.getGoodsCount()));
-            menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getPrice() * module.getGoodsCount() * 1.0f / 100));
+            if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
+                menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getPrice() * module.getGoodsCount() * 1.0f / 100));
+            } else {
+                menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getPrice() * 1.0f / 100));
+            }
 
             //称重的商品无法通过“+”或“-”来增减商品数量
             if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
