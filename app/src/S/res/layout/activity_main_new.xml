@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:id="@+id/menu_container"
-        android:layout_width="456dp"
+        android:layout_width="380dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="#f8d451">
@@ -16,8 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="已选商品"
             android:textSize="26dp"
             android:textColor="#ffffff"/>
@@ -57,7 +57,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="205dp"
+            android:layout_height="175dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:paddingBottom="20dp"
@@ -126,7 +126,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="商品金额："
+                    android:text="总金额："
                     android:textSize="34dp"
                     android:textColor="#ffffff"/>
 
@@ -150,7 +150,7 @@
             android:text="结算"
             android:textSize="28dp"
             android:textColor="#ffffff"
-            android:background="#e67140"/>
+            android:background="#ff7129"/>
 
     </LinearLayout>
 
