@@ -168,7 +168,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 payCodeEt.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 payCodeEt.setHint("单位：元");
                 payTv.setText("结算成功");
-                codeNameTv.setText("实收");
+                codeNameTv.setText("实收：");
             } else {
                 otherPayLayout.setVisibility(View.VISIBLE);
                 payTypeTv.setText(Util.getPayType(payType));
