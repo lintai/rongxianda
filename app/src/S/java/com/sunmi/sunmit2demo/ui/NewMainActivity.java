@@ -859,8 +859,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 //            bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
             intent.putExtras(bundle);
             startActivity(intent);
-        } else {
-            Toast.makeText(this, "订单生成失败，请稍后再试", Toast.LENGTH_SHORT).show();
         }
     }
 

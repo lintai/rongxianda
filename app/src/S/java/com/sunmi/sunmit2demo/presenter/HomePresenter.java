@@ -84,6 +84,8 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                 }
                 if (result != null && result.getErrno() == 0 && result.getResult() != null) {
                     e.onNext(result.getResult());
+                } else if (result != null && result.getError() != null) {
+                    e.onError(new Throwable(result.getError()));
                 } else {
                     e.onError(new Throwable());
                 }
@@ -139,6 +141,8 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                 CreateOrderResult result = ServerManager.createOrder(Util.appId, orderModles, totalPrice);
                 if (result != null && result.getErrno() == 0 && result.getResult() != null) {
                     e.onNext(result.getResult());
+                } else if (result != null && result.getError() != null) {
+                    e.onError(new Throwable(result.getError()));
                 } else {
                     e.onError(new Throwable());
                 }
