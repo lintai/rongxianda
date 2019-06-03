@@ -7,6 +7,8 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunmi.sunmit2demo.Constants;
@@ -102,6 +104,9 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
+                        if (e != null && e.getMessage() != null) {
+                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
 //                        mView.loadComplete(null);
                     }
 
@@ -154,6 +159,9 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
+                        if (e != null && e.getMessage() != null) {
+                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                         mView.orderCreateComplete(null);
                     }
 

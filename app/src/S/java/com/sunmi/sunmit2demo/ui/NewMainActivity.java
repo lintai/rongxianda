@@ -172,15 +172,15 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         int width = dm.widthPixels;// 屏幕宽度
         int height = dm.heightPixels;// 屏幕宽度
 
-        int result = 0;
-        int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = this.getResources().getDimensionPixelSize(resourceId);
-        }
-
-        Log.e("@@@", dm.densityDpi + "  " + dm.density);
-        Toast.makeText(this, dm.densityDpi + "  " + dm.density
-                +" width="+width+"  height="+height+" statusHeight="+result, Toast.LENGTH_LONG).show();
+//        int result = 0;
+//        int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
+//        if (resourceId > 0) {
+//            result = this.getResources().getDimensionPixelSize(resourceId);
+//        }
+//
+//        Log.e("@@@", dm.densityDpi + "  " + dm.density);
+//        Toast.makeText(this, dm.densityDpi + "  " + dm.density
+//                +" width="+width+"  height="+height+" statusHeight="+result, Toast.LENGTH_LONG).show();
         isVertical = height > width;
 
         isK1 = MyApplication.getInstance().isHaveCamera() && isVertical;
