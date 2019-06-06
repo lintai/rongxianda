@@ -13,22 +13,23 @@
         android:id="@+id/tv_goods_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="74dp"
+        android:layout_marginTop="109dp"
+        android:textStyle="bold"
         android:text="总共n件商品"
-        android:textSize="33dp"
+        android:textSize="24dp"
         android:textColor="#333333"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="原价："
-                android:textSize="33dp"
+                android:textSize="24dp"
                 android:textColor="#333333"/>
 
             <TextView
@@ -37,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="11dp"
                 android:text=""
-                android:textSize="33dp"
+                android:textSize="24dp"
                 android:textColor="#333333"/>
 
         </LinearLayout>
@@ -45,14 +46,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="34dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="折后："
-                android:textSize="56dp"
+                android:textSize="41dp"
                 android:textColor="#333333"/>
 
             <TextView
@@ -60,8 +62,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:textStyle="bold"
                 android:text=""
-                android:textSize="56dp"
+                android:textSize="41dp"
                 android:textColor="#ff0000"/>
 
         </LinearLayout>

@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="166dp"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/goods_item_rectangle_bg">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_goods_cover"
+        android:layout_width="match_parent"
+        android:layout_height="129dp"
+        fresco:actualImageScaleType="centerInside"
+        fresco:placeholderImage="@mipmap/ic_launcher"
+        fresco:placeholderImageScaleType="centerInside"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="#ffffff">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/iv_goods_cover"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            fresco:actualImageScaleType="centerInside"
-            fresco:placeholderImage="@mipmap/ic_launcher"
-            fresco:placeholderImageScaleType="centerInside"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="37dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:orientation="horizontal"
@@ -35,10 +29,11 @@
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:gravity="center_vertical"
+            android:textStyle="bold"
             android:singleLine="true"
             android:ellipsize="end"
             android:text=""
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textColor="#333333"/>
 
         <TextView
@@ -48,7 +43,7 @@
             android:paddingRight="5dp"
             android:gravity="center_vertical"
             android:text=""
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textColor="#333333"/>
 
     </LinearLayout>

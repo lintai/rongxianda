@@ -171,8 +171,16 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;// 屏幕宽度
         int height = dm.heightPixels;// 屏幕宽度
-        Log.e("@@@", dm.densityDpi + "  " + dm.density);
-        //Toast.makeText(this, dm.densityDpi + "  " + dm.density, Toast.LENGTH_LONG).show();
+
+//        int result = 0;
+//        int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
+//        if (resourceId > 0) {
+//            result = this.getResources().getDimensionPixelSize(resourceId);
+//        }
+//
+//        Log.e("@@@", dm.densityDpi + "  " + dm.density);
+//        Toast.makeText(this, dm.densityDpi + "  " + dm.density
+//                +" width="+width+"  height="+height+" statusHeight="+result, Toast.LENGTH_LONG).show();
         isVertical = height > width;
 
         isK1 = MyApplication.getInstance().isHaveCamera() && isVertical;
@@ -363,7 +371,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     private void initViewPager(List<ClassAndGoodsModle> datas) {
         if (datas == null || datas.size() == 0) return;
-
         mHomeGoodsViewPagerAdapter = new HomeGoodsViewPagerAdapter(getSupportFragmentManager(), datas);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mHomeGoodsViewPagerAdapter);
@@ -392,7 +399,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         });
         mGoodsSortRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mGoodsSortRecyclerView.addItemDecoration(new GoodsSortGridSpacingItemDecoration(3, 10));
+        mGoodsSortRecyclerView.addItemDecoration(new GoodsSortGridSpacingItemDecoration(3, 1));
         mGoodsSortRecyclerView.setAdapter(mGoodsSortAdapter);
 
         screenManager.init(this);
@@ -851,8 +858,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 //            bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
             intent.putExtras(bundle);
             startActivity(intent);
-        } else {
-            Toast.makeText(this, "订单生成失败，请稍后再试", Toast.LENGTH_SHORT).show();
         }
     }
 

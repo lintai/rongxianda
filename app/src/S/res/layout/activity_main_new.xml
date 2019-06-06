@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:id="@+id/menu_container"
-        android:layout_width="380dp"
+        android:layout_width="334dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="#fece23">
@@ -16,37 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
             android:text="已选商品"
-            android:textSize="26dp"
+            android:textSize="19dp"
             android:textColor="#ffffff"/>
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/et_scan_data"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center"-->
-                <!--android:hint="请输入"-->
-                <!--android:textSize="26dp"-->
-                <!--android:textColor="#ffffff"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tv_scan_data_confirm"-->
-                <!--android:layout_width="50dp"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:gravity="center"-->
-                <!--android:text="确认"-->
-                <!--android:textSize="26dp"-->
-                <!--android:textColor="#ffffff"/>-->
-
-        <!--</LinearLayout>-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pay_menu_recyclerview"
@@ -57,18 +31,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="175dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingBottom="20dp"
+            android:layout_height="150dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:background="#816c21"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="18dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -76,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="商品总数："
-                    android:textSize="24dp"
+                    android:textSize="18dp"
                     android:textColor="#ffffff"/>
 
                 <TextView
@@ -84,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="24dp"
+                    android:textSize="18dp"
                     android:textColor="#ffffff"/>
 
             </LinearLayout>
@@ -93,7 +67,7 @@
                 android:id="@+id/layout_goods_discount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginBottom="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -102,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="商品优惠："
-                    android:textSize="24dp"
+                    android:textSize="18dp"
                     android:textColor="#ffffff"/>
 
                 <TextView
@@ -110,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="24dp"
+                    android:textSize="18dp"
                     android:textColor="#ffffff"/>
 
             </LinearLayout>
@@ -118,7 +92,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -127,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="总金额："
-                    android:textSize="34dp"
+                    android:textSize="20dp"
                     android:textColor="#ffffff"/>
 
                 <TextView
@@ -135,7 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="34dp"
+                    android:textSize="20dp"
                     android:textColor="#ffffff"/>
 
             </LinearLayout>
@@ -145,10 +118,10 @@
         <TextView
             android:id="@+id/tv_pay"
             android:layout_width="match_parent"
-            android:layout_height="92dp"
+            android:layout_height="68dp"
             android:gravity="center"
             android:text="结算"
-            android:textSize="28dp"
+            android:textSize="20dp"
             android:textColor="#ffffff"
             android:background="#ff7129"/>
 
@@ -165,15 +138,12 @@
             android:id="@+id/goods_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_above="@+id/goods_sort_container"/>
 
         <LinearLayout
             android:id="@+id/goods_sort_container"
             android:layout_width="match_parent"
-            android:layout_height="184dp"
+            android:layout_height="135dp"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
             android:background="#fae9a1">
@@ -192,21 +162,21 @@
 
                 <TextView
                     android:id="@+id/tv_pre_page"
-                    android:layout_width="220dp"
-                    android:layout_height="87dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_width="258dp"
+                    android:layout_height="67dp"
+                    android:layout_marginBottom="1dp"
                     android:text="上一页"
-                    android:textSize="30dp"
+                    android:textSize="22dp"
                     android:gravity="center"
                     android:textColor="#856c00"
                     android:background="#fece23"/>
 
                 <TextView
                     android:id="@+id/tv_next_page"
-                    android:layout_width="220dp"
-                    android:layout_height="87dp"
+                    android:layout_width="258dp"
+                    android:layout_height="67dp"
                     android:text="下一页"
-                    android:textSize="30dp"
+                    android:textSize="22dp"
                     android:gravity="center"
                     android:textColor="#856c00"
                     android:background="#fece23"/>

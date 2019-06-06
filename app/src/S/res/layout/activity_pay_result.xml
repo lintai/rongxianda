@@ -2,19 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="178dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/pay_img_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="63dp"
+            android:layout_height="63dp"
             android:layout_marginRight="20dp"
             android:src="@drawable/pay_success_icon"/>
 
@@ -24,28 +25,28 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="支付成功"
-            android:textSize="68dp"
+            android:textSize="50dp"
             android:textStyle="bold"
             android:textColor="#fed426"/>
 
     </LinearLayout>
 
 
-
     <TextView
         android:id="@+id/tv_pay_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="11dp"
         android:layout_marginTop="20dp"
+        android:textStyle="bold"
         android:text=""
-        android:textSize="33dp"
-        android:textColor="#233333"/>
+        android:textSize="24dp"
+        android:textColor="#333333"/>
 
     <LinearLayout
         android:id="@+id/layout_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="83dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -53,22 +54,23 @@
             android:id="@+id/tv_goods_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:textStyle="bold"
             android:text="总共n件商品"
-            android:textSize="33dp"
+            android:textSize="24dp"
             android:textColor="#333333"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="13dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="原价："
-                android:textSize="33dp"
+                android:textSize="24dp"
                 android:textColor="#333333"/>
 
             <TextView
@@ -76,8 +78,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="11dp"
+                android:textStyle="bold"
                 android:text=""
-                android:textSize="33dp"
+                android:textSize="24dp"
                 android:textColor="#333333"/>
 
         </LinearLayout>
@@ -85,23 +88,25 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="13dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="折后："
-                android:textSize="33dp"
+                android:textSize="24dp"
                 android:textColor="#333333"/>
 
             <TextView
                 android:id="@+id/tv_discount_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="11dp"
+                android:textStyle="bold"
                 android:text=""
-                android:textSize="33dp"
+                android:textSize="24dp"
                 android:textColor="#ff0000"/>
 
         </LinearLayout>
@@ -110,14 +115,13 @@
 
     <TextView
         android:id="@+id/tv_pay"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_width="217dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="70dp"
         android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:textStyle="bold"
         android:text="完 成"
-        android:textSize="33dp"
+        android:textSize="24dp"
         android:textColor="@color/color_white"
         android:background="@drawable/goods_choose_pay_way_next_rectangle_bg"/>
 
@@ -125,33 +129,31 @@
         android:id="@+id/layout_pay_fail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="102dp"
+        android:layout_marginTop="70dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_pre"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:layout_width="217dp"
+            android:layout_height="60dp"
             android:gravity="center"
-            android:layout_marginRight="95dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_marginRight="71dp"
+            android:textStyle="bold"
             android:text="上一步"
-            android:textSize="33dp"
+            android:textSize="24dp"
             android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
             android:background="@drawable/goods_choose_pay_way_selector"/>
 
         <TextView
             android:id="@+id/tv_cancel_pay"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:layout_width="217dp"
+            android:layout_height="60dp"
             android:gravity="center"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:textStyle="bold"
             android:text="结 算"
-            android:textSize="33dp"
+            android:textSize="24dp"
             android:textColor="@drawable/goods_choose_pay_way_text_color_selector"
             android:background="@drawable/goods_choose_pay_way_selector"/>
 

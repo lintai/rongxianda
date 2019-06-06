@@ -42,7 +42,7 @@ public class HomeGoodsSortFragment extends BaseFragment {
     protected void init(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, 10, true));
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, 9, true));
 
         mAdapter = new GoodsSortDetailAdapter(getContext(), new ArrayList<GoodsInfo>());
         mRecyclerView.setAdapter(mAdapter);

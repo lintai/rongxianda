@@ -168,7 +168,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 payCodeEt.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 payCodeEt.setHint("单位：元");
                 payTv.setText("结算成功");
-                codeNameTv.setText("实收");
+                codeNameTv.setText("实收：");
             } else {
                 otherPayLayout.setVisibility(View.VISIBLE);
                 payTypeTv.setText(Util.getPayType(payType));
@@ -229,6 +229,9 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     public void onError(Throwable e) {
                         loadingView.setVisibility(View.GONE);
                         PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+                        if (e != null && e.getMessage() != null) {
+                            Toast.makeText(PayingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -270,27 +273,23 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     public void onNext(PayCheckInfo payCheckInfo) {
                         Log.i("timer_time==="," response_time="+String.valueOf(System.currentTimeMillis() - currTime));
                         if (payCheckInfo != null && "2".equals(payCheckInfo.getPaystatus())) {
-                            loadingView.setVisibility(View.GONE);
-                            PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                             compositeDisposable.remove(this);
-                            gotoNextActivity();
+                            checkComplete("");
                             EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
                         } else if (System.currentTimeMillis() - currTime > 60 * 1000){
-                            loadingView.setVisibility(View.GONE);
-                            PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                             compositeDisposable.remove(this);
-                            gotoNextActivity("支付失败");
+                            checkComplete("支付失败");
                         }
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        loadingView.setVisibility(View.GONE);
-                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
                         compositeDisposable.remove(this);
-                        String message = e == null ? "" : e.getMessage();
-                        gotoNextActivity("支付失败");
+                        checkComplete("支付失败");
+                        if (e != null && e.getMessage() != null) {
+                            Toast.makeText(PayingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -301,8 +300,11 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         compositeDisposable.add(disposable);
 
     }
-    private void gotoNextActivity() {
-        gotoNextActivity("");
+
+    private void checkComplete(String errorMsg) {
+        loadingView.setVisibility(View.GONE);
+        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+        gotoNextActivity("errorMsg");
     }
 
     private void gotoNextActivity(String errorMsg) {
