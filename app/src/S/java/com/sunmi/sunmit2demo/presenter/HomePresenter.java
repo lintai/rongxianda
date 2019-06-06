@@ -299,7 +299,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
             }
             esc.addSetAbsolutePrintPosition( (short) 12 );
             if(menuItem.getPriceType() == Constants.WEIGHT_PRICE_TYPE){
-                esc.addText( menuItem.getTotalPrice()+"\n","GB2312" );
+                esc.addText( menuItem.getTotalPrice()/100.0+"\n","GB2312" );
             }else{
                 esc.addText( menuItem.getPrice()/100.0*menuItem.getGoodsCount()+"\n","GB2312" );
             }
