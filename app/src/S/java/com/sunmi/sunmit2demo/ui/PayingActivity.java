@@ -358,10 +358,9 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    final StringBuilder sb = new StringBuilder();
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        final StringBuilder sb = new StringBuilder();
         int action = event.getAction();
         switch (action) {
             case KeyEvent.ACTION_DOWN:
@@ -404,6 +403,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void scanCodeToPay(String code) {
+        code = code.trim();
         if (!TextUtils.isEmpty(code)) {
             authoCode = code;
             payCodeEt.setText(code);
