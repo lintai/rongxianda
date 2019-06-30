@@ -95,6 +95,8 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         preTv = findViewById(R.id.tv_pre);
         payTv = findViewById(R.id.tv_pay);
         loadingView = findViewById(R.id.loading_view);
+        loadingView.setText("等待支付成功，请客人在手机上确认支付");
+        loadingView.setTextViewVisibility(View.VISIBLE);
 
         payCodeEt = findViewById(R.id.et_pay_code);
         payCodeEt.addTextChangedListener(new TextWatcher() {
@@ -204,11 +206,13 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+        final int realPayType = payType == ALI_PAY_TYPE || payType == WX_PAY_TYPE ? 1 : payType;
+
         authoCode = authoCode == null ? "" : authoCode;
         Disposable disposable = Observable.create(new ObservableOnSubscribe<PayInfo>() {
             @Override
             public void subscribe(ObservableEmitter<PayInfo> e) throws Exception {
-                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), payType, authoCode,  2);
+                Result<PayInfo> result = ServerManager.pay(Util.appId, orderInfo.getOrderId(), realPayType, authoCode,  2);
                 if (result != null && result.getErrno() == 0 && result.getResult() != null) {
                     e.onNext(result.getResult());
                 } else if (result != null && !TextUtils.isEmpty(result.getError())) {
@@ -358,7 +362,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         int action = event.getAction();
         switch (action) {
             case KeyEvent.ACTION_DOWN:
-                int unicodeChar = event.getUnicodeChar();
+                final int unicodeChar = event.getUnicodeChar();
                 sb.append((char) unicodeChar);
                 if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
                     return super.dispatchKeyEvent(event);
@@ -382,14 +386,26 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (len != sb.length()) return;
+                        if (len != sb.length()) {
+                            //目前是扫码输入
+                            if (!TextUtils.isEmpty(payCodeEt.getText())) {
+                                //需要去除editText中的数据
+                                sb.setLength(0);
+                                sb.append(unicodeChar);
+                            }
+                            return;
+                        }
                         if (sb.length() > 0) {
                             scanCodeToPay(sb.toString());
                             sb.setLength(0);
                         }
                     }
                 }, 200);
-                return true;
+                if (sb.toString().trim().length() != 18) {
+                    return super.dispatchKeyEvent(event);
+                } else {
+                    return true;
+                }
             default:
                 break;
         }
@@ -397,37 +413,47 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void scanCodeToPay(String code) {
+        //code码长度规定是18
+        if (code.length() != 18) {
+            return;
+        }
         code = code.trim();
         if (!TextUtils.isEmpty(code)) {
             authoCode = code;
             payCodeEt.setText(code);
             if (payType == ALI_PAY_TYPE) {
-                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("26")
-                        && authoCode.length() == 18) {
+                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("26")) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是支付宝付款码，请重新扫描", Toast.LENGTH_SHORT).show();
+                    resetPayCodeEt(authoCode);
                 }
             } else if (payType == WX_PAY_TYPE) {
-                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("13")
-                        && authoCode.length() == 18) {
+                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("13")) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是微信付款码，请重新扫描", Toast.LENGTH_SHORT).show();
+                    resetPayCodeEt(authoCode);
                 }
             } else if (payType == MEMBER_PAYT_TYPE) {
                 if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("11")) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是会员卡付款码，请重新扫描", Toast.LENGTH_SHORT).show();
+                    resetPayCodeEt(authoCode);
                 }
             }
         }
     }
 
+    private void resetPayCodeEt(String authoCode) {
+        payCodeEt.setText("");
+        payCodeEt.setHint(authoCode);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void payCodeEvent(PayCodeEvent event) {
-        scanCodeToPay(event.payCode);
+//        scanCodeToPay(event.payCode);
     }
 
     @Override
