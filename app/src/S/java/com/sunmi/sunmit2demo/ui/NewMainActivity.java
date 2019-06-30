@@ -58,7 +58,6 @@ import com.sunmi.sunmit2demo.decoration.GoodsSortGridSpacingItemDecoration;
 import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
 import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
 import com.sunmi.sunmit2demo.eventbus.PrintDataEvent;
-import com.sunmi.sunmit2demo.eventbus.TestPayCodeEvent;
 import com.sunmi.sunmit2demo.eventbus.UpdateUnLockUserEvent;
 import com.sunmi.sunmit2demo.fragment.GoodsManagerFragment;
 import com.sunmi.sunmit2demo.modle.ClassAndGoodsModle;
@@ -489,7 +488,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                         if (len != sb.length()) return;
                         Log.e(TAG, "isQRcode");
                         if (sb.length() > 0) {
-                            addGoods(sb.toString());
+                            addGoods(sb.toString().trim());
                             sb.setLength(0);
                         }
                     }
@@ -499,13 +498,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
         return super.dispatchKeyEvent(event);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void payCodeEvent(TestPayCodeEvent event) {
-        if (!TextUtils.isEmpty(event.payCode)) {
-           addGoods(event.payCode);
-        }
     }
 
     private void addGoods(String code) {

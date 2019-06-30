@@ -21,7 +21,6 @@ import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
 import com.sunmi.sunmit2demo.eventbus.PrintDataEvent;
-import com.sunmi.sunmit2demo.eventbus.TestPayCodeEvent;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
 import com.sunmi.sunmit2demo.modle.PayCheckInfo;
 import com.sunmi.sunmit2demo.modle.PayInfo;
@@ -96,12 +95,6 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         preTv = findViewById(R.id.tv_pre);
         payTv = findViewById(R.id.tv_pay);
         loadingView = findViewById(R.id.loading_view);
-        findViewById(R.id.layout_other_pay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventBus.getDefault().post(new TestPayCodeEvent("134772960842086895"));
-            }
-        });
 
         payCodeEt = findViewById(R.id.et_pay_code);
         payCodeEt.addTextChangedListener(new TextWatcher() {
@@ -404,6 +397,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void scanCodeToPay(String code) {
+        code = code.trim();
         if (!TextUtils.isEmpty(code)) {
             authoCode = code;
             payCodeEt.setText(code);
