@@ -78,6 +78,8 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     private String goodsCount;
     private float cashReturn;
 
+    private boolean scanInputType = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +99,15 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         loadingView = findViewById(R.id.loading_view);
         loadingView.setText("等待支付成功，请客人在手机上确认支付");
         loadingView.setTextViewVisibility(View.VISIBLE);
+
+        findViewById(R.id.layout_other_pay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanInputType = !scanInputType;
+                setPayCodeEtEnable(!scanInputType);
+                Toast.makeText(PayingActivity.this, "扫码输入付款码="+scanInputType, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         payCodeEt = findViewById(R.id.et_pay_code);
         payCodeEt.addTextChangedListener(new TextWatcher() {
@@ -169,12 +180,14 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
 
             payType = bundle.getInt(GOODS_PAY_TYPE);
             if (payType == CASH_PAYT_TYPE) {
+                setPayCodeEtEnable(true);
                 cashPayLayout.setVisibility(View.VISIBLE);
                 payCodeEt.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 payCodeEt.setHint("单位：元");
                 payTv.setText("结算成功");
                 codeNameTv.setText("实收：");
             } else {
+                setPayCodeEtEnable(false);
                 otherPayLayout.setVisibility(View.VISIBLE);
                 payTypeTv.setText(Util.getPayType(payType));
             }
@@ -383,27 +396,19 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     return super.dispatchKeyEvent(event);
                 }
                 final int len = sb.length();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (len != sb.length()) {
-                            //目前是扫码输入
-                            if (!TextUtils.isEmpty(payCodeEt.getText())) {
-                                //需要去除editText中的数据
-                                sb.setLength(0);
-                                sb.append(unicodeChar);
-                            }
-                            return;
-                        }
-                        if (sb.length() > 0) {
-                            scanCodeToPay(sb.toString());
-                            sb.setLength(0);
-                        }
-                    }
-                }, 200);
-                if (sb.toString().trim().length() != 18) {
+                if (!scanInputType) {
                     return super.dispatchKeyEvent(event);
                 } else {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (len != sb.length()) return;
+                            if (sb.length() > 0) {
+                                scanCodeToPay(sb.toString());
+                                sb.setLength(0);
+                            }
+                        }
+                    }, 200);
                     return true;
                 }
             default:
@@ -413,11 +418,12 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void scanCodeToPay(String code) {
+        payCodeEt.setText("");
+        code = code.trim();
         //code码长度规定是18
         if (code.length() != 18) {
             return;
         }
-        code = code.trim();
         if (!TextUtils.isEmpty(code)) {
             authoCode = code;
             payCodeEt.setText(code);
@@ -449,6 +455,16 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     private void resetPayCodeEt(String authoCode) {
         payCodeEt.setText("");
         payCodeEt.setHint(authoCode);
+    }
+
+    private void setPayCodeEtEnable(boolean enable) {
+        scanInputType = !enable;
+        payCodeEt.setEnabled(enable);
+        if (enable) {
+            payCodeEt.setHint("请手动输入付款码");
+        } else {
+            payCodeEt.setHint("请扫描支付二维码");
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

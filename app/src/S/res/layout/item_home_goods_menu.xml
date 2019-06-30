@@ -89,12 +89,17 @@
             android:textColor="#625000"
             android:background="@drawable/menu_item_count_rectangle_bg"/>
 
-        <ImageView
-            android:id="@+id/iv_delease"
+        <LinearLayout
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:src="@drawable/close"
-            android:scaleType="centerInside"/>
+            android:background="@drawable/menu_item_btn_rectangle_bg">
+            <ImageView
+                android:id="@+id/iv_delease"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:src="@drawable/delease"
+                android:scaleType="centerInside"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
