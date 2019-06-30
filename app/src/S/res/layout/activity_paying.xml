@@ -98,6 +98,7 @@
                 android:textStyle="bold"
                 android:textSize="24dp"
                 android:textColor="#333333"
+                android:textColorHint="#666666"
                 android:inputType="number"
                 android:background="@drawable/pay_code_rectangle_bg"/>
 

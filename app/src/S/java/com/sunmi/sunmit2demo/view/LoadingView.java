@@ -67,6 +67,10 @@ public class LoadingView extends LinearLayout {
         progressBar.setVisibility(GONE);
     }
 
+    public void setTextViewVisibility(int visibility) {
+        tv.setVisibility(visibility);
+    }
+
     /**
      * 提示文字
      *
