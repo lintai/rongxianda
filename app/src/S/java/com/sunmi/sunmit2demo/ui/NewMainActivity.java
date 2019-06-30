@@ -622,7 +622,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 new PrinterModle(modules,
                         event.orderNo,
                         event.time,
-                        Utils.parseFloat((TextUtils.isEmpty(totalPrice) ? "":totalPrice) + (TextUtils.isEmpty(discountPrice) ? "":discountPrice)),
+                        (Float.parseFloat((TextUtils.isEmpty(totalPrice) ? "0":totalPrice))
+                                + Float.parseFloat((TextUtils.isEmpty(discountPrice) ? "0":discountPrice))),
                         Utils.parseFloat((TextUtils.isEmpty(discountPrice) ? "":discountPrice)),
                         Utils.parseFloat((TextUtils.isEmpty(totalPrice) ? "":totalPrice)),
                         event.payType));
@@ -634,7 +635,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         //加入购物清单
         MenuItemModule menuItemModule = new MenuItemModule();
         menuItemModule.setGoodsName(event.goodsName);
-        menuItemModule.setPrice(event.priceType == Constants.WEIGHT_PRICE_TYPE ? (int) event.totalPrice : event.price);        menuItemModule.setTotalPrice(event.totalPrice);
+        menuItemModule.setPrice(event.price);
+        menuItemModule.setTotalPrice(event.totalPrice);
         menuItemModule.setUnit(event.unit);
         menuItemModule.setGoodsCount(1);
         menuItemModule.setGoodsCode(event.goodsCode);

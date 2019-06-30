@@ -269,7 +269,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
 
         EscCommand esc = new EscCommand();
         esc.addInitializePrinter();
-        esc.addPrintAndFeedLines( (byte) 3 );
+        esc.addPrintAndFeedLines( (byte) 2 );
         /* 设置打印居中 */
         esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );
         /* 设置为倍高倍宽 */
@@ -301,15 +301,15 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         for(MenuItemModule menuItem : printerModle.getModules()){
             esc.addText( menuItem.getGoodsName()+"\n","GB2312" );
             esc.addSetHorAndVerMotionUnits( (byte) 7, (byte) 0 );
-            esc.addSetAbsolutePrintPosition( (short) 7 );
+            esc.addSetAbsolutePrintPosition( (short) 4 );
             esc.addText( menuItem.getPrice()/100.0+"","GB2312" );
-            esc.addSetAbsolutePrintPosition( (short) 10 );
+            esc.addSetAbsolutePrintPosition( (short) 7 );
             if(menuItem.getPriceType() == Constants.WEIGHT_PRICE_TYPE){
                 esc.addText( menuItem.getGoodsCount()+"g","GB2312" );
             }else{
                 esc.addText( menuItem.getGoodsCount()+"","GB2312" );
             }
-            esc.addSetAbsolutePrintPosition( (short) 12 );
+            esc.addSetAbsolutePrintPosition( (short) 11 );
             if(menuItem.getPriceType() == Constants.WEIGHT_PRICE_TYPE){
                 esc.addText( menuItem.getTotalPrice()/100.0+"\n","GB2312" );
             }else{
@@ -349,7 +349,8 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         esc.addText( "便捷","GB2312" );
         esc.addSetAbsolutePrintPosition( (short) 11 );
         esc.addText( "健康\n","GB2312" );
-        esc.addPrintAndFeedLines( (byte) 8 );
+        esc.addPrintAndFeedLines( (byte) 2 );
+        esc.addPrintAndFeedLines( (byte) 2 );
 
         /* 加入查询打印机状态，用于连续打印 */
         byte[] bytes = { 29, 114, 1 };
