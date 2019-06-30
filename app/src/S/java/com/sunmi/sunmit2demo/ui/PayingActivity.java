@@ -81,6 +81,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paying);
         EventBus.getDefault().register(this);
+        PreferenceUtil.putString(this, PreferenceUtil.KEY.PAYING_TYPE, "paying");
         initView();
         initData();
     }
@@ -192,8 +193,10 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     private void pay() {
 //        测试代码
 //        EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), getPayType(payType)));
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();
+        }
         loadingView.setVisibility(View.VISIBLE);
-        PreferenceUtil.putString(this, PreferenceUtil.KEY.PAYING_TYPE, "paying");
         if (payType != CASH_PAYT_TYPE && TextUtils.isEmpty(authoCode)) {
             Toast.makeText(PayingActivity.this, "请输入或扫描付款码", Toast.LENGTH_SHORT).show();
             return;
@@ -232,8 +235,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
 
                     @Override
                     public void onError(Throwable e) {
-                        loadingView.setVisibility(View.GONE);
-                        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
+                        loadingView.setVisibility(View.GONE);;
                         if (e != null && e.getMessage() != null) {
                             Toast.makeText(PayingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -308,7 +310,6 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
 
     private void checkComplete(String errorMsg) {
         loadingView.setVisibility(View.GONE);
-        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
         gotoNextActivity(errorMsg);
     }
 
@@ -354,13 +355,15 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
             authoCode = event.payCode;
             payCodeEt.setText(event.payCode);
             if (payType == ALI_PAY_TYPE) {
-                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("26")) {
+                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("26")
+                && authoCode.length() == 18) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是支付宝付款码，请重新扫描", Toast.LENGTH_SHORT).show();
                 }
             } else if (payType == WX_PAY_TYPE) {
-                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("13")) {
+                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("13")
+                        && authoCode.length() == 18) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是微信付款码，请重新扫描", Toast.LENGTH_SHORT).show();
@@ -382,6 +385,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         if (compositeDisposable != null) {
             compositeDisposable.dispose();
         }
+        PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
     }
 
     @Override
