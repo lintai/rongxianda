@@ -309,7 +309,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     private void checkComplete(String errorMsg) {
         loadingView.setVisibility(View.GONE);
         PreferenceUtil.putString(PayingActivity.this, PreferenceUtil.KEY.PAYING_TYPE, "");
-        gotoNextActivity("errorMsg");
+        gotoNextActivity(errorMsg);
     }
 
     private void gotoNextActivity(String errorMsg) {
