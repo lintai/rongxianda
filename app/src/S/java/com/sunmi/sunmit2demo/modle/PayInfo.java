@@ -9,7 +9,7 @@ public class PayInfo extends BaseModle {
 
     private String orderid;
     private String payorderid;
-    private String status;
+    private String status;	//状态：6-支付中 2-支付成功 7-支付失败（返回支付中状态需
     private int cashfee;
     private String paytype;
 
