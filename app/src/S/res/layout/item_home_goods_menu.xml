@@ -28,10 +28,11 @@
 
         <ImageView
             android:id="@+id/iv_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="14dp"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/close"/>
+            android:src="@drawable/close"
+            android:scaleType="centerInside"/>
 
     </LinearLayout>
 
