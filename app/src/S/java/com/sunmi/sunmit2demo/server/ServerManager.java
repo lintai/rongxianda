@@ -14,6 +14,7 @@ import com.sunmi.sunmit2demo.modle.PayCheckInfo;
 import com.sunmi.sunmit2demo.modle.PayInfo;
 import com.sunmi.sunmit2demo.modle.Result;
 import com.sunmi.sunmit2demo.modle.ShopInfo;
+import com.sunmi.sunmit2demo.utils.OkHttpUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class ServerManager {
                         .post(requestBody)
                         .build();
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = OkHttpUtil.getInstance();
         try {
             Response response = client.newCall(request).execute();
             if (response != null && response.isSuccessful()) {
@@ -90,7 +91,7 @@ public class ServerManager {
                 .post(requestBody)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = OkHttpUtil.getInstance();
         try {
             Response response = client.newCall(request).execute();
             if (response != null && response.isSuccessful()) {
@@ -134,7 +135,7 @@ public class ServerManager {
                 .post(requestBody)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = OkHttpUtil.getInstance();
         try {
             Response response = client.newCall(request).execute();
             if (response != null && response.isSuccessful()) {
@@ -172,7 +173,7 @@ public class ServerManager {
                 .post(requestBody)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = OkHttpUtil.getInstance();
         try {
             Response response = client.newCall(request).execute();
             if (response != null && response.isSuccessful()) {
@@ -211,7 +212,7 @@ public class ServerManager {
                 .post(requestBody)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = OkHttpUtil.getInstance();
         try {
             Response response = client.newCall(request).execute();
             if (response != null && response.isSuccessful()) {
@@ -229,7 +230,7 @@ public class ServerManager {
                 .url(imgUrl)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = OkHttpUtil.getInstance();
         try {
             Response response = client.newCall(request).execute();
             if (response != null && response.isSuccessful()) {
