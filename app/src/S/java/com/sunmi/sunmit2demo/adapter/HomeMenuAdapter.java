@@ -98,10 +98,11 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
                 menuViewHolder.mGoodsNameTv.setText(module.getGoodsName());
             }
             menuViewHolder.mSingleGoodsPriceTv.setText("￥"+ Utils.numberFormat(module.getPrice() * 1.0f / 100) + module.getUnit());
-            menuViewHolder.mGoodsCountTv.setText(Utils.numberFormat(module.getGoodsCount()));
             if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
+                menuViewHolder.mGoodsCountTv.setText(Utils.numberFormat(module.getGoodsCount()));
                 menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getPrice() * module.getGoodsCount() * 1.0f / 100));
             } else {
+                menuViewHolder.mGoodsCountTv.setText(Utils.numberFormat(module.getGoodsCount()) + "g");
                 menuViewHolder.mGoodsTotalPrice.setText("￥"+Utils.numberFormat(module.getTotalPrice() * 1.0f / 100));
             }
 
