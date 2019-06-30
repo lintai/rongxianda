@@ -413,11 +413,12 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void scanCodeToPay(String code) {
+        code = code.trim();
+        Log.e("code码：",code);
         //code码长度规定是18
         if (code.length() != 18) {
             return;
         }
-        code = code.trim();
         if (!TextUtils.isEmpty(code)) {
             authoCode = code;
             payCodeEt.setText(code);
