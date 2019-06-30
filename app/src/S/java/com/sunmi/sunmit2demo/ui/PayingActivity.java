@@ -1,6 +1,7 @@
 package com.sunmi.sunmit2demo.ui;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -19,6 +21,7 @@ import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
 import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
 import com.sunmi.sunmit2demo.eventbus.PrintDataEvent;
+import com.sunmi.sunmit2demo.eventbus.TestPayCodeEvent;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
 import com.sunmi.sunmit2demo.modle.PayCheckInfo;
 import com.sunmi.sunmit2demo.modle.PayInfo;
@@ -93,6 +96,12 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         preTv = findViewById(R.id.tv_pre);
         payTv = findViewById(R.id.tv_pay);
         loadingView = findViewById(R.id.loading_view);
+        findViewById(R.id.layout_other_pay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new TestPayCodeEvent("134772960842086895"));
+            }
+        });
 
         payCodeEt = findViewById(R.id.et_pay_code);
         payCodeEt.addTextChangedListener(new TextWatcher() {
@@ -349,14 +358,57 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void payCodeEvent(PayCodeEvent event) {
-        if (!TextUtils.isEmpty(event.payCode)) {
-            authoCode = event.payCode;
-            payCodeEt.setText(event.payCode);
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        final StringBuilder sb = new StringBuilder();
+        int action = event.getAction();
+        switch (action) {
+            case KeyEvent.ACTION_DOWN:
+                int unicodeChar = event.getUnicodeChar();
+                sb.append((char) unicodeChar);
+                if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
+                    return super.dispatchKeyEvent(event);
+                }
+                if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                    return super.dispatchKeyEvent(event);
+                }
+                if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    return super.dispatchKeyEvent(event);
+                }
+                if (event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
+                    return super.dispatchKeyEvent(event);
+                }
+                if (event.getKeyCode() == KeyEvent.KEYCODE_HOME) {
+                    return super.dispatchKeyEvent(event);
+                }
+                if (event.getKeyCode() == KeyEvent.KEYCODE_POWER) {
+                    return super.dispatchKeyEvent(event);
+                }
+                final int len = sb.length();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (len != sb.length()) return;
+                        if (sb.length() > 0) {
+                            scanCodeToPay(sb.toString());
+                            sb.setLength(0);
+                        }
+                    }
+                }, 200);
+                return true;
+            default:
+                break;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    private void scanCodeToPay(String code) {
+        if (!TextUtils.isEmpty(code)) {
+            authoCode = code;
+            payCodeEt.setText(code);
             if (payType == ALI_PAY_TYPE) {
                 if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("26")
-                && authoCode.length() == 18) {
+                        && authoCode.length() == 18) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是支付宝付款码，请重新扫描", Toast.LENGTH_SHORT).show();
@@ -376,6 +428,11 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void payCodeEvent(PayCodeEvent event) {
+        scanCodeToPay(event.payCode);
     }
 
     @Override
