@@ -62,7 +62,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     public static final String GOODS_AUTHO_DATA = "goods_autho_data";//测试用的代码
 
     private TextView goodsCountTv, goodsPriceTv, goodsDiscountTv, payTypeTv;
-    private TextView preTv, payTv, cashReturnTv, codeNameTv;
+    private TextView preTv, payTv, cashReturnTv, codeNameTv, payTypeChangeTv;
     private EditText payCodeEt;
     private LinearLayout cashPayLayout, otherPayLayout;
     private View focusView;
@@ -100,12 +100,12 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         loadingView.setText("等待支付成功，请客人在手机上确认支付");
         loadingView.setTextViewVisibility(View.VISIBLE);
 
-        findViewById(R.id.layout_other_pay).setOnClickListener(new View.OnClickListener() {
+        payTypeChangeTv = findViewById(R.id.tv_pay_type_change);
+        payTypeChangeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 scanInputType = !scanInputType;
                 setPayCodeEtEnable(!scanInputType);
-                Toast.makeText(PayingActivity.this, "扫码输入付款码="+scanInputType, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -462,8 +462,10 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         payCodeEt.setEnabled(enable);
         if (enable) {
             payCodeEt.setHint("请手动输入付款码");
+            payTypeChangeTv.setText("扫码输入");
         } else {
             payCodeEt.setHint("请扫描支付二维码");
+            payTypeChangeTv.setText("键盘输入");
         }
     }
 
