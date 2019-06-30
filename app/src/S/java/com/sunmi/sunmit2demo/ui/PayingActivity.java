@@ -222,7 +222,14 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 .subscribeWith(new DisposableObserver<PayInfo>() {
                     @Override
                     public void onNext(PayInfo payInfo) {
-                        checkPayStatus();
+                        if ("2".equals(payInfo.getStatus())) {
+                            checkComplete("");
+                            EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                        } else if ("6".equals(payInfo.getStatus())) {
+                            checkPayStatus();
+                        } else {
+                            onError(new Throwable());
+                        }
                     }
 
                     @Override
