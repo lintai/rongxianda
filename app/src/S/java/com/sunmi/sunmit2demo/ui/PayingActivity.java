@@ -429,6 +429,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         code = code.trim();
         //code码长度规定是18
         if (code.length() != 18) {
+            Toast.makeText(this, "付款码长度不正确", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!TextUtils.isEmpty(code)) {

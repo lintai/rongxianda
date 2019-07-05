@@ -4,4 +4,10 @@
     <color name="color_black">#333333</color>
     <color name="color_e5e5e5">#e5e5e5</color>
     <color name="color_c2c2c2">#c2c2c2</color>
+
+    <color name="color_d0ac1f">#d0ac1f</color>
+    <color name="color_fece23">#fece23</color>
+
+    <color name="color_333333">#333333</color>
+    <color name="color_bf333333">#bf333333</color>
 </resources>

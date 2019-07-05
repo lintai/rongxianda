@@ -2,16 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="#fece23">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_goods_sort_name"
-        android:layout_width="258dp"
+        android:layout_width="match_parent"
         android:layout_height="67dp"
         android:gravity="center"
+        android:focusable="true"
+        android:clickable="true"
         android:text=""
         android:textSize="22dp"
-        android:textColor="#333333"/>
+        android:textColor="@drawable/goods_sort_item_textcolor_selector"
+        android:background="@drawable/goods_sort_item_selector"/>
 
 </LinearLayout>
