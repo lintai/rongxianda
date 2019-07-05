@@ -157,7 +157,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private int id;
     private String usbName;
 
-    private Toast mToast;
+    private List<Toast> mToastList = new ArrayList<>();
+    //结算按钮点击的时间，用于 防止结算按钮点击多次
+    private long payButtonClickTime;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -296,9 +298,16 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onStop() {
         super.onStop();
         this.willwelcome = false;
-        if (mToast != null) {
-            mToast.cancel();
+        if (mToastList.size() > 0) {
+            for (int i = mToastList.size() - 1; i >= 0 ; i--) {
+                Toast toast = mToastList.get(i);
+                if (toast != null) {
+                    toast.cancel();
+                }
+            }
+            mToastList.clear();
         }
+        payButtonClickTime = 0;
         unregisterReceiver(receiver);
     }
 
@@ -430,7 +439,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.tv_pay:
                 if (mPresenter != null) {
-                    mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
+                    if (System.currentTimeMillis() - payButtonClickTime >= 1 * 1000) {
+                        payButtonClickTime = System.currentTimeMillis();
+                        mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
+                    }
                 }
                 break;
             case R.id.tv_pre_page:
@@ -514,6 +526,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             if (!TextUtils.isEmpty(code)
                     && !TextUtils.isEmpty(PreferenceUtil.getString(this,PreferenceUtil.KEY.PAYING_TYPE, ""))) {
                 //在支付中。。。
+                /**
+                 * 已废弃
+                 */
                 EventBus.getDefault().post(new PayCodeEvent(code));
             } else if (datas != null) {
                 //称重物品
@@ -818,8 +833,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private void resetViewData(int page) {
         if (totalDatas <= 0 || page * DEFAULT_PAGE_SIZE >= totalDatas) {
             //没有该页对应的数据
-            mToast = Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT);
-            mToast.show();
+            Toast toast = Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT);
+            mToastList.add(toast);
+            toast.show();
             currPage = page - 1;
             return;
         } else {
@@ -828,8 +844,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         if (page < 0) {
             this.currPage = 0;
-            mToast = Toast.makeText(this, "已经是第一页了", Toast.LENGTH_SHORT);
-            mToast.show();
+            Toast toast = Toast.makeText(this, "已经是第一页了", Toast.LENGTH_SHORT);
+            mToastList.add(toast);
+            toast.show();
             return;
         } else {
             currPage = page;
