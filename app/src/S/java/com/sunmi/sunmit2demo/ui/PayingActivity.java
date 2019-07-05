@@ -181,6 +181,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
             payType = bundle.getInt(GOODS_PAY_TYPE);
             if (payType == CASH_PAYT_TYPE) {
                 setPayCodeEtEnable(true);
+                payTypeChangeTv.setVisibility(View.GONE);
                 cashPayLayout.setVisibility(View.VISIBLE);
                 payCodeEt.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 payCodeEt.setHint("单位：元");
@@ -188,6 +189,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 codeNameTv.setText("实收：");
             } else {
                 setPayCodeEtEnable(false);
+                payTypeChangeTv.setVisibility(View.VISIBLE);
                 otherPayLayout.setVisibility(View.VISIBLE);
                 payTypeTv.setText(Util.getPayType(payType));
             }
@@ -356,8 +358,12 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     } else {
                         pay();
                     }
-                } else if (!TextUtils.isEmpty(payCodeEt.getText().toString())) {
-                    pay();
+                } else {
+                    if (!TextUtils.isEmpty(payCodeEt.getText().toString())) {
+                        pay();
+                    } else {
+                        Toast.makeText(this, "请输入付款码", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
             case R.id.tv_pre:

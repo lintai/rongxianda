@@ -157,6 +157,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private int id;
     private String usbName;
 
+    private Toast mToast;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -295,7 +296,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onStop() {
         super.onStop();
         this.willwelcome = false;
-
+        if (mToast != null) {
+            mToast.cancel();
+        }
         unregisterReceiver(receiver);
     }
 
@@ -815,20 +818,22 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private void resetViewData(int page) {
         if (totalDatas <= 0 || page * DEFAULT_PAGE_SIZE >= totalDatas) {
             //没有该页对应的数据
-            Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT).show();
+            mToast = Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT);
+            mToast.show();
             currPage = page - 1;
             return;
         } else {
             currPage = page;
-
         }
 
         if (page < 0) {
             this.currPage = 0;
-            Toast.makeText(this, "已经是第一页了", Toast.LENGTH_SHORT).show();
+            mToast = Toast.makeText(this, "已经是第一页了", Toast.LENGTH_SHORT);
+            mToast.show();
             return;
         } else {
             currPage = page;
+            mGoodsSortAdapter.setSelectPos(mGoodsSortAdapter.getDatas().size() - 1 < 0 ? 0 : mGoodsSortAdapter.getDatas().size() - 1 );
         }
 
         List<GoodsSortTagModle> tags = mGoodsSortAdapter.getDatas();
@@ -843,6 +848,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 tags.add(new GoodsSortTagModle(modle.getClassId(), modle.getClassName()));
             }
         }
+        mGoodsSortAdapter.setSelectPos(0);
         mGoodsSortAdapter.notifyDataSetChanged();
 
         initViewPager(modles);

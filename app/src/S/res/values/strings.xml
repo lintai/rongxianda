@@ -15,5 +15,6 @@
     <string name="str_printer_printmode_tsc">Print Mode:TSC</string>
     <string name="str_printer_printmode_cpcl">Print Mode:CPCL</string>
 
-    <string name="str_cann_printer">Please connect the printer first</string>
+    <!--<string name="str_cann_printer">Please connect the printer first</string>-->
+    <string name="str_cann_printer">打印机未连接</string>
 </resources>

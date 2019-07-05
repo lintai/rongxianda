@@ -1,5 +1,6 @@
 package com.sunmi.sunmit2demo.adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,14 @@ public class GoodsSortAdapter extends RecyclerView.Adapter {
 
     List<GoodsSortTagModle> datas;
     ItemClickListenr itemClickListenr;
+    int selectPos;
 
     public GoodsSortAdapter(List<GoodsSortTagModle> datas) {
         this.datas = datas;
+    }
+
+    public void setSelectPos(int selectPos) {
+        this.selectPos = selectPos;
     }
 
     public List<GoodsSortTagModle> getDatas() {
@@ -41,15 +47,24 @@ public class GoodsSortAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        GoodsSortViewHolder viewHolder = (GoodsSortViewHolder) holder;
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        final GoodsSortViewHolder viewHolder = (GoodsSortViewHolder) holder;
         final GoodsSortTagModle modle = datas.get(position);
         viewHolder.goodsSortTv.setText(modle.getClassName());
+        if (selectPos == position) {
+            viewHolder.goodsSortTv.setTextColor(Color.parseColor("#ffffff"));
+        } else {
+            viewHolder.goodsSortTv.setTextColor(Color.parseColor("#333333"));
+        }
         if (itemClickListenr != null) {
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClickListenr.onItemClick(modle.getClassId());
+                    if (selectPos != position) {
+                        selectPos = position;
+                        notifyDataSetChanged();
+                        itemClickListenr.onItemClick(modle.getClassId());
+                    }
                 }
             });
         }

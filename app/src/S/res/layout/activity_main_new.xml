@@ -168,8 +168,8 @@
                     android:text="上一页"
                     android:textSize="22dp"
                     android:gravity="center"
-                    android:textColor="#856c00"
-                    android:background="#fece23"/>
+                    android:textColor="#ffffff"
+                    android:background="#ff7d2e"/>
 
                 <TextView
                     android:id="@+id/tv_next_page"
@@ -178,8 +178,8 @@
                     android:text="下一页"
                     android:textSize="22dp"
                     android:gravity="center"
-                    android:textColor="#856c00"
-                    android:background="#fece23"/>
+                    android:textColor="#ffffff"
+                    android:background="#ff7d2e"/>
 
             </LinearLayout>
 
