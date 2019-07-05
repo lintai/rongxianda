@@ -435,7 +435,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_pay:
-                if (mPresenter != null) {
+                if (mPresenter != null
+                    && mMenuAdapter != null
+                    && mMenuAdapter.getDatas().size() > 0) {
                     mPayTv.setText("结算中...");
                     mPayTv.setClickable(false);
                     mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
