@@ -158,8 +158,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private String usbName;
 
     private List<Toast> mToastList = new ArrayList<>();
-    //结算按钮点击的时间，用于 防止结算按钮点击多次
-    private long payButtonClickTime;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -307,7 +305,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             }
             mToastList.clear();
         }
-        payButtonClickTime = 0;
         unregisterReceiver(receiver);
     }
 
@@ -439,10 +436,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.tv_pay:
                 if (mPresenter != null) {
-                    if (System.currentTimeMillis() - payButtonClickTime >= 1 * 1000) {
-                        payButtonClickTime = System.currentTimeMillis();
-                        mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
-                    }
+                    mPayTv.setText("结算中...");
+                    mPayTv.setClickable(false);
+                    mPresenter.pay(mMenuAdapter.getDatas(), (int) mMenuAdapter.getGoodsTotalPrice());
                 }
                 break;
             case R.id.tv_pre_page:
@@ -456,6 +452,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
                 break;
             case R.id.tv_has_selected:
+                mPayTv.setText("结算");
+                mPayTv.setClickable(true);
                 try {
                     connectPrintService();
 
@@ -873,6 +871,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void orderCreateComplete(OrderInfo orderInfo) {
+        mPayTv.setText("结算");
+        mPayTv.setClickable(true);
         if (orderInfo != null) {
             Intent intent = new Intent(this, ChoosePayWayActivity.class);
             Bundle bundle = new Bundle();
