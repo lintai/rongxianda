@@ -456,13 +456,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_has_selected:
                 mPayTv.setText("结算");
                 mPayTv.setClickable(true);
+                try {
+                    connectPrintService();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 EventBus.getDefault().post(new PrintDataEvent(true));
-//                try {
-//                    connectPrintService();
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
                 break;
             default:
                 break;
