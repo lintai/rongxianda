@@ -80,7 +80,9 @@ import com.sunmi.sunmit2demo.unlock.UnlockServer;
 import com.sunmi.sunmit2demo.utils.ResourcesUtils;
 import com.sunmi.sunmit2demo.utils.ScreenManager;
 import com.sunmi.sunmit2demo.utils.SharePreferenceUtil;
+import com.sunmi.sunmit2demo.utils.ToastUtil;
 import com.sunmi.sunmit2demo.utils.Utils;
+import com.sunmi.widget.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -158,7 +160,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private int id;
     private String usbName;
 
-    private List<Toast> mToastList = new ArrayList<>();
+    private long mPrePrintTime;//上次打印的时间点
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -297,15 +299,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onStop() {
         super.onStop();
         this.willwelcome = false;
-        if (mToastList.size() > 0) {
-            for (int i = mToastList.size() - 1; i >= 0 ; i--) {
-                Toast toast = mToastList.get(i);
-                if (toast != null) {
-                    toast.cancel();
-                }
-            }
-            mToastList.clear();
-        }
         unregisterReceiver(receiver);
     }
 
@@ -625,6 +618,14 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             mPresenter.openCashBox(myHandler, id);
             return;
         }
+
+        if (System.currentTimeMillis() - mPrePrintTime < 2 * 1000) {
+            //2次打印票据之间的时间间隔
+            ToastUtil.showShort(NewMainActivity.this, "打印小票太频繁，请稍后再试");
+            return;
+        }
+        mPrePrintTime = System.currentTimeMillis();
+
         if (mMenuAdapter == null
                 || mMenuAdapter.getDatas() == null
                 || mMenuAdapter.getDatas().size() == 0) {
@@ -845,9 +846,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private void resetViewData(int page) {
         if (totalDatas <= 0 || page * DEFAULT_PAGE_SIZE >= totalDatas) {
             //没有该页对应的数据
-            Toast toast = Toast.makeText(this, "没有更多数据了", Toast.LENGTH_SHORT);
-            mToastList.add(toast);
-            toast.show();
+            ToastUtil.showShort(this, "没有更多数据了");
             currPage = page - 1;
             return;
         } else {
@@ -856,9 +855,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         if (page < 0) {
             this.currPage = 0;
-            Toast toast = Toast.makeText(this, "已经是第一页了", Toast.LENGTH_SHORT);
-            mToastList.add(toast);
-            toast.show();
+            ToastUtil.showShort(this, "已经是第一页了");
             return;
         } else {
             currPage = page;
@@ -897,6 +894,11 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             intent.putExtras(bundle);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void printerOutOfConnected() {
+        mPrePrintTime = 0;
     }
 
     @Override

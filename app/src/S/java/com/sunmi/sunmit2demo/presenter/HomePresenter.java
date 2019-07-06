@@ -30,6 +30,7 @@ import com.sunmi.sunmit2demo.print.PrinterCode;
 import com.sunmi.sunmit2demo.print.PrinterCommand;
 import com.sunmi.sunmit2demo.print.ThreadPool;
 import com.sunmi.sunmit2demo.server.ServerManager;
+import com.sunmi.sunmit2demo.utils.ToastUtil;
 import com.sunmi.sunmit2demo.utils.Utils;
 import com.tools.command.EscCommand;
 import com.tools.command.LabelCommand;
@@ -213,7 +214,8 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                              final PrinterModle printerModle) {
         if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
                 !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
-            Utils.toast( context, context.getString( R.string.str_cann_printer ) );
+            mView.printerOutOfConnected();
+            ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
         }
         ThreadPool threadPool = ThreadPool.getInstantiation();
@@ -235,7 +237,8 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
     public void openCashBox(final Handler mHandler, final int id) {
         if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
                 !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
-            Utils.toast( context, context.getString( R.string.str_cann_printer ) );
+            mView.printerOutOfConnected();
+            ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
         }
         ThreadPool threadPool = ThreadPool.getInstantiation();

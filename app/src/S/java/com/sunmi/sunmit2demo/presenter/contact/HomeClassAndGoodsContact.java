@@ -16,6 +16,7 @@ public interface HomeClassAndGoodsContact {
     public interface View {
         void loadComplete(List<ClassAndGoodsModle> datas);
         void orderCreateComplete(OrderInfo orderInfo);
+        void printerOutOfConnected();
     }
 
     public interface Presenter {
