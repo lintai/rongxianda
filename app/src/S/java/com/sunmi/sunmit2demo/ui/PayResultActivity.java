@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.sunmi.sunmit2demo.R;
 import com.sunmi.sunmit2demo.Util;
+import com.sunmi.sunmit2demo.eventbus.ClearDataEvent;
 import com.sunmi.sunmit2demo.eventbus.PrintDataEvent;
 import com.sunmi.sunmit2demo.modle.OrderInfo;
 import com.sunmi.sunmit2demo.utils.Utils;
@@ -108,6 +109,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_pay:
+                EventBus.getDefault().post(new ClearDataEvent());
                 setResult(-1);
                 finish();
                 break;

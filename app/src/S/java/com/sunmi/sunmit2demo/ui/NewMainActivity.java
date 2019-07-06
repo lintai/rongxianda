@@ -55,6 +55,7 @@ import com.sunmi.sunmit2demo.adapter.HomeGoodsViewPagerAdapter;
 import com.sunmi.sunmit2demo.adapter.HomeMenuAdapter;
 import com.sunmi.sunmit2demo.bean.GoodsCode;
 import com.sunmi.sunmit2demo.decoration.GoodsSortGridSpacingItemDecoration;
+import com.sunmi.sunmit2demo.eventbus.ClearDataEvent;
 import com.sunmi.sunmit2demo.eventbus.GoodsItemClickEvent;
 import com.sunmi.sunmit2demo.eventbus.PayCodeEvent;
 import com.sunmi.sunmit2demo.eventbus.PrintDataEvent;
@@ -609,6 +610,16 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void clearDataEvent(ClearDataEvent event) {
+        if (mMenuAdapter != null) {
+            mMenuAdapter.clear();
+        }
+        //更新所有清单总价格
+        mGoodsCountTv.setText("0");
+        mGoodsTotalPriceTv.setText("0");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void printDataEvent(PrintDataEvent event) {
         if (event.openCashBox) {
             mPresenter.openCashBox(myHandler, id);
@@ -632,10 +643,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         List<MenuItemModule> modules = new ArrayList<>();
         modules.addAll(mMenuAdapter.getDatas());
 
-        mMenuAdapter.clear();
-        //更新所有清单总价格
-        mGoodsCountTv.setText("0");
-        mGoodsTotalPriceTv.setText("0");
+//        mMenuAdapter.clear();
+//        //更新所有清单总价格
+//        mGoodsCountTv.setText("0");
+//        mGoodsTotalPriceTv.setText("0");
 
         mPresenter.printReceipt(myHandler, id,
                 new PrinterModle(modules,
