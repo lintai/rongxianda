@@ -24,7 +24,7 @@ public class OkHttpUtil {
     }
 
     private static OkHttpClient createOKhttpClient() {
-        OkHttpClient httpClient = new OkHttpClient.Builder()
+        OkHttpClient httpClient = new HttpsTrustUtil().getTrustAllClient().newBuilder()
 //                .retryOnConnectionFailure(true)
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS) //连接超时
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS) //读取超时

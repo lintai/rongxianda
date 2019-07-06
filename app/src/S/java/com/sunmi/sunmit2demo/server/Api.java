@@ -7,7 +7,9 @@ package com.sunmi.sunmit2demo.server;
  */
 public interface Api {
 
-    String HOST = "http://47.92.54.128:9801";
+//    String HOST = "http://47.92.54.128:9801";
+//    String HOST = "https://rxd.ponlok.com";//正式环境
+    String HOST = "https://testapi.ponlok.com";//测试环境
 
     //获取所有商品信息
     String HOME_CLASS_GOODS_LIST = HOST + "/GoodsInfo/GoodsInfo/getClassGoodsList";
