@@ -529,6 +529,7 @@ public class DeviceConnFactoryManager {
                     int result = judgeResponseType(buffer[0]); //数据右移
                     String status = "Printer connected normal";
                     if (sendCommand == esc) {
+                        Log.e("ESC","=====");
                         //设置当前打印机模式为ESC模式
                         if (currentPrinterCommand == null) {
                             currentPrinterCommand = PrinterCommand.ESC;
@@ -554,6 +555,7 @@ public class DeviceConnFactoryManager {
                             }
                         }
                     } else if (sendCommand == tsc) {
+                        Log.e("TSC","=====");
                         //设置当前打印机模式为TSC模式
                         if (currentPrinterCommand == null) {
                             currentPrinterCommand = PrinterCommand.TSC;
@@ -579,6 +581,7 @@ public class DeviceConnFactoryManager {
                             }
                         }
                     }else if(sendCommand==cpcl){
+                        Log.e("cpcl","=====");
                         if (currentPrinterCommand == null) {
                             currentPrinterCommand = PrinterCommand.CPCL;
                             sendStateBroadcast(CONN_STATE_CONNECTED);
