@@ -38,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/pay_result_title_layout"
         android:textStyle="bold"
         android:text=""
@@ -169,6 +170,7 @@
         android:id="@+id/tv_bill"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_pay"
         android:padding="15dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
@@ -178,6 +180,7 @@
         android:textColor="@color/color_white"
         android:textSize="20dp"
         android:drawableLeft="@drawable/icon_bill"
-        android:drawablePadding="5dp"/>
+        android:drawablePadding="5dp"
+        android:background="@drawable/goods_choose_pay_way_next_rectangle_bg"/>
 
 </RelativeLayout>

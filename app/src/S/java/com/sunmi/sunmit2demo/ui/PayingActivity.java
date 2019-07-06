@@ -97,7 +97,6 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         preTv = findViewById(R.id.tv_pre);
         payTv = findViewById(R.id.tv_pay);
         loadingView = findViewById(R.id.loading_view);
-        loadingView.setText("等待支付成功，请客人在手机上确认支付");
         loadingView.setTextViewVisibility(View.VISIBLE);
 
         payTypeChangeTv = findViewById(R.id.tv_pay_type_change);
@@ -187,11 +186,13 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                 payCodeEt.setHint("单位：元");
                 payTv.setText("结算成功");
                 codeNameTv.setText("实收：");
+                loadingView.setText("等待支付成功");
             } else {
                 setPayCodeEtEnable(false);
                 payTypeChangeTv.setVisibility(View.VISIBLE);
                 otherPayLayout.setVisibility(View.VISIBLE);
                 payTypeTv.setText(Util.getPayType(payType));
+                loadingView.setText("等待支付成功，请客人在手机上确认支付");
             }
         } catch (Exception e) {
             e.printStackTrace();

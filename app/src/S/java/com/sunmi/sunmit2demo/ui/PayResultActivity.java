@@ -23,6 +23,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
     private TextView goodsCountTv, goodsPriceTv, goodsDiscountTv, payTypeTv;
     private TextView payTv, resultTipTv;
     private TextView preTv, cancelPayTv;
+    private TextView billTv;
     private ImageView payIv;
     private LinearLayout failLayout;
 
@@ -52,7 +53,9 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
         failLayout = findViewById(R.id.layout_pay_fail);
         payIv = findViewById(R.id.pay_img_iv);
 
-        findViewById(R.id.tv_bill).setOnClickListener(this);
+        billTv = findViewById(R.id.tv_bill);
+
+        billTv.setOnClickListener(this);
         payTv.setOnClickListener(this);
         preTv.setOnClickListener(this);
         cancelPayTv.setOnClickListener(this);
@@ -88,6 +91,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
                 cancelLastViewFocus(preTv);
                 cancelPayTv.setText("取消支付");
                 payIv.setImageResource(R.drawable.pay_failed_icon);
+                billTv.setVisibility(View.GONE);
             } else {
                 payType = bundle.getInt(PayingActivity.GOODS_PAY_TYPE);
                 payTypeTv.setText("支付方式："+Util.getPayType(payType));
