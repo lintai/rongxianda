@@ -55,6 +55,7 @@ public class GoodsSortAdapter extends RecyclerView.Adapter {
             viewHolder.goodsSortTv.setTextColor(Color.parseColor("#bf333333"));
             viewHolder.goodsSortTv.setBackgroundResource(R.drawable.goods_sort_item_select_rectangle_bg);
         } else {
+            viewHolder.goodsSortTv.setTextColor(viewHolder.goodsSortTv.getContext().getResources().getColorStateList(R.color.goods_sort_item_textcolor_selector));
             viewHolder.goodsSortTv.setBackgroundResource(R.drawable.goods_sort_item_selector);
         }
         if (itemClickListenr != null) {

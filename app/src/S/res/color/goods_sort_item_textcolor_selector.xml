@@ -6,4 +6,6 @@
     <item android:state_selected="false" android:color="@color/color_333333"/>
     <item android:state_focused="false" android:color="@color/color_333333"/>
     <item android:state_pressed="false" android:color="@color/color_333333"/>
+
+    <item android:color="@color/color_333333"/>
 </selector>
