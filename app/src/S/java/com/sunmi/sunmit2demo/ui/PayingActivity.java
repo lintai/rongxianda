@@ -361,7 +361,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 } else {
                     if (!TextUtils.isEmpty(payCodeEt.getText().toString())) {
-                        pay();
+                        checkCorrectCode(payCodeEt.getText().toString());
                     } else {
                         Toast.makeText(this, "请输入付款码", Toast.LENGTH_SHORT).show();
                     }
@@ -428,36 +428,42 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         Toast.makeText(this, "code="+code, Toast.LENGTH_SHORT).show();
         payCodeEt.setText("");
         code = code.trim();
+        payCodeEt.setText(code);
         //code码长度规定是18
         if (code.length() != 18) {
             Toast.makeText(this, "付款码长度不正确", Toast.LENGTH_SHORT).show();
             return;
         }
+        checkCorrectCode(code);
+    }
+
+    private void checkCorrectCode(String code) {
         if (!TextUtils.isEmpty(code)) {
-            authoCode = code;
-            payCodeEt.setText(code);
+            authoCode = code.trim();
             if (payType == ALI_PAY_TYPE) {
-                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("26")) {
+                if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("28")) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是支付宝付款码，请重新扫描", Toast.LENGTH_SHORT).show();
-                    resetPayCodeEt(authoCode);
+//                    resetPayCodeEt(authoCode);
                 }
             } else if (payType == WX_PAY_TYPE) {
                 if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("13")) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是微信付款码，请重新扫描", Toast.LENGTH_SHORT).show();
-                    resetPayCodeEt(authoCode);
+//                    resetPayCodeEt(authoCode);
                 }
             } else if (payType == MEMBER_PAYT_TYPE) {
                 if (!TextUtils.isEmpty(authoCode) && authoCode.startsWith("11")) {
                     pay();
                 } else {
                     Toast.makeText(PayingActivity.this, "不是会员卡付款码，请重新扫描", Toast.LENGTH_SHORT).show();
-                    resetPayCodeEt(authoCode);
+//                    resetPayCodeEt(authoCode);
                 }
             }
+        } else {
+            Toast.makeText(PayingActivity.this, "付款码不能为空，请输入付款码", Toast.LENGTH_SHORT).show();
         }
     }
 
