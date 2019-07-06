@@ -52,6 +52,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
         failLayout = findViewById(R.id.layout_pay_fail);
         payIv = findViewById(R.id.pay_img_iv);
 
+        findViewById(R.id.tv_bill).setOnClickListener(this);
         payTv.setOnClickListener(this);
         preTv.setOnClickListener(this);
         cancelPayTv.setOnClickListener(this);
@@ -116,6 +117,11 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
                 cancelLastViewFocus(cancelPayTv);
                 setResult(-1);
                 finish();
+                break;
+            case R.id.tv_bill:
+                if (orderInfo != null) {
+                    EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                }
                 break;
         }
     }

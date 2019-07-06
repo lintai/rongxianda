@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/pay_result_title_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="178dp"
@@ -37,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_below="@+id/pay_result_title_layout"
         android:textStyle="bold"
         android:text=""
         android:textSize="24dp"
@@ -47,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="83dp"
+        android:layout_below="@+id/tv_pay_type"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -118,7 +121,9 @@
         android:layout_width="217dp"
         android:layout_height="60dp"
         android:layout_marginTop="70dp"
+        android:layout_below="@+id/layout_info"
         android:gravity="center"
+        android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:text="完 成"
         android:textSize="24dp"
@@ -130,6 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
+        android:layout_below="@+id/layout_info"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -159,4 +165,19 @@
 
     </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_bill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="重新打印小票"
+        android:textColor="@color/color_white"
+        android:textSize="20dp"
+        android:drawableLeft="@drawable/icon_bill"
+        android:drawablePadding="5dp"/>
+
+</RelativeLayout>
