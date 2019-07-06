@@ -425,7 +425,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void scanCodeToPay(String code) {
-        Toast.makeText(this, "code="+code, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "code="+code, Toast.LENGTH_SHORT).show();
         payCodeEt.setText("");
         code = code.trim();
         payCodeEt.setText(code);
