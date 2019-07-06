@@ -82,7 +82,7 @@ public class Utils {
         }
     }
 
-    public static String numberFormat(float number) {
+    public static String numberFormat(double number) {
         NumberFormat nf = new DecimalFormat("#.##");
         return nf.format(number);
     }

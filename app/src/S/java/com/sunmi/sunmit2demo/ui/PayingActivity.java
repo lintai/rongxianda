@@ -74,9 +74,9 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
     private String authoCode;
     private int payType;
 
-    private float goodsOriginalPrice;
+    private double goodsOriginalPrice;
     private String goodsCount;
-    private float cashReturn;
+    private double cashReturn;
 
     private boolean scanInputType = false;
 
@@ -166,7 +166,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
             orderInfo = (OrderInfo) bundle.getSerializable(ORDER_RESULT);
 
             goodsCount = bundle.getString(GOODS_COUNT);
-            goodsOriginalPrice = bundle.getFloat(GOODS_ORIGINAL_PRICE);
+            goodsOriginalPrice = bundle.getDouble(GOODS_ORIGINAL_PRICE);
 
             goodsCountTv.setText("总共"+goodsCount+"件商品");
             goodsPriceTv.setText("￥"+Utils.numberFormat(goodsOriginalPrice / 100));
@@ -340,7 +340,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
         Bundle bundle = new Bundle();
         bundle.putSerializable(PayingActivity.ORDER_RESULT, orderInfo);
         bundle.putString(PayingActivity.GOODS_COUNT, String.valueOf(goodsCount));
-        bundle.putFloat(PayingActivity.GOODS_ORIGINAL_PRICE, goodsOriginalPrice);
+        bundle.putDouble(PayingActivity.GOODS_ORIGINAL_PRICE, goodsOriginalPrice);
         bundle.putInt(PayingActivity.GOODS_PAY_TYPE, payType);
         bundle.putString(PayResultActivity.ERROR_MSG, errorMsg);
         intent.putExtras(bundle);

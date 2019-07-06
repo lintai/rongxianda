@@ -674,7 +674,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         menuItemModule.setPriceType(event.priceType);
 
         mMenuAdapter.addGoodsCount(1);
-        mMenuAdapter.addGoodsTotalPrice(event.priceType == Constants.WEIGHT_PRICE_TYPE ? event.totalPrice : event.price);
+        mMenuAdapter.addGoodsTotalPrice(event.priceType == Constants.WEIGHT_PRICE_TYPE ? event.totalPrice * 1.0d : event.price * 1.0d);
 
         List<MenuItemModule> modules = mMenuAdapter.getDatas();
         if (event.priceType == Constants.WEIGHT_PRICE_TYPE) {
@@ -890,7 +890,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             Bundle bundle = new Bundle();
             bundle.putSerializable(PayingActivity.ORDER_RESULT, orderInfo);
             bundle.putString(PayingActivity.GOODS_COUNT, String.valueOf(mMenuAdapter.getGoodsCount()));
-            bundle.putFloat(PayingActivity.GOODS_ORIGINAL_PRICE, mMenuAdapter.getGoodsTotalPrice());
+            bundle.putDouble(PayingActivity.GOODS_ORIGINAL_PRICE, mMenuAdapter.getGoodsTotalPrice());
 //            bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
             intent.putExtras(bundle);
             startActivity(intent);

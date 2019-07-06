@@ -32,7 +32,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
     private OrderInfo orderInfo;
     private int payType;
 
-    private float goodsOriginalPrice;
+    private double goodsOriginalPrice;
     private View focusView;
 
     @Override
@@ -71,7 +71,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
             orderInfo = (OrderInfo) bundle.getSerializable(PayingActivity.ORDER_RESULT);
 
             String goodsCount = bundle.getString(PayingActivity.GOODS_COUNT);
-            goodsOriginalPrice = bundle.getFloat(PayingActivity.GOODS_ORIGINAL_PRICE);
+            goodsOriginalPrice = bundle.getDouble(PayingActivity.GOODS_ORIGINAL_PRICE);
 
             goodsCountTv.setText("总共"+goodsCount+"件商品");
             goodsPriceTv.setText("￥"+Utils.numberFormat(goodsOriginalPrice / 100));

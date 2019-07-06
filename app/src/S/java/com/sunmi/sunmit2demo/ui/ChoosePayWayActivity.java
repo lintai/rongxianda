@@ -46,7 +46,7 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
 
     private String authoData;
     private String goodsCount;
-    private float goodsOriginalPrice;
+    private double goodsOriginalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +98,7 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
             authoData = bundle.getString(PayingActivity.GOODS_AUTHO_DATA);
             orderInfo = (OrderInfo) bundle.getSerializable(PayingActivity.ORDER_RESULT);
             goodsCount = bundle.getString(PayingActivity.GOODS_COUNT);
-            goodsOriginalPrice = bundle.getFloat(PayingActivity.GOODS_ORIGINAL_PRICE);
+            goodsOriginalPrice = bundle.getDouble(PayingActivity.GOODS_ORIGINAL_PRICE);
 
 
             goodsCountTv.setText("总共"+goodsCount+"件商品");
@@ -149,7 +149,7 @@ public class ChoosePayWayActivity extends AppCompatActivity implements View.OnCl
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(PayingActivity.ORDER_RESULT, orderInfo);
                     bundle.putString(PayingActivity.GOODS_COUNT, String.valueOf(goodsCount));
-                    bundle.putFloat(PayingActivity.GOODS_ORIGINAL_PRICE, goodsOriginalPrice);
+                    bundle.putDouble(PayingActivity.GOODS_ORIGINAL_PRICE, goodsOriginalPrice);
                     bundle.putString(PayingActivity.GOODS_AUTHO_DATA, authoData);
                     bundle.putInt(PayingActivity.GOODS_PAY_TYPE, payType);
                     intent.putExtras(bundle);

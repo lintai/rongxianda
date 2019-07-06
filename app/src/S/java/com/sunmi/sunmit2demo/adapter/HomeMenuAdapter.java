@@ -35,7 +35,7 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
     private GoodsCountChangeListener changeListener;
 
     private int goodsCount;
-    private float goodsTotalPrice;
+    private double goodsTotalPrice;
 
     public HomeMenuAdapter(List<MenuItemModule> datas) {
         this.datas = datas;
@@ -56,7 +56,7 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
         return goodsCount;
     }
 
-    public float getGoodsTotalPrice() {
+    public double getGoodsTotalPrice() {
         return goodsTotalPrice;
     }
 
@@ -71,7 +71,7 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void addGoodsTotalPrice(float goodsPrice) {
+    public void addGoodsTotalPrice(double goodsPrice) {
         this.goodsTotalPrice += goodsPrice;
     }
 
