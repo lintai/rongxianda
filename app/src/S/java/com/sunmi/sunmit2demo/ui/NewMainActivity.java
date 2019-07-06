@@ -210,7 +210,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         /* 获取USB设备名 */
         usbName = mPresenter.getUsbDeviceList();
         if (TextUtils.isEmpty(usbName)) {
-            Utils.toast(this, "no usb device");
+//            Utils.toast(this, "no usb device");
+            Utils.toast(this, "未检测到usb设备");
             return;
         }
         /* 通过USB设备名找到USB设备 */

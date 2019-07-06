@@ -571,7 +571,7 @@ public class DeviceConnFactoryManager {
                                 }
                                 System.out.println(MyApplication.app.getString(R.string.str_state) + status);
                                 String mode=MyApplication.app.getString(R.string.str_printer_printmode_tsc);
-                                Utils.toast(MyApplication.app, mode+" "+status);
+//                                Utils.toast(MyApplication.app, mode+" "+status);
                             } else {//打印机状态查询
                                 Intent intent = new Intent(ACTION_QUERY_PRINTER_STATE);
                                 intent.putExtra(DEVICE_ID, id);
@@ -592,7 +592,7 @@ public class DeviceConnFactoryManager {
                                     status += " "+MyApplication.app.getString(R.string.str_printer_open_cover);
                                 }
                                 String mode=MyApplication.app.getString(R.string.str_printer_printmode_cpcl);
-                                Utils.toast(MyApplication.app, mode+" "+status);
+//                                Utils.toast(MyApplication.app, mode+" "+status);
                             } else {//打印机状态查询
                                 Intent intent = new Intent(ACTION_QUERY_PRINTER_STATE);
                                 intent.putExtra(DEVICE_ID, id);
