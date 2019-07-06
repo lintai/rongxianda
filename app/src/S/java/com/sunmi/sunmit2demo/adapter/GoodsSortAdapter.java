@@ -51,20 +51,21 @@ public class GoodsSortAdapter extends RecyclerView.Adapter {
         final GoodsSortViewHolder viewHolder = (GoodsSortViewHolder) holder;
         final GoodsSortTagModle modle = datas.get(position);
         viewHolder.goodsSortTv.setText(modle.getClassName());
-//        if (selectPos == position) {
-//            viewHolder.goodsSortTv.setTextColor(Color.parseColor("#ffffff"));
-//        } else {
-//            viewHolder.goodsSortTv.setTextColor(Color.parseColor("#333333"));
-//        }
+        if (selectPos == position) {
+            viewHolder.goodsSortTv.setTextColor(Color.parseColor("#bf333333"));
+            viewHolder.goodsSortTv.setBackgroundResource(R.drawable.goods_sort_item_select_rectangle_bg);
+        } else {
+            viewHolder.goodsSortTv.setBackgroundResource(R.drawable.goods_sort_item_selector);
+        }
         if (itemClickListenr != null) {
             viewHolder.goodsSortTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    if (selectPos != position) {
-//                        selectPos = position;
-//                        notifyDataSetChanged();
+                    if (selectPos != position) {
+                        selectPos = position;
+                        notifyDataSetChanged();
                         itemClickListenr.onItemClick(modle.getClassId());
-//                    }
+                    }
                 }
             });
         }
