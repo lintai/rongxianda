@@ -1,5 +1,6 @@
 package com.sunmi.sunmit2demo.ui;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -100,6 +101,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
                 failLayout.setVisibility(View.GONE);
             }
 
+            delayPrint();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,9 +129,21 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
             case R.id.tv_bill:
                 if (orderInfo != null) {
                     EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                    delayPrint();
                 }
                 break;
         }
+    }
+
+    private void delayPrint() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (orderInfo != null) {
+                    EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                }
+            }
+        }, 2000);
     }
 
     private void cancelLastViewFocus(View view) {

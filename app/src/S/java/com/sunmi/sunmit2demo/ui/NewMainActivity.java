@@ -625,6 +625,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             return;
         }
         mPrePrintTime = System.currentTimeMillis();
+        Log.i("PrintDataEvent===", "time="+(mPrePrintTime/1000));
 
         if (mMenuAdapter == null
                 || mMenuAdapter.getDatas() == null
