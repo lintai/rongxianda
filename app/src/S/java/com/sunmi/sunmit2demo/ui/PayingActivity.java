@@ -247,7 +247,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                     public void onNext(PayInfo payInfo) {
                         if ("2".equals(payInfo.getStatus())) {
                             checkComplete("");
-                            EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                            EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType), 2));
                         } else if ("6".equals(payInfo.getStatus())) {
                             checkPayStatus();
                         } else {
@@ -304,7 +304,7 @@ public class PayingActivity extends AppCompatActivity implements View.OnClickLis
                         if (payCheckInfo != null && "2".equals(payCheckInfo.getPaystatus())) {
                             compositeDisposable.remove(this);
                             checkComplete("");
-                            EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                            EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType), 2));
                         } else if (System.currentTimeMillis() - currTime > 60 * 1000){
                             compositeDisposable.remove(this);
                             checkComplete("支付失败");

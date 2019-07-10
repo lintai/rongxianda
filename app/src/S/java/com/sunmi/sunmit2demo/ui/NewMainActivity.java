@@ -300,7 +300,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onStop() {
         super.onStop();
         this.willwelcome = false;
-        unregisterReceiver(receiver);
     }
 
     @Override
@@ -617,7 +616,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     }
 
     private PrintDataEvent tempPrintDataEvent;
-    private int printCounts = 2;
+    private int printCounts = 0;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void printDataEvent(PrintDataEvent event) {
@@ -625,7 +624,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             return;
         }
         tempPrintDataEvent = event;
-        printCounts = 2;
         if (event.openCashBox) {
             mPresenter.openCashBox(myHandler, id);
             return;
@@ -662,6 +660,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 //        mGoodsCountTv.setText("0");
 //        mGoodsTotalPriceTv.setText("0");
 
+        printCounts = event.printCount;
         printCounts--;
         mPresenter.printReceipt(myHandler, id,
                 new PrinterModle(modules,
@@ -782,7 +781,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             payMentPayPresenter.destoryReceiver();
         }
 
-
+        unregisterReceiver(receiver);
         printerPresenter = null;
         kPrinterPresenter = null;
         EventBus.getDefault().unregister(this);
@@ -974,6 +973,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     break;
                 case ACTION_QUERY_PRINTER_STATE:
                     if (printCounts > 0) {
+                        int count = tempPrintDataEvent.printCount;
+                        count--;
+                        tempPrintDataEvent.printCount = count;
                         EventBus.getDefault().post(tempPrintDataEvent);
                     }
                     break;

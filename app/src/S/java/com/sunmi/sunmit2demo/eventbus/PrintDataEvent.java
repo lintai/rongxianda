@@ -15,13 +15,16 @@ public class PrintDataEvent {
 
     public boolean openCashBox;
 
+    public int printCount;
+
     public PrintDataEvent(boolean openCashBox) {
         this.openCashBox = openCashBox;
     }
 
-    public PrintDataEvent(String orderNo, String time, String payType) {
+    public PrintDataEvent(String orderNo, String time, String payType, int printCount) {
         this.orderNo = orderNo;
         this.time = time;
         this.payType = payType;
+        this.printCount = printCount;
     }
 }

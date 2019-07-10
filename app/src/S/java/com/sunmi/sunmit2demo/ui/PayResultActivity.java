@@ -128,7 +128,7 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.tv_bill:
                 if (orderInfo != null) {
-                    EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                    EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType), 2));
                     delayPrint();
                 }
                 break;
