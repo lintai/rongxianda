@@ -361,16 +361,22 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
 
         /*Bitmap b = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.gprinter );*/
-        byte[] bitmaps = Util.read();
-        if (bitmaps != null) {
-            Bitmap b = BitmapFactory.decodeByteArray(bitmaps, 0, bitmaps.length);
-            if (b != null) {
-                /* 打印图片 */
-                /* 设置打印居中 */
-                esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );
-                esc.addRastBitImage( b, 320, 0 );
-            }
-        }
+//        byte[] bitmaps = Util.read();
+//        if (bitmaps != null) {
+//            Bitmap b = BitmapFactory.decodeByteArray(bitmaps, 0, bitmaps.length);
+//            if (b != null) {
+//                /* 打印图片 */
+//                /* 设置打印居中 */
+//                esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );
+//                esc.addRastBitImage( b, 320, 0 );
+//            }
+//        }
+        esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );
+        esc.addSelectSizeOfModuleForQRCode((byte) 9);
+        esc.addSelectErrorCorrectionLevelForQRCode((byte) 33);
+        esc.addStoreQRCodeData("https://mp.weixin.qq.com/a/~GOSLX_fpqVcy45zaY-ClfA~~");
+        esc.addPrintQRCode();
+        esc.addPrintAndFeedLines( (byte) 1 );
 
         /* 打印一维条码 *//*
         *//* 打印文字 *//*
