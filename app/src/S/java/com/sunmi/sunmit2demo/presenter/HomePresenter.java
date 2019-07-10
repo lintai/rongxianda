@@ -7,6 +7,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -244,11 +245,14 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                         public void run()
                         {
                             counts--;
+                            Log.i("bill_print===", "counts="+counts);
                             if (counts < 0) {
                                 scheduledExecutorService.shutdown();
+                                Log.i("bill_print===", "shutdown");
                                 return;
                             }
                             if ( DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
+                                Log.i("bill_print===", "sendReceiptWithResponse");
                                 sendReceiptWithResponse(id, printerModle);
                             }
                         }
