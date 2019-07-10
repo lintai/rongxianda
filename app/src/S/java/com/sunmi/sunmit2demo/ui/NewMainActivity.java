@@ -513,6 +513,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void addGoods(String code) {
+        code = code.toUpperCase();
         code = code.replaceAll("[^0-9a-zA-Z]", "");
         Log.e(TAG, "扫码===" + code + "   " + GoodsCode.getInstance().getGood().containsKey(code));
 //        inputEt.setText(sb.toString());
