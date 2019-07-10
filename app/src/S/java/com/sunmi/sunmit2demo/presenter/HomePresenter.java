@@ -211,27 +211,22 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                 || (vid == 26728 && pid == 1536));
     }
 
-
-    private int counts = 2;
-    private int printcount	= 0;
-    private boolean continuityprint = true;
+    private int counts;
 
     /**
      * 打印票据
      */
     public void printReceipt(final Handler mHandler,
                              final int id,
-                             final PrinterModle printerModle) {
+                             final PrinterModle printerModle,
+                             final int count) {
+        counts = count;
         if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
                 !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
             mView.printerOutOfConnected();
             ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
         }
-
-        counts = 2;
-        printcount = 0;
-        continuityprint = true;
         ThreadPool.getInstantiation().addTask( new Runnable() {
             @Override
             public void run() {

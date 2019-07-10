@@ -610,13 +610,22 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         if (mMenuAdapter != null) {
             mMenuAdapter.clear();
         }
+        tempPrintDataEvent = null;
         //更新所有清单总价格
         mGoodsCountTv.setText("0");
         mGoodsTotalPriceTv.setText("0");
     }
 
+    private PrintDataEvent tempPrintDataEvent;
+    private int printCounts = 2;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void printDataEvent(PrintDataEvent event) {
+        if (event == null) {
+            return;
+        }
+        tempPrintDataEvent = event;
+        printCounts = 2;
         if (event.openCashBox) {
             mPresenter.openCashBox(myHandler, id);
             return;
@@ -653,6 +662,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 //        mGoodsCountTv.setText("0");
 //        mGoodsTotalPriceTv.setText("0");
 
+        printCounts--;
         mPresenter.printReceipt(myHandler, id,
                 new PrinterModle(modules,
                         event.orderNo,
@@ -660,7 +670,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                         Utils.parseFloat((TextUtils.isEmpty(totalPrice) ? "":totalPrice) + (TextUtils.isEmpty(discountPrice) ? "":discountPrice)),
                         Utils.parseFloat((TextUtils.isEmpty(discountPrice) ? "":discountPrice)),
                         Utils.parseFloat((TextUtils.isEmpty(totalPrice) ? "":totalPrice)),
-                        event.payType));
+                        event.payType),
+                printCounts);
 
     }
 
@@ -962,7 +973,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     }
                     break;
                 case ACTION_QUERY_PRINTER_STATE:
-
+                    if (printCounts > 0) {
+                        EventBus.getDefault().post(tempPrintDataEvent);
+                    }
                     break;
                 default:
                     break;
