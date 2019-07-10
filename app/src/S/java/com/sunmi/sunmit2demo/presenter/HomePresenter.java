@@ -237,13 +237,17 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                 if ( DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] != null
                         && DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
                     ThreadFactoryBuilder threadFactoryBuilder = new ThreadFactoryBuilder( "MainActivity_sendContinuity_Timer" );
-                    ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor( 1, threadFactoryBuilder );
+                    final ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor( 1, threadFactoryBuilder );
                     scheduledExecutorService.schedule( threadFactoryBuilder.newThread( new Runnable()
                     {
                         @Override
                         public void run()
                         {
                             counts--;
+                            if (counts < 0) {
+                                scheduledExecutorService.shutdown();
+                                return;
+                            }
                             if ( DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
                                 sendReceiptWithResponse(id, printerModle);
                             }
