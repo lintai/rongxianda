@@ -453,13 +453,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     mPayTv.setText("结算");
                     mPayTv.setClickable(true);
                 }
-//                try {
-//                    connectPrintService();
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                EventBus.getDefault().post(new PrintDataEvent(true));
+                try {
+                    connectPrintService();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                EventBus.getDefault().post(new PrintDataEvent(true));
                 break;
             default:
                 break;

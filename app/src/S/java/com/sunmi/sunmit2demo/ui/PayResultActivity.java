@@ -136,14 +136,14 @@ public class PayResultActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void delayPrint() {
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (orderInfo != null) {
-//                    EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
-//                }
-//            }
-//        }, 2000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (orderInfo != null) {
+                    EventBus.getDefault().post(new PrintDataEvent(orderInfo.getOrderId(), Util.getCurrData(), Util.getPayType(payType)));
+                }
+            }
+        }, 2000);
     }
 
     private void cancelLastViewFocus(View view) {
