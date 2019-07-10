@@ -239,7 +239,6 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                         @Override
                         public void run()
                         {
-                            counts--;
                             Log.i("bill_print===", "counts="+counts);
                             if (counts < 0) {
                                 scheduledExecutorService.shutdown();
