@@ -28,6 +28,7 @@ import com.sunmi.sunmit2demo.presenter.contact.HomeClassAndGoodsContact;
 import com.sunmi.sunmit2demo.print.DeviceConnFactoryManager;
 import com.sunmi.sunmit2demo.print.PrinterCode;
 import com.sunmi.sunmit2demo.print.PrinterCommand;
+import com.sunmi.sunmit2demo.print.ThreadFactoryBuilder;
 import com.sunmi.sunmit2demo.print.ThreadPool;
 import com.sunmi.sunmit2demo.server.ServerManager;
 import com.sunmi.sunmit2demo.utils.ToastUtil;
@@ -40,6 +41,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -206,6 +210,11 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                 || (vid == 26728 && pid == 1536));
     }
 
+
+    private int counts = 2;
+    private int printcount	= 0;
+    private boolean continuityprint = true;
+
     /**
      * 打印票据
      */
@@ -218,17 +227,42 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
             ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
         }
-        ThreadPool threadPool = ThreadPool.getInstantiation();
-        threadPool.addTask( new Runnable() {
+
+        counts = 2;
+        printcount = 0;
+        continuityprint = true;
+        ThreadPool.getInstantiation().addTask( new Runnable() {
             @Override
             public void run() {
-                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
-                    sendReceiptWithResponse(id, printerModle);
-                } else {
-                    mHandler.obtainMessage(PrinterCode.PRINTER_COMMAND_ERROR).sendToTarget();
+                if ( DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] != null
+                        && DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
+                    ThreadFactoryBuilder threadFactoryBuilder = new ThreadFactoryBuilder( "MainActivity_sendContinuity_Timer" );
+                    ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor( 1, threadFactoryBuilder );
+                    scheduledExecutorService.schedule( threadFactoryBuilder.newThread( new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            counts--;
+                            if ( DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
+                                sendReceiptWithResponse(id, printerModle);
+                            }
+                        }
+                    } ), 1000, TimeUnit.MILLISECONDS );
                 }
             }
         } );
+//        ThreadPool threadPool = ThreadPool.getInstantiation();
+//        threadPool.addTask( new Runnable() {
+//            @Override
+//            public void run() {
+//                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
+//                    sendReceiptWithResponse(id, printerModle);
+//                } else {
+//                    mHandler.obtainMessage(PrinterCode.PRINTER_COMMAND_ERROR).sendToTarget();
+//                }
+//            }
+//        } );
     }
 
     /**
