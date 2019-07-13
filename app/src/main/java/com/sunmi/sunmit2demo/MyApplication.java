@@ -12,8 +12,8 @@ import android.util.Log;
 import com.bst.bsbandlib.sdk.BSBandSDKManager;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.sunmi.payment.PaymentService;
-import com.sunmi.sunmit2demo.bean.blescan.DaoMaster;
-import com.sunmi.sunmit2demo.bean.blescan.DaoSession;
+import com.sunmi.sunmit2demo.bean.DaoMaster;
+import com.sunmi.sunmit2demo.bean.DaoSession;
 
 
 import java.io.File;
