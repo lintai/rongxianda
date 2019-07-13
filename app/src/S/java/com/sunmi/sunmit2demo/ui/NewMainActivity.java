@@ -94,6 +94,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
@@ -161,6 +168,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private String usbName;
 
     private long mPrePrintTime;//上次打印的时间点
+    private Disposable checkUsbDisposable = null;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -194,12 +202,26 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         EventBus.getDefault().register(this);
         initView();
         initData();
+        checkUsbDevice();
 
 //        if (isK1) {
 //            connectKPrintService();
 //        } else {
-            connectPrintService();
+//            connectPrintService();
 //        }
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    connectPrintService();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                EventBus.getDefault().post(new PrintDataEvent(true));
+//                ToastUtil.showShort(NewMainActivity.this, "延迟5s初始化");
+//            }
+//        }, 5000);
     }
 
 
@@ -326,6 +348,37 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         filter.addAction( DeviceConnFactoryManager.ACTION_CONN_STATE );
         filter.addAction( ACTION_USB_DEVICE_ATTACHED );
         registerReceiver( receiver, filter );
+    }
+
+    private void checkUsbDevice() {
+        // 这里使用rxjava来轮询
+        checkUsbDisposable = Observable.interval(1, 3, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        if (!TextUtils.isEmpty(mPresenter.getUsbDeviceList())) { // 插入了USB设备
+                            try {
+                                connectPrintService();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ToastUtil.showShort(NewMainActivity.this, "usb 设备已连接-轮询");
+//                            EventBus.getDefault().post(new PrintDataEvent(true));
+                            if (checkUsbDisposable != null) {
+                                checkUsbDisposable.dispose();
+                            }
+                        } else if (aLong > 20) {// 60/3=20
+                            ToastUtil.showShort(NewMainActivity.this, "轮询超过60s-轮询");
+                            if (checkUsbDisposable != null) {
+                                checkUsbDisposable.dispose();
+                            }
+                        } else { // USB设备已拔出
+                            ToastUtil.showShort(NewMainActivity.this, "usb 设备未连接-轮询"+aLong);
+                        }
+                    }
+                });
     }
 
 
@@ -624,17 +677,21 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         if (event == null) {
             return;
         }
+//        if (printCounts > 0 && event.printCount == 2) {//在打印过程中，又点了一次打印
+//            ToastUtil.showShort(NewMainActivity.this, "正在打印，请稍后再试");
+//            return;
+//        }
         tempPrintDataEvent = event;
         if (event.openCashBox) {
             mPresenter.openCashBox(myHandler, id);
             return;
         }
 
-        if (System.currentTimeMillis() - mPrePrintTime < 2 * 1000) {
-            //2次打印票据之间的时间间隔
-            ToastUtil.showShort(NewMainActivity.this, "打印小票太频繁，请稍后再试");
-            return;
-        }
+//        if (System.currentTimeMillis() - mPrePrintTime < 2 * 1000) {
+//            //2次打印票据之间的时间间隔
+//            ToastUtil.showShort(NewMainActivity.this, "打印小票太频繁，请稍后再试");
+//            return;
+//        }
         mPrePrintTime = System.currentTimeMillis();
         Log.i("PrintDataEvent===", "time="+(mPrePrintTime/1000));
 
@@ -663,6 +720,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         printCounts = event.printCount;
         printCounts--;
+        ToastUtil.showShort(NewMainActivity.this, "打印剩余次数="+printCounts);
         mPresenter.printReceipt(myHandler, id,
                 new PrinterModle(modules,
                         event.orderNo,
@@ -781,6 +839,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         if (payMentPayPresenter != null) {
             payMentPayPresenter.destoryReceiver();
+        }
+        if (checkUsbDisposable != null) {
+            checkUsbDisposable.dispose();
         }
 
         unregisterReceiver(receiver);
@@ -958,14 +1019,16 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     {
                         case DeviceConnFactoryManager.CONN_STATE_DISCONNECT:
                             if ( id == deviceId ) {
+//                                ToastUtil.showShort(NewMainActivity.this, "USB 设备位未接");
 
                             }
                             break;
                         case DeviceConnFactoryManager.CONN_STATE_CONNECTING:
+//                            ToastUtil.showShort(NewMainActivity.this, "USB 设备正在连接");
 
                             break;
                         case DeviceConnFactoryManager.CONN_STATE_CONNECTED:
-
+//                            ToastUtil.showShort(NewMainActivity.this, "USB 设备已连接");
                             break;
                         case CONN_STATE_FAILED:
                             break;
@@ -974,7 +1037,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     }
                     break;
                 case ACTION_QUERY_PRINTER_STATE:
+                    ToastUtil.showShort(NewMainActivity.this, "ACTION_QUERY_PRINTER_STATE");
                     if (printCounts > 0) {
+                        ToastUtil.showShort(NewMainActivity.this, "第二次打印");
                         int count = tempPrintDataEvent.printCount;
                         count--;
                         tempPrintDataEvent.printCount = count;

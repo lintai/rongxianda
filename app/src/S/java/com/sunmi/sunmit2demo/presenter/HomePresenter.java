@@ -221,10 +221,13 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                              final PrinterModle printerModle,
                              final int count) {
         counts = count;
-        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null) {
+        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
+                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
             mView.printerOutOfConnected();
             ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
+        } else if (count == 1){//连续打印时，第一次打印提示 “正在打印”
+            ToastUtil.showShort(context, "正在打印，请稍后");
         }
         ThreadPool.getInstantiation().addTask( new Runnable() {
             @Override
@@ -270,7 +273,8 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
      * 开钱箱
      */
     public void openCashBox(final Handler mHandler, final int id) {
-        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ) {
+        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
+                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
             mView.printerOutOfConnected();
             ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
@@ -279,7 +283,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         threadPool.addTask( new Runnable() {
             @Override
             public void run() {
-                if (true ) {
+                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
                     /* 开钱箱 */
                     EscCommand esc = new EscCommand();
                     esc.addGeneratePlus( LabelCommand.FOOT.F5, (byte) 255, (byte) 255 );
