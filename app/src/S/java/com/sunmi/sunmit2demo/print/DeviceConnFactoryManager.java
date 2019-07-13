@@ -551,7 +551,7 @@ public class DeviceConnFactoryManager {
                                 }
                                 System.out.println(MyApplication.app.getString(R.string.str_state) + status);
                                 String mode=MyApplication.app.getString(R.string.str_printer_printmode_esc);
-                                Utils.toast(MyApplication.app, "Print Mode:ESC"+status);
+//                                Utils.toast(MyApplication.app, "Print Mode:ESC"+status);
                             }
                         }
                     } else if (sendCommand == tsc) {
