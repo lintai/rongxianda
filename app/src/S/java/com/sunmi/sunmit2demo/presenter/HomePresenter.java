@@ -271,8 +271,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
      * 开钱箱
      */
     public void openCashBox(final Handler mHandler, final int id) {
-        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
-                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
+        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ) {
             mView.printerOutOfConnected();
             ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
@@ -281,7 +280,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         threadPool.addTask( new Runnable() {
             @Override
             public void run() {
-                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
+                if (true ) {
                     /* 开钱箱 */
                     EscCommand esc = new EscCommand();
                     esc.addGeneratePlus( LabelCommand.FOOT.F5, (byte) 255, (byte) 255 );
