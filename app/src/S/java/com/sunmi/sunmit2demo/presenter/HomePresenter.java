@@ -271,8 +271,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
      * 开钱箱
      */
     public void openCashBox(final Handler mHandler, final int id) {
-        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
-                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
+        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ) {
             mView.printerOutOfConnected();
             ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
@@ -281,7 +280,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         threadPool.addTask( new Runnable() {
             @Override
             public void run() {
-                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC ) {
+                if (true ) {
                     /* 开钱箱 */
                     EscCommand esc = new EscCommand();
                     esc.addGeneratePlus( LabelCommand.FOOT.F5, (byte) 255, (byte) 255 );
@@ -339,13 +338,20 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         //TODO
         for(MenuItemModule menuItem : printerModle.getModules()){
             esc.addText( menuItem.getGoodsName()+"\n","GB2312" );
-            esc.addSetHorAndVerMotionUnits( (byte) 7, (byte) 0 );
-            esc.addSetAbsolutePrintPosition( (short) 7 );
+            esc.addSetAbsolutePrintPosition( (short) 3 );
             esc.addText( menuItem.getPrice()/100.0+"","GB2312" );
+            esc.addSetAbsolutePrintPosition( (short) 7 );
+            if(menuItem.getPriceType() == Constants.WEIGHT_PRICE_TYPE){
+                esc.addText( menuItem.getGoodsCount()+"g","GB2312" );
+            }else{
+                esc.addText( menuItem.getGoodsCount()+"","GB2312" );
+            }
             esc.addSetAbsolutePrintPosition( (short) 10 );
-            esc.addText( menuItem.getGoodsCount()+"","GB2312" );
-            esc.addSetAbsolutePrintPosition( (short) 12 );
-            esc.addText( menuItem.getPrice()/100.0*menuItem.getGoodsCount()+"\n","GB2312" );
+            if(menuItem.getPriceType() == Constants.WEIGHT_PRICE_TYPE){
+                esc.addText( menuItem.getTotalPrice()/100.0+"\n","GB2312" );
+            }else{
+                esc.addText( menuItem.getPrice()/100.0*menuItem.getGoodsCount()+"\n","GB2312" );
+            }
         }
         esc.addText( "————————————————\n","GB2312" );
         //打印商品总价
@@ -378,45 +384,9 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
         esc.addPrintQRCode();
         esc.addPrintAndFeedLines( (byte) 1 );
 
-        /* 打印一维条码 *//*
-        *//* 打印文字 *//*
-        esc.addText( "Print code128\n" );
-        esc.addSelectPrintingPositionForHRICharacters( EscCommand.HRI_POSITION.BELOW );
-        *//*
-         * 设置条码可识别字符位置在条码下方
-         * 设置条码高度为60点
-         *//*
-        esc.addSetBarcodeHeight( (byte) 60 );
-        *//* 设置条码单元宽度为1 *//*
-        esc.addSetBarcodeWidth( (byte) 1 );
-        *//* 打印Code128码 *//*
-        esc.addCODE128( esc.genCodeB( "SMARNET" ) );
-        esc.addPrintAndLineFeed();
+        esc.addText( "简单  新鲜  便捷  健康\n","GB2312" );
 
-
-        *//*
-         * QRCode命令打印 此命令只在支持QRCode命令打印的机型才能使用。 在不支持二维码指令打印的机型上，则需要发送二维条码图片
-         *//*
-        *//* 打印文字 *//*
-        esc.addText( "Print QRcode\n" );
-
-        /* 设置纠错等级 *//*
-        esc.addSelectErrorCorrectionLevelForQRCode( (byte) 0x31 );
-        *//* 设置qrcode模块大小 *//*
-        esc.addSelectSizeOfModuleForQRCode( (byte) 3 );
-        *//* 设置qrcode内容 *//*
-        esc.addStoreQRCodeData( "www.smarnet.cc" );
-        esc.addPrintQRCode(); *//* 打印QRCode *//*
-        esc.addPrintAndLineFeed();
-
-        *//* 设置打印左对齐 *//*
-        esc.addSelectJustification( EscCommand.JUSTIFICATION.CENTER );*/
-        /* 打印文字 */
-        //esc.addText( "Completed!\r\n" );
-
-        /* 开钱箱 */
-//        esc.addGeneratePlus( LabelCommand.FOOT.F5, (byte) 255, (byte) 255 );
-        esc.addPrintAndFeedLines( (byte) 8 );
+        esc.addPrintAndFeedLines( (byte) 3 );
         /* 加入查询打印机状态，用于连续打印 */
         byte[] bytes = { 29, 114, 1 };
         esc.addUserCommand( bytes );

@@ -667,7 +667,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 new PrinterModle(modules,
                         event.orderNo,
                         event.time,
-                        Utils.parseFloat((TextUtils.isEmpty(totalPrice) ? "":totalPrice) + (TextUtils.isEmpty(discountPrice) ? "":discountPrice)),
+                        (Float.parseFloat((TextUtils.isEmpty(totalPrice) ? "0":totalPrice))
+                                + Float.parseFloat((TextUtils.isEmpty(discountPrice) ? "0":discountPrice))),
                         Utils.parseFloat((TextUtils.isEmpty(discountPrice) ? "":discountPrice)),
                         Utils.parseFloat((TextUtils.isEmpty(totalPrice) ? "":totalPrice)),
                         event.payType),
