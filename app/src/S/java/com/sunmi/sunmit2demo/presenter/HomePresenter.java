@@ -221,8 +221,7 @@ public class HomePresenter implements HomeClassAndGoodsContact.Presenter {
                              final PrinterModle printerModle,
                              final int count) {
         counts = count;
-        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
-                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState() ) {
+        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null) {
             mView.printerOutOfConnected();
             ToastUtil.showShort( context, context.getString( R.string.str_cann_printer ) );
             return;
