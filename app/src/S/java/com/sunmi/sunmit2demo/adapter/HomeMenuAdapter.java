@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sunmi.sunmit2demo.Constants;
@@ -108,8 +109,8 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
 
             //称重的商品无法通过“+”或“-”来增减商品数量
             if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
-                menuViewHolder.mAddGoodsIv.setVisibility(View.VISIBLE);
-                menuViewHolder.mAddGoodsIv.setOnClickListener(new View.OnClickListener() {
+                menuViewHolder.addLl.setVisibility(View.VISIBLE);
+                menuViewHolder.addLl.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         goodsCount++;
@@ -122,12 +123,12 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
                     }
                 });
             } else {
-                menuViewHolder.mAddGoodsIv.setVisibility(View.GONE);
+                menuViewHolder.addLl.setVisibility(View.GONE);
             }
 
             if (module.getPriceType() != Constants.WEIGHT_PRICE_TYPE) {
-                menuViewHolder.mdeleaseGoodsIv.setVisibility(View.VISIBLE);
-                menuViewHolder.mdeleaseGoodsIv.setOnClickListener(new View.OnClickListener() {
+                menuViewHolder.deleaseLl.setVisibility(View.VISIBLE);
+                menuViewHolder.deleaseLl.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (module.getGoodsCount() <= 0) return;
@@ -150,7 +151,7 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
                     }
                 });
             } else {
-                menuViewHolder.mdeleaseGoodsIv.setVisibility(View.GONE);
+                menuViewHolder.deleaseLl.setVisibility(View.GONE);
             }
 
             menuViewHolder.mDeleteIv.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +192,7 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
         private TextView mGoodsNameTv, mSingleGoodsPriceTv, mGoodsTotalPrice;
         private TextView mGoodsCountTv;
         private ImageView mAddGoodsIv, mdeleaseGoodsIv, mDeleteIv;
+        private LinearLayout deleaseLl, addLl;
 
         public MenuViewHolder(View itemView) {
             super(itemView);
@@ -199,6 +201,8 @@ public class HomeMenuAdapter extends RecyclerView.Adapter {
             mGoodsTotalPrice = itemView.findViewById(R.id.tv_totle_price);
             mGoodsCountTv = itemView.findViewById(R.id.tv_goods_count);
             mdeleaseGoodsIv = itemView.findViewById(R.id.iv_delease);
+            deleaseLl = itemView.findViewById(R.id.ll_delease);
+            addLl = itemView.findViewById(R.id.ll_add);
             mDeleteIv = itemView.findViewById(R.id.iv_delete);
             mAddGoodsIv = itemView.findViewById(R.id.iv_add);
         }

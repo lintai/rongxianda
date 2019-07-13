@@ -74,6 +74,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/ll_delease"
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:background="@drawable/menu_item_btn_rectangle_bg">
@@ -98,6 +99,7 @@
             android:background="@drawable/menu_item_count_rectangle_bg"/>
 
         <LinearLayout
+            android:id="@+id/ll_add"
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:background="@drawable/menu_item_btn_rectangle_bg">
