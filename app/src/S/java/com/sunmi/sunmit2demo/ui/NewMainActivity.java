@@ -364,18 +364,18 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            ToastUtil.showShort(NewMainActivity.this, "usb 设备已连接-轮询");
+                            ToastUtil.showShort(NewMainActivity.this, "usb 设备已连接");
 //                            EventBus.getDefault().post(new PrintDataEvent(true));
                             if (checkUsbDisposable != null) {
                                 checkUsbDisposable.dispose();
                             }
                         } else if (aLong > 20) {// 60/3=20
-                            ToastUtil.showShort(NewMainActivity.this, "轮询超过60s-轮询");
+                            ToastUtil.showShort(NewMainActivity.this, "USB连接超过60s");
                             if (checkUsbDisposable != null) {
                                 checkUsbDisposable.dispose();
                             }
                         } else { // USB设备已拔出
-                            ToastUtil.showShort(NewMainActivity.this, "usb 设备未连接-轮询"+aLong);
+                            ToastUtil.showShort(NewMainActivity.this, "usb 设备未连接"+aLong);
                         }
                     }
                 });
@@ -720,7 +720,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         printCounts = event.printCount;
         printCounts--;
-        ToastUtil.showShort(NewMainActivity.this, "打印剩余次数="+printCounts);
         mPresenter.printReceipt(myHandler, id,
                 new PrinterModle(modules,
                         event.orderNo,
@@ -1037,9 +1036,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     }
                     break;
                 case ACTION_QUERY_PRINTER_STATE:
-                    ToastUtil.showShort(NewMainActivity.this, "ACTION_QUERY_PRINTER_STATE");
                     if (printCounts > 0) {
-                        ToastUtil.showShort(NewMainActivity.this, "第二次打印");
                         int count = tempPrintDataEvent.printCount;
                         count--;
                         tempPrintDataEvent.printCount = count;

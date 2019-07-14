@@ -535,10 +535,11 @@ public class DeviceConnFactoryManager {
                             currentPrinterCommand = PrinterCommand.ESC;
                             sendStateBroadcast(CONN_STATE_CONNECTED);
                         } else {//查询打印机状态
+                            Intent intent = new Intent(ACTION_QUERY_PRINTER_STATE);
+                            intent.putExtra(DEVICE_ID, id);
+                            MyApplication.app.sendBroadcast(intent);
                             if (result == 0) {//打印机状态查询
-                                Intent intent = new Intent(ACTION_QUERY_PRINTER_STATE);
-                                intent.putExtra(DEVICE_ID, id);
-                                MyApplication.app.sendBroadcast(intent);
+
                             } else if (result == 1) {//查询打印机实时状态
                                 if ((buffer[0] & ESC_STATE_PAPER_ERR) > 0) {
                                     status += " "+MyApplication.app.getString(R.string.str_printer_out_of_paper);
